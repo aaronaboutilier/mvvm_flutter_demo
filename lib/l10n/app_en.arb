@@ -1,0 +1,421 @@
+{
+  "@@locale": "en",
+  "@@last_modified": "2024-12-19T10:00:00.000Z",
+  
+  "appTitle": "MVVM Demo",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  
+  "homeTitle": "MVVM Demo - Home",
+  "@homeTitle": {
+    "description": "Title for the home screen"
+  },
+  
+  "detailsTitle": "MVVM Demo - Details",
+  "@detailsTitle": {
+    "description": "Title for the details screen"
+  },
+  
+  "welcomeBack": "Welcome back, {userName}!",
+  "@welcomeBack": {
+    "description": "Welcome message for returning users",
+    "placeholders": {
+      "userName": {
+        "type": "String",
+        "description": "The name of the user"
+      }
+    }
+  },
+  
+  "welcomeGuest": "Welcome, Guest!",
+  "@welcomeGuest": {
+    "description": "Welcome message for guests"
+  },
+  
+  "loadingUser": "Loading user information...",
+  "@loadingUser": {
+    "description": "Message shown while loading user data"
+  },
+  
+  "userInformation": "User Information:",
+  "@userInformation": {
+    "description": "Header for user information section"
+  },
+  
+  "userId": "ID: {id}",
+  "@userId": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "userName": "Name: {name}",
+  "@userName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "userEmail": "Email: {email}",
+  "@userEmail": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "buttonClickedTimes": "Button clicked {count} times",
+  "@buttonClickedTimes": {
+    "description": "Shows how many times the button was clicked",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  
+  "clickMe": "Click Me!",
+  "@clickMe": {
+    "description": "Text for the clickable button"
+  },
+  
+  "navigationExample": "Navigation Example",
+  "@navigationExample": {
+    "description": "Header for navigation section"
+  },
+  
+  "goToDetails": "Go to Details",
+  "@goToDetails": {
+    "description": "Button text to navigate to details screen"
+  },
+  
+  "backToHome": "Back to Home",
+  "@backToHome": {
+    "description": "Button text to navigate back to home"
+  },
+  
+  "chooseThemeColor": "Choose Your Theme Color:",
+  "@chooseThemeColor": {
+    "description": "Header for color selection section"
+  },
+  
+  "addNewItem": "Add New Item:",
+  "@addNewItem": {
+    "description": "Header for add item section"
+  },
+  
+  "enterItemName": "Enter item name...",
+  "@enterItemName": {
+    "description": "Placeholder text for item name input"
+  },
+  
+  "yourItems": "Your Items ({count}):",
+  "@yourItems": {
+    "description": "Header for items list with count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  
+  "noItemsYet": "No items yet",
+  "@noItemsYet": {
+    "description": "Message when no items are present"
+  },
+  
+  "addFirstItem": "Add your first item above to get started!",
+  "@addFirstItem": {
+    "description": "Instruction message when list is empty"
+  },
+  
+  "itemsSummary": "You have {count} items in {color} theme",
+  "@itemsSummary": {
+    "description": "Summary text showing item count and theme",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "color": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "noItemsSummary": "No items yet. Add some to get started!",
+  "@noItemsSummary": {
+    "description": "Summary when no items exist"
+  },
+  
+  "clearAllItems": "Clear All Items",
+  "@clearAllItems": {
+    "description": "Button text and dialog title for clearing all items"
+  },
+  
+  "clearAllConfirmation": "Are you sure you want to remove all items?",
+  "@clearAllConfirmation": {
+    "description": "Confirmation message for clearing all items"
+  },
+  
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Generic cancel button text"
+  },
+  
+  "clearAll": "Clear All",
+  "@clearAll": {
+    "description": "Confirmation button for clearing items"
+  },
+  
+  "retry": "Retry",
+  "@retry": {
+    "description": "Button text for retrying an operation"
+  },
+  
+  "clearUser": "Clear User",
+  "@clearUser": {
+    "description": "Tooltip for clear user button"
+  },
+  
+  "navigation": "Navigation",
+  "@navigation": {
+    "description": "Header for navigation section"
+  },
+  
+  "pageNotFound": "Page Not Found",
+  "@pageNotFound": {
+    "description": "Title for 404 error page"
+  },
+  
+  "pageNotFoundMessage": "Oops! Page not found.",
+  "@pageNotFoundMessage": {
+    "description": "Error message for 404 page"
+  },
+  
+  "goHome": "Go Home",
+  "@goHome": {
+    "description": "Button text to return to home page"
+  },
+  
+  "colorRed": "Red",
+  "@colorRed": {
+    "description": "Name of red color"
+  },
+  
+  "colorBlue": "Blue", 
+  "@colorBlue": {
+    "description": "Name of blue color"
+  },
+  
+  "colorGreen": "Green",
+  "@colorGreen": {
+    "description": "Name of green color"
+  },
+  
+  "colorYellow": "Yellow",
+  "@colorYellow": {
+    "description": "Name of yellow color"
+  },
+  
+  "colorPurple": "Purple",
+  "@colorPurple": {
+    "description": "Name of purple color"
+  },
+  
+  "colorOrange": "Orange",
+  "@colorOrange": {
+    "description": "Name of orange color"
+  },
+  
+  "settingsTitle": "Settings",
+  "@settingsTitle": {
+    "description": "Title for settings screen"
+  },
+  
+  "themeSettings": "Theme & Appearance",
+  "@themeSettings": {
+    "description": "Header for theme settings section"
+  },
+  
+  "themeMode": "Theme Mode",
+  "@themeMode": {
+    "description": "Label for theme mode selection"
+  },
+  
+  "lightTheme": "Light",
+  "@lightTheme": {
+    "description": "Light theme option"
+  },
+  
+  "darkTheme": "Dark", 
+  "@darkTheme": {
+    "description": "Dark theme option"
+  },
+  
+  "systemTheme": "System",
+  "@systemTheme": {
+    "description": "System theme option"
+  },
+  
+  "textSize": "Text Size",
+  "@textSize": {
+    "description": "Label for text size setting"
+  },
+  
+  "textSizeSmall": "A",
+  "@textSizeSmall": {
+    "description": "Small text size indicator"
+  },
+  
+  "textSizeLarge": "A",
+  "@textSizeLarge": {
+    "description": "Large text size indicator"
+  },
+  
+  "accessibilitySettings": "Accessibility",
+  "@accessibilitySettings": {
+    "description": "Header for accessibility settings section"
+  },
+  
+  "reduceAnimations": "Reduce Animations",
+  "@reduceAnimations": {
+    "description": "Label for reduce animations setting"
+  },
+  
+  "reduceAnimationsDescription": "Minimize motion for better accessibility",
+  "@reduceAnimationsDescription": {
+    "description": "Description for reduce animations setting"
+  },
+  
+  "highContrast": "High Contrast",
+  "@highContrast": {
+    "description": "Label for high contrast setting"
+  },
+  
+  "highContrastDescription": "Increase contrast for better visibility",
+  "@highContrastDescription": {
+    "description": "Description for high contrast setting"
+  },
+  
+  "largerTouchTargets": "Larger Touch Targets",
+  "@largerTouchTargets": {
+    "description": "Label for larger touch targets setting"
+  },
+  
+  "largerTouchTargetsDescription": "Make buttons and controls easier to tap",
+  "@largerTouchTargetsDescription": {
+    "description": "Description for larger touch targets setting"
+  },
+  
+  "voiceGuidance": "Voice Guidance",
+  "@voiceGuidance": {
+    "description": "Label for voice guidance setting"
+  },
+  
+  "voiceGuidanceDescription": "Enable text-to-speech for interface elements",
+  "@voiceGuidanceDescription": {
+    "description": "Description for voice guidance setting"
+  },
+  
+  "hapticFeedback": "Haptic Feedback",
+  "@hapticFeedback": {
+    "description": "Label for haptic feedback setting"
+  },
+  
+  "hapticFeedbackDescription": "Feel vibrations when interacting with the app",
+  "@hapticFeedbackDescription": {
+    "description": "Description for haptic feedback setting"
+  },
+  
+  "languageSettings": "Language & Region",
+  "@languageSettings": {
+    "description": "Header for language settings section"
+  },
+  
+  "useDeviceLanguage": "Use Device Language",
+  "@useDeviceLanguage": {
+    "description": "Label for device language setting"
+  },
+  
+  "useDeviceLanguageDescription": "Follow your device's language setting",
+  "@useDeviceLanguageDescription": {
+    "description": "Description for device language setting"
+  },
+  
+  "selectLanguage": "Select Language",
+  "@selectLanguage": {
+    "description": "Label for manual language selection"
+  },
+  
+  "language": "Language",
+  "@language": {
+    "description": "Generic language label"
+  },
+  
+  "advancedSettings": "Advanced",
+  "@advancedSettings": {
+    "description": "Header for advanced settings section"
+  },
+  
+  "exportSettings": "Export Settings",
+  "@exportSettings": {
+    "description": "Label for export settings option"
+  },
+  
+  "exportSettingsDescription": "Save your current configuration to a file",
+  "@exportSettingsDescription": {
+    "description": "Description for export settings option"
+  },
+  
+  "resetToDefaults": "Reset to Defaults",
+  "@resetToDefaults": {
+    "description": "Label for reset settings option"
+  },
+  
+  "resetToDefaultsDescription": "Restore all settings to their original values",
+  "@resetToDefaultsDescription": {
+    "description": "Description for reset settings option"
+  },
+  
+  "resetConfirmation": "This will reset all your preferences to default values. This action cannot be undone.",
+  "@resetConfirmation": {
+    "description": "Confirmation message for resetting settings"
+  },
+  
+  "reset": "Reset",
+  "@reset": {
+    "description": "Confirmation button for reset action"
+  },
+  
+  "aboutApp": "About",
+  "@aboutApp": {
+    "description": "Header for app information section"
+  },
+  
+  "appName": "App Name",
+  "@appName": {
+    "description": "Label for app name"
+  },
+  
+  "version": "Version",
+  "@version": {
+    "description": "Label for app version"
+  },
+  
+  "website": "Website",
+  "@website": {
+    "description": "Label for website"
+  },
+  
+  "support": "Support",
+  "@support": {
+    "description": "Label for support contact"
+  }
+}

@@ -1,0 +1,69 @@
+# pubspec.yaml
+
+name: mvvm_flutter_demo
+description: A MVVM Flutter demo with i18n, a11y, theming, and white-label support
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.8.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # State management for MVVM - Provider is very stable
+  provider: ^6.1.2
+  
+  # Navigation - Go Router has frequent updates but good backward compatibility
+  go_router: ^16.2.1
+  
+  # Internationalization and localization - These are essential and stable
+  flutter_localizations:
+    sdk: flutter
+  # intl is provided by flutter_localizations, so we don't need to specify it separately
+  
+  # Accessibility helpers - Enhanced for 2025
+  flutter_tts: ^4.2.0
+  accessibility_tools: ^2.2.0  # New addition for comprehensive a11y testing
+  
+  # Persistence and file system access - These are mature packages
+  shared_preferences: ^2.3.3
+  path_provider: ^2.1.5
+  
+  # Configuration management for white-labeling - Stable serialization
+  json_annotation: ^4.9.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  
+  # Linting rules - Keep updated for best practices
+  flutter_lints: ^6.0.0
+  
+  # Code generation for internationalization and JSON serialization
+  build_runner: ^2.4.13
+  json_serializable: ^6.8.0
+
+# Configuration for internationalization
+flutter:
+  uses-material-design: true
+  
+  # Enable generation of localization files
+  generate: true
+  
+  # Asset configuration for white-labeling
+  assets:
+    - assets/images/
+    - assets/brand/
+    - assets/config/
+    
+  # Font configuration for theming
+  # fonts:
+  #   - family: CustomFont
+  #     fonts:
+  #       # - asset: assets/fonts/CustomFont-Regular.ttf
+  #       # - asset: assets/fonts/CustomFont-Bold.ttf
+  #         weight: 700
