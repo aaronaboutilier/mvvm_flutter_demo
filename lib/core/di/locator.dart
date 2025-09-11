@@ -13,6 +13,9 @@ import '../../features/settings/application/usecases/settings_usecases.dart';
 import '../../features/settings/infrastructure/repositories/config_settings_repository.dart';
 import '../../features/settings/domain/repositories/settings_repository.dart';
 import '../configuration/configuration.dart';
+import '../theming/theming.dart';
+import '../accessibility/accessibility.dart';
+import '../analytics/analytics.dart';
 import '../../features/home/presentation/viewmodels/home_viewmodel.dart';
 import '../../features/details/presentation/viewmodels/details_viewmodel.dart';
 import '../../features/settings/presentation/viewmodels/settings_viewmodel.dart';
@@ -22,6 +25,9 @@ final GetIt locator = GetIt.instance;
 void setupLocator() {
   // Core services
   locator.registerLazySingleton<ConfigService>(() => ConfigService.instance);
+  locator.registerLazySingleton<ThemeService>(() => DefaultThemeService());
+  locator.registerLazySingleton<AccessibilityService>(() => NoopAccessibilityService());
+  locator.registerLazySingleton<AnalyticsService>(() => DebugAnalyticsService());
 
   // Details feature
   locator.registerLazySingleton(() => InMemoryDetailsRepository());

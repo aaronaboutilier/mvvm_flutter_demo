@@ -4,3 +4,4 @@
 // Example future exports:
 // export 'package:mvvm_flutter_demo/core/theming/tokens.dart';
 // export 'package:mvvm_flutter_demo/core/theming/theme_extensions.dart';
+export 'package:mvvm_flutter_demo/core/theming/theme_service.dart';
