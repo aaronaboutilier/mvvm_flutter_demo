@@ -1,5 +1,4 @@
 import '../../../../core/core.dart';
-import '../../../../core/configuration/configuration.dart';
 import '../../domain/repositories/settings_repository.dart';
 import '../../domain/value_objects/language_code.dart';
 import '../../domain/value_objects/text_scale.dart';
