@@ -7,7 +7,7 @@ import 'package:mvvm_flutter_demo/features/settings/domain/repositories/settings
 import 'package:mvvm_flutter_demo/features/settings/domain/value_objects/language_code.dart' as vo;
 import 'package:mvvm_flutter_demo/features/settings/domain/value_objects/text_scale.dart' as vo;
 import 'package:mvvm_flutter_demo/features/settings/domain/value_objects/theme_preference.dart' as vo;
-import 'package:mvvm_flutter_demo/models/app_config.dart';
+import 'package:mvvm_flutter_demo/core/configuration/configuration.dart';
 import 'package:mvvm_flutter_demo/features/settings/presentation/viewmodels/settings_viewmodel.dart';
 
 class _FakeSettingsRepo implements SettingsRepository {

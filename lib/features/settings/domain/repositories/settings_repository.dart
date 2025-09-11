@@ -1,4 +1,4 @@
-import '../../../../models/app_config.dart';
+import '../../../../core/configuration/configuration.dart';
 import '../../../../core/result/result.dart';
 import '../value_objects/text_scale.dart';
 import '../value_objects/language_code.dart';

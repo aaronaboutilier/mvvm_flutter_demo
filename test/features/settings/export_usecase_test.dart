@@ -4,7 +4,7 @@ import 'package:mvvm_flutter_demo/core/result/result.dart';
 import 'package:mvvm_flutter_demo/features/settings/application/usecases/settings_usecases.dart';
 import 'package:mvvm_flutter_demo/core/core.dart' as core;
 import 'package:mvvm_flutter_demo/features/settings/domain/repositories/settings_repository.dart';
-import 'package:mvvm_flutter_demo/models/app_config.dart';
+import 'package:mvvm_flutter_demo/core/configuration/configuration.dart';
 
 class _Repo implements SettingsRepository {
   bool failExport = false;

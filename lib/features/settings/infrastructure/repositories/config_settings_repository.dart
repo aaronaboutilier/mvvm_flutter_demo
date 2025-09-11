@@ -1,6 +1,5 @@
 import '../../../../core/core.dart';
-import '../../../../models/app_config.dart';
-import '../../../../services/config_service.dart';
+import '../../../../core/configuration/configuration.dart';
 import '../../domain/repositories/settings_repository.dart';
 import '../../domain/value_objects/language_code.dart';
 import '../../domain/value_objects/text_scale.dart';

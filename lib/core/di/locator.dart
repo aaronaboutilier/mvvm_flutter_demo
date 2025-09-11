@@ -12,7 +12,7 @@ import '../../features/home/infrastructure/repositories/in_memory_user_repositor
 import '../../features/settings/application/usecases/settings_usecases.dart';
 import '../../features/settings/infrastructure/repositories/config_settings_repository.dart';
 import '../../features/settings/domain/repositories/settings_repository.dart';
-import '../../services/config_service.dart';
+import '../configuration/configuration.dart';
 import '../../features/home/presentation/viewmodels/home_viewmodel.dart';
 import '../../features/details/presentation/viewmodels/details_viewmodel.dart';
 import '../../features/settings/presentation/viewmodels/settings_viewmodel.dart';
