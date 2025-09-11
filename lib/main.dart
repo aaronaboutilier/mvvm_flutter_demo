@@ -9,9 +9,9 @@ import 'package:go_router/go_router.dart';
 import 'generated/l10n/app_localizations.dart';
 import 'services/config_service.dart';
 import 'models/app_config.dart';
-import 'views/home_view.dart';
-import 'views/details_view.dart';
-import 'views/settings_view.dart';
+import 'features/home/presentation/views/home_view.dart';
+import 'features/details/presentation/views/details_view.dart';
+import 'features/settings/presentation/views/settings_view.dart';
 import 'core/di/locator.dart';
 
 /// The main entry point of our enhanced MVVM Flutter application

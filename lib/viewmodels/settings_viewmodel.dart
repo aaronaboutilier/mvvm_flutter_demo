@@ -9,6 +9,7 @@ import '../features/settings/domain/value_objects/text_scale.dart' as vo;
 import '../features/settings/domain/value_objects/language_code.dart' as vo;
 import '../features/settings/domain/value_objects/theme_preference.dart' as vo;
 import '../features/settings/domain/repositories/settings_repository.dart';
+import '../core/presentation/base_view_model.dart';
 
 /// SettingsViewModel manages the business logic for user preference changes
 /// This demonstrates how configuration management integrates with MVVM patterns.
@@ -16,7 +17,7 @@ import '../features/settings/domain/repositories/settings_repository.dart';
 /// Notice how this ViewModel focuses purely on business logic - it doesn't
 /// know anything about UI components, but it provides a clean interface
 /// for the View to interact with configuration settings.
-class SettingsViewModel extends ChangeNotifier {
+class SettingsViewModel extends BaseViewModel {
   final SettingsRepository _repo;
   late final UpdateThemeMode _updateThemeMode;
   late final UpdateTextScale _updateTextScale;
@@ -56,15 +57,9 @@ class SettingsViewModel extends ChangeNotifier {
         _exportConfiguration = exportConfiguration,
         _resetToDefaults = resetToDefaults;
   
-  // State for tracking ongoing operations
-  bool _isUpdating = false;
-  String? _errorMessage;
-  String? _successMessage;
-
-  // Public getters for View to access state
-  bool get isUpdating => _isUpdating;
-  String? get errorMessage => _errorMessage;
-  String? get successMessage => _successMessage;
+  // Backwards compatibility getters for previous API
+  bool get isUpdating => isLoading;
+  // errorMessage and successMessage come from BaseViewModel
   
   // Quick access to current configuration
   AppConfig get currentConfig => _repo.currentConfig;
@@ -73,7 +68,7 @@ class SettingsViewModel extends ChangeNotifier {
   /// This method demonstrates how ViewModels handle user preference changes
   /// while providing appropriate feedback and error handling
   Future<void> updateThemeMode(ThemeMode newThemeMode) async {
-    await _performConfigUpdate(
+  await performOperation(
       'Updating theme mode',
       () async {
         final pref = switch (newThemeMode) {
@@ -84,9 +79,7 @@ class SettingsViewModel extends ChangeNotifier {
         await _updateThemeMode(pref);
         
         // Provide haptic feedback if enabled
-        if (currentConfig.accessibility.enableHapticFeedback) {
-          HapticFeedback.selectionClick();
-        }
+  _maybeHapticSelection();
   },
     );
   }
@@ -94,15 +87,12 @@ class SettingsViewModel extends ChangeNotifier {
   /// Updates text scale factor for accessibility
   /// This shows how accessibility preferences are managed through the ViewModel
   Future<void> updateTextScaleFactor(double newScaleFactor) async {
-    await _performConfigUpdate(
+  await performOperation(
       'Updating text size',
       () async {
   await _updateTextScale(vo.TextScale(newScaleFactor));
         
-        // Provide feedback for accessibility
-        if (currentConfig.accessibility.enableHapticFeedback) {
-          HapticFeedback.lightImpact();
-        }
+  _maybeHapticLight();
       },
     );
   }
@@ -110,73 +100,63 @@ class SettingsViewModel extends ChangeNotifier {
   /// Updates reduce animations accessibility setting
   /// This demonstrates how accessibility preferences flow through the MVVM system
   Future<void> updateReduceAnimations(bool reduceAnimations) async {
-    await _performConfigUpdate(
+  await performOperation(
       'Updating animation preferences',
       () async {
   await _updateReduceAnimations(reduceAnimations);
         
         // Only provide haptic feedback if the user hasn't disabled animations
         // This shows how settings can influence each other logically
-        if (currentConfig.accessibility.enableHapticFeedback && !reduceAnimations) {
-          HapticFeedback.selectionClick();
-        }
+  if (!reduceAnimations) _maybeHapticSelection();
       },
     );
   }
 
   /// Updates high contrast accessibility setting
   Future<void> updateHighContrast(bool highContrast) async {
-    await _performConfigUpdate(
+  await performOperation(
       'Updating contrast settings',
       () async {
   await _updateHighContrast(highContrast);
         
-        if (currentConfig.accessibility.enableHapticFeedback) {
-          HapticFeedback.selectionClick();
-        }
+  _maybeHapticSelection();
       },
     );
   }
 
   /// Updates larger touch targets accessibility setting
   Future<void> updateLargerTouchTargets(bool largerTouchTargets) async {
-    await _performConfigUpdate(
+  await performOperation(
       'Updating touch target size',
       () async {
   await _updateLargerTouchTargets(largerTouchTargets);
         
-        if (currentConfig.accessibility.enableHapticFeedback) {
-          HapticFeedback.selectionClick();
-        }
+  _maybeHapticSelection();
       },
     );
   }
 
   /// Updates voice guidance accessibility setting
   Future<void> updateVoiceGuidance(bool enableVoiceGuidance) async {
-    await _performConfigUpdate(
+  await performOperation(
       'Updating voice guidance',
       () async {
   await _updateVoiceGuidance(enableVoiceGuidance);
         
-        if (currentConfig.accessibility.enableHapticFeedback) {
-          HapticFeedback.selectionClick();
-        }
+  _maybeHapticSelection();
       },
     );
   }
 
   /// Updates haptic feedback accessibility setting
   Future<void> updateHapticFeedback(bool enableHapticFeedback) async {
-    await _performConfigUpdate(
+  await performOperation(
       'Updating haptic feedback',
       () async {
   await _updateHapticFeedback(enableHapticFeedback);
         
         // Provide one last haptic feedback before potentially disabling it
-        if (enableHapticFeedback) {
-          HapticFeedback.selectionClick();
-        }
+  if (enableHapticFeedback) _maybeHapticSelection();
       },
     );
   }
@@ -184,14 +164,12 @@ class SettingsViewModel extends ChangeNotifier {
   /// Updates device locale usage preference
   /// This shows how localization preferences are managed
   Future<void> updateUseDeviceLocale(bool useDeviceLocale) async {
-    await _performConfigUpdate(
+  await performOperation(
       'Updating language preferences',
       () async {
   await _updateUseDeviceLocale(useDeviceLocale);
         
-        if (currentConfig.accessibility.enableHapticFeedback) {
-          HapticFeedback.selectionClick();
-        }
+  _maybeHapticSelection();
       },
     );
   }
@@ -199,7 +177,7 @@ class SettingsViewModel extends ChangeNotifier {
   /// Updates the specific language code
   /// This demonstrates how manual language selection works
   Future<void> updateLanguageCode(String languageCode) async {
-    await _performConfigUpdate(
+  await performOperation(
       'Updating language',
       () async {
         final res = await _updateLanguageCode(vo.LanguageCode(languageCode));
@@ -207,10 +185,7 @@ class SettingsViewModel extends ChangeNotifier {
           failure: (f) => throw Exception(f.message),
           success: (_) {},
         );
-        
-        if (currentConfig.accessibility.enableHapticFeedback) {
-          HapticFeedback.selectionClick();
-        }
+  _maybeHapticSelection();
       },
     );
   }
@@ -219,17 +194,17 @@ class SettingsViewModel extends ChangeNotifier {
   /// This demonstrates how feature flags can control advanced functionality
   Future<void> exportConfiguration() async {
     if (!currentConfig.features.enableDataExport) {
-      _setError('Export functionality is not available in this version');
+      setError('Export functionality is not available in this version');
       return;
     }
 
-    await _performConfigUpdate(
+  await performOperation(
       'Exporting configuration',
       () async {
         final res = await _exportConfiguration(const core.NoParams());
         res.fold(
           failure: (f) => throw Exception(f.message),
-          success: (path) => _setSuccess('Configuration exported to: $path'),
+      success: (path) => setSuccess('Configuration exported to: $path'),
         );
       },
     );
@@ -238,92 +213,34 @@ class SettingsViewModel extends ChangeNotifier {
   /// Resets all settings to defaults
   /// This shows how to handle potentially destructive operations
   Future<void> resetToDefaults() async {
-    await _performConfigUpdate(
+  await performOperation(
       'Resetting to defaults',
       () async {
   await _resetToDefaults(const core.NoParams());
-        _setSuccess('Settings reset to defaults');
+    setSuccess('Settings reset to defaults');
         
-        // Provide strong haptic feedback for important actions
-        HapticFeedback.heavyImpact();
+        _maybeHapticHeavy();
       },
     );
   }
 
-  /// Generic method for performing configuration updates with consistent error handling
-  /// This pattern ensures all configuration changes follow the same flow:
-  /// 1. Set loading state
-  /// 2. Clear previous messages
-  /// 3. Perform the operation
-  /// 4. Handle success/error appropriately
-  /// 5. Clear loading state
-  /// 6. Notify listeners
-  Future<void> _performConfigUpdate(String operation, Future<void> Function() updateFunction) async {
-    _setLoading(true);
-    _clearMessages();
-
-    try {
-      debugPrint('Starting: $operation');
-      
-      await updateFunction();
-      
-      debugPrint('Completed: $operation');
-      
-      // Most updates don't need explicit success messages since the UI will reflect changes
-      // Only set success messages for operations that aren't immediately visible
-      
-    } catch (error) {
-      debugPrint('Error during $operation: $error');
-      _setError('Failed to update settings: ${error.toString()}');
-      
-      // Provide error haptic feedback if available
-      if (currentConfig.accessibility.enableHapticFeedback) {
-        HapticFeedback.heavyImpact();
-      }
-    } finally {
-      _setLoading(false);
+  // Small helpers to reduce repetition when triggering haptics
+  void _maybeHapticSelection() {
+    if (currentConfig.accessibility.enableHapticFeedback) {
+      HapticFeedback.selectionClick();
     }
   }
 
-  /// Sets loading state and notifies listeners
-  void _setLoading(bool loading) {
-    _isUpdating = loading;
-    notifyListeners();
+  void _maybeHapticLight() {
+    if (currentConfig.accessibility.enableHapticFeedback) {
+      HapticFeedback.lightImpact();
+    }
   }
 
-  /// Sets error message and notifies listeners
-  void _setError(String error) {
-    _errorMessage = error;
-    _successMessage = null;
-    notifyListeners();
-    
-    // Clear error message after a delay
-    Future.delayed(const Duration(seconds: 5), () {
-      if (_errorMessage == error) {
-        _clearMessages();
-      }
-    });
-  }
-
-  /// Sets success message and notifies listeners
-  void _setSuccess(String message) {
-    _successMessage = message;
-    _errorMessage = null;
-    notifyListeners();
-    
-    // Clear success message after a delay
-    Future.delayed(const Duration(seconds: 3), () {
-      if (_successMessage == message) {
-        _clearMessages();
-      }
-    });
-  }
-
-  /// Clears all messages
-  void _clearMessages() {
-    _errorMessage = null;
-    _successMessage = null;
-    notifyListeners();
+  void _maybeHapticHeavy() {
+    if (currentConfig.accessibility.enableHapticFeedback) {
+      HapticFeedback.heavyImpact();
+    }
   }
 
   /// Checks if a specific feature is enabled

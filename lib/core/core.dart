@@ -6,3 +6,4 @@ export 'usecase_base/usecase.dart';
 export 'utils/guards.dart';
 export 'utils/error_mapper.dart';
 export 'di/locator.dart';
+export 'presentation/base_view_model.dart';

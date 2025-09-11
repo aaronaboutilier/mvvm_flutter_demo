@@ -5,7 +5,7 @@ import 'package:mvvm_flutter_demo/features/home/application/usecases/clear_user.
 import 'package:mvvm_flutter_demo/features/home/application/usecases/load_user.dart';
 import 'package:mvvm_flutter_demo/features/home/domain/entities/user.dart' as domain;
 import 'package:mvvm_flutter_demo/features/home/domain/repositories/user_repository.dart';
-import 'package:mvvm_flutter_demo/viewmodels/home_viewmodel.dart';
+import 'package:mvvm_flutter_demo/features/home/presentation/viewmodels/home_viewmodel.dart';
 
 class _FakeUserRepository implements UserRepository {
   Result<domain.User> loadResult;

@@ -7,7 +7,7 @@ import 'package:mvvm_flutter_demo/features/details/application/usecases/remove_d
 import 'package:mvvm_flutter_demo/features/details/application/usecases/reorder_detail_items.dart';
 import 'package:mvvm_flutter_demo/features/details/domain/entities/detail_item.dart';
 import 'package:mvvm_flutter_demo/features/details/domain/repositories/details_repository.dart';
-import 'package:mvvm_flutter_demo/viewmodels/details_viewmodel.dart';
+import 'package:mvvm_flutter_demo/features/details/presentation/viewmodels/details_viewmodel.dart';
 
 class _FakeDetailsRepo implements DetailsRepository {
   final List<DetailItem> _items = [];

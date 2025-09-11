@@ -8,7 +8,7 @@ import 'package:mvvm_flutter_demo/features/settings/domain/value_objects/languag
 import 'package:mvvm_flutter_demo/features/settings/domain/value_objects/text_scale.dart' as vo;
 import 'package:mvvm_flutter_demo/features/settings/domain/value_objects/theme_preference.dart' as vo;
 import 'package:mvvm_flutter_demo/models/app_config.dart';
-import 'package:mvvm_flutter_demo/viewmodels/settings_viewmodel.dart';
+import 'package:mvvm_flutter_demo/features/settings/presentation/viewmodels/settings_viewmodel.dart';
 
 class _FakeSettingsRepo implements SettingsRepository {
   AppConfig _config = AppConfig.defaultConfig();
@@ -135,8 +135,9 @@ void main() {
         resetToDefaults: ResetToDefaults(repo),
       );
 
-      // Avoid platform channel issues from haptics in tests
-      SystemChannels.platform.setMockMethodCallHandler((_) async {});
+    // Avoid platform channel issues from haptics in tests (updated API)
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(SystemChannels.platform, (_) async => null);
 
       await vm.updateLanguageCode('xx');
 

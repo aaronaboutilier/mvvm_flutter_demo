@@ -1,10 +1,11 @@
 // lib/viewmodels/home_viewmodel.dart
 
-import 'package:flutter/foundation.dart';
+// BaseViewModel already extends ChangeNotifier
 import '../core/core.dart' as core;
 import '../features/home/application/usecases/clear_user.dart';
 import '../features/home/application/usecases/load_user.dart';
 import '../features/home/domain/entities/user.dart' as domain;
+import 'base_view_model.dart';
 // DI is handled at the View level; dependencies are injected via constructor.
 
 /// HomeViewModel manages the state and business logic for the home screen
@@ -12,18 +13,16 @@ import '../features/home/domain/entities/user.dart' as domain;
 /// 
 /// ChangeNotifier allows this class to notify listeners when data changes
 /// This is crucial for reactive UI updates in MVVM
-class HomeViewModel extends ChangeNotifier {
+class HomeViewModel extends BaseViewModel {
   // Private fields to store state
   domain.User? _currentUser;
-  bool _isLoading = false;
-  String? _errorMessage;
+  // BaseViewModel provides isLoading/errorMessage
   int _buttonClickCount = 0;
 
   // Public getters to expose state to the View
   // The View should never directly modify private fields
   domain.User? get currentUser => _currentUser;
-  bool get isLoading => _isLoading;
-  String? get errorMessage => _errorMessage;
+  // Use BaseViewModel's isLoading and errorMessage getters
   int get buttonClickCount => _buttonClickCount;
 
   // Computed properties that derive from state
@@ -44,30 +43,30 @@ class HomeViewModel extends ChangeNotifier {
 
   Future<void> loadUser() async {
     // Set loading state and notify listeners
-    _setLoading(true);
-    _clearError();
+  setLoading(true);
+  _clearError();
 
     try {
       final res = await _loadUser(const core.NoParams());
       res.fold(
         failure: (f) {
-          _errorMessage = f.message;
+          setError(f.message);
           _currentUser = null;
         },
         success: (user) {
           _currentUser = user;
-          _errorMessage = null;
+          _clearError();
         },
       );
 
       // Success - clear any previous errors
     } catch (error) {
       // Handle errors gracefully
-      _errorMessage = 'Failed to load user: $error';
+  setError('Failed to load user: $error');
       _currentUser = null;
     } finally {
-      // Always clear loading state
-      _setLoading(false);
+  // Always clear loading state
+  setLoading(false);
     }
   }
 
@@ -90,20 +89,21 @@ class HomeViewModel extends ChangeNotifier {
     await _clearUser(const core.NoParams());
     _currentUser = null;
     _buttonClickCount = 0;
-    _clearError();
+  _clearError();
     notifyListeners();
   }
 
   // Private helper methods to manage state changes
   // These ensure consistent state management and notification patterns
 
-  void _setLoading(bool loading) {
-    _isLoading = loading;
-    notifyListeners();
-  }
-
   void _clearError() {
-    _errorMessage = null;
+    // ensure error cleared without extra notify
+    if (super.errorMessage != null) {
+      // use BaseViewModel.clearMessages but avoid success reset here
+      // setError(null) not allowed; directly clear via protected method
+      // We'll call clearMessages to reset both; acceptable in this context
+      clearMessages();
+    }
     // Note: We don't always need to call notifyListeners() here
     // since this is usually called before other state changes
   }
