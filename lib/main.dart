@@ -24,7 +24,7 @@ void main() async {
   // Initialize the configuration service early in the app lifecycle
   // This loads brand configuration, user preferences, and accessibility settings
   setupLocator();
-  await ConfigService.instance.initialize(
+  await locator<ConfigService>().initialize(
     // You can specify a brand-specific config file for white-labeling
     // brandConfigPath: 'assets/config/brand_a_config.json',
   );
@@ -50,7 +50,7 @@ class MVVMDemoApp extends StatelessWidget {
     // This makes configuration available throughout your widget tree
     // and ensures the app rebuilds when configuration changes
     return ChangeNotifierProvider<ConfigService>.value(
-      value: ConfigService.instance,
+      value: locator<ConfigService>(),
       child: Consumer<ConfigService>(
         builder: (context, configService, child) {
           // Show a loading screen while configuration initializes
@@ -280,7 +280,7 @@ class _AccessibilityWrapper extends StatelessWidget {
     if (config.theme.textScaleFactor != 1.0) {
       result = MediaQuery(
         data: MediaQuery.of(context).copyWith(
-          textScaleFactor: config.theme.textScaleFactor,
+          textScaler: TextScaler.linear(config.theme.textScaleFactor),
         ),
         child: result,
       );
@@ -298,8 +298,6 @@ class _AccessibilityWrapper extends StatelessWidget {
     // This provides a powerful overlay for testing accessibility features
     // The tools only appear in debug mode and don't affect production builds
     result = AccessibilityTools(
-      child: result,
-      
       // Configure which accessibility checkers to enable
       // These help validate your accessibility implementation
       checkFontOverflows: true,  // Ensures text doesn't overflow at large font sizes
@@ -309,13 +307,12 @@ class _AccessibilityWrapper extends StatelessWidget {
       // enabledGuidelines: [
       //   // Ensures all interactive elements meet minimum touch target sizes
       //   AccessibilityGuideline.minimumTapTargetSize,
-        
       //   // Validates that tappable elements have semantic labels
       //   AccessibilityGuideline.labeledTapTargets,
-        
       //   // Checks color contrast ratios for text readability
       //   AccessibilityGuideline.textContrast,
       // ],
+      child: result,
     );
     
     return result;

@@ -5,6 +5,7 @@ import 'package:mvvm_flutter_demo/generated/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../viewmodels/home_viewmodel.dart';
+import '../core/di/locator.dart';
 
 /// HomeView represents the UI layer of our MVVM architecture
 /// This View should contain minimal logic - just UI layout and user interaction handling
@@ -17,7 +18,7 @@ class HomeView extends StatelessWidget {
     // We wrap the entire view with ChangeNotifierProvider to provide the ViewModel
     // to this widget tree. This is how we connect the View to the ViewModel in MVVM.
     return ChangeNotifierProvider(
-      create: (context) => HomeViewModel(),
+      create: (context) => locator<HomeViewModel>(),
       child: const _HomeContent(),
     );
   }

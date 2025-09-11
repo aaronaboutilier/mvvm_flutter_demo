@@ -4,52 +4,52 @@ import 'failure.dart';
 class NetworkFailure extends Failure {
   final int? statusCode;
   const NetworkFailure({
-    required String message,
+    required super.message,
     this.statusCode,
     String? code,
-    Object? cause,
-    StackTrace? stackTrace,
-  }) : super(message: message, code: code ?? 'network', cause: cause, stackTrace: stackTrace);
+    super.cause,
+    super.stackTrace,
+  }) : super(code: code ?? 'network');
 }
 
 /// Validation/business rule violation failure.
 class ValidationFailure extends Failure {
   final Map<String, String>? fieldErrors;
   const ValidationFailure({
-    required String message,
+    required super.message,
     this.fieldErrors,
     String? code,
-    Object? cause,
-    StackTrace? stackTrace,
-  }) : super(message: message, code: code ?? 'validation', cause: cause, stackTrace: stackTrace);
+    super.cause,
+    super.stackTrace,
+  }) : super(code: code ?? 'validation');
 }
 
 /// Configuration-related failure (missing keys, invalid formats).
 class ConfigFailure extends Failure {
   const ConfigFailure({
-    required String message,
+    required super.message,
     String? code,
-    Object? cause,
-    StackTrace? stackTrace,
-  }) : super(message: message, code: code ?? 'config', cause: cause, stackTrace: stackTrace);
+    super.cause,
+    super.stackTrace,
+  }) : super(code: code ?? 'config');
 }
 
 /// Missing resource failure.
 class NotFoundFailure extends Failure {
   const NotFoundFailure({
-    required String message,
+    required super.message,
     String? code,
-    Object? cause,
-    StackTrace? stackTrace,
-  }) : super(message: message, code: code ?? 'not_found', cause: cause, stackTrace: stackTrace);
+    super.cause,
+    super.stackTrace,
+  }) : super(code: code ?? 'not_found');
 }
 
 /// Unknown/unclassified failure type to avoid exposing raw exceptions.
 class UnknownFailure extends Failure {
   const UnknownFailure({
-    required String message,
+    required super.message,
     String? code,
-    Object? cause,
-    StackTrace? stackTrace,
-  }) : super(message: message, code: code ?? 'unknown', cause: cause, stackTrace: stackTrace);
+    super.cause,
+    super.stackTrace,
+  }) : super(code: code ?? 'unknown');
 }

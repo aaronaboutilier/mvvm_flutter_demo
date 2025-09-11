@@ -1,6 +1,5 @@
 // lib/viewmodels/settings_viewmodel.dart
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../core/core.dart' as core;
@@ -8,8 +7,8 @@ import '../models/app_config.dart';
 import '../features/settings/application/usecases/settings_usecases.dart';
 import '../features/settings/domain/value_objects/text_scale.dart' as vo;
 import '../features/settings/domain/value_objects/language_code.dart' as vo;
-import '../features/settings/domain/value_objects/theme_mode_vo.dart' as vo;
-import '../features/settings/infrastructure/repositories/config_settings_repository.dart';
+import '../features/settings/domain/value_objects/theme_preference.dart' as vo;
+import '../features/settings/domain/repositories/settings_repository.dart';
 
 /// SettingsViewModel manages the business logic for user preference changes
 /// This demonstrates how configuration management integrates with MVVM patterns.
@@ -18,7 +17,7 @@ import '../features/settings/infrastructure/repositories/config_settings_reposit
 /// know anything about UI components, but it provides a clean interface
 /// for the View to interact with configuration settings.
 class SettingsViewModel extends ChangeNotifier {
-  final ConfigSettingsRepository _repo;
+  final SettingsRepository _repo;
   late final UpdateThemeMode _updateThemeMode;
   late final UpdateTextScale _updateTextScale;
   late final UpdateReduceAnimations _updateReduceAnimations;
@@ -31,19 +30,31 @@ class SettingsViewModel extends ChangeNotifier {
   late final ExportConfiguration _exportConfiguration;
   late final ResetToDefaults _resetToDefaults;
 
-  SettingsViewModel() : _repo = ConfigSettingsRepository() {
-    _updateThemeMode = UpdateThemeMode(_repo);
-    _updateTextScale = UpdateTextScale(_repo);
-    _updateReduceAnimations = UpdateReduceAnimations(_repo);
-    _updateHighContrast = UpdateHighContrast(_repo);
-    _updateLargerTouchTargets = UpdateLargerTouchTargets(_repo);
-    _updateVoiceGuidance = UpdateVoiceGuidance(_repo);
-    _updateHapticFeedback = UpdateHapticFeedback(_repo);
-    _updateUseDeviceLocale = UpdateUseDeviceLocale(_repo);
-    _updateLanguageCode = UpdateLanguageCode(_repo);
-    _exportConfiguration = ExportConfiguration(_repo);
-    _resetToDefaults = ResetToDefaults(_repo);
-  }
+  SettingsViewModel({
+    required SettingsRepository repo,
+    required UpdateThemeMode updateThemeMode,
+    required UpdateTextScale updateTextScale,
+    required UpdateReduceAnimations updateReduceAnimations,
+    required UpdateHighContrast updateHighContrast,
+    required UpdateLargerTouchTargets updateLargerTouchTargets,
+    required UpdateVoiceGuidance updateVoiceGuidance,
+    required UpdateHapticFeedback updateHapticFeedback,
+    required UpdateUseDeviceLocale updateUseDeviceLocale,
+    required UpdateLanguageCode updateLanguageCode,
+    required ExportConfiguration exportConfiguration,
+    required ResetToDefaults resetToDefaults,
+  })  : _repo = repo,
+        _updateThemeMode = updateThemeMode,
+        _updateTextScale = updateTextScale,
+        _updateReduceAnimations = updateReduceAnimations,
+        _updateHighContrast = updateHighContrast,
+        _updateLargerTouchTargets = updateLargerTouchTargets,
+        _updateVoiceGuidance = updateVoiceGuidance,
+        _updateHapticFeedback = updateHapticFeedback,
+        _updateUseDeviceLocale = updateUseDeviceLocale,
+        _updateLanguageCode = updateLanguageCode,
+        _exportConfiguration = exportConfiguration,
+        _resetToDefaults = resetToDefaults;
   
   // State for tracking ongoing operations
   bool _isUpdating = false;
@@ -65,13 +76,18 @@ class SettingsViewModel extends ChangeNotifier {
     await _performConfigUpdate(
       'Updating theme mode',
       () async {
-  await _updateThemeMode(vo.ThemeModeVO(newThemeMode));
+        final pref = switch (newThemeMode) {
+          ThemeMode.light => vo.ThemePreference.light,
+          ThemeMode.dark => vo.ThemePreference.dark,
+          ThemeMode.system => vo.ThemePreference.system,
+        };
+        await _updateThemeMode(pref);
         
         // Provide haptic feedback if enabled
         if (currentConfig.accessibility.enableHapticFeedback) {
           HapticFeedback.selectionClick();
         }
-      },
+  },
     );
   }
 
@@ -186,7 +202,11 @@ class SettingsViewModel extends ChangeNotifier {
     await _performConfigUpdate(
       'Updating language',
       () async {
-  await _updateLanguageCode(vo.LanguageCode(languageCode));
+        final res = await _updateLanguageCode(vo.LanguageCode(languageCode));
+        res.fold(
+          failure: (f) => throw Exception(f.message),
+          success: (_) {},
+        );
         
         if (currentConfig.accessibility.enableHapticFeedback) {
           HapticFeedback.selectionClick();

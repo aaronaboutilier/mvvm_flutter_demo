@@ -4,7 +4,8 @@ import '../../../../services/config_service.dart';
 import '../../domain/repositories/settings_repository.dart';
 import '../../domain/value_objects/language_code.dart';
 import '../../domain/value_objects/text_scale.dart';
-import '../../domain/value_objects/theme_mode_vo.dart';
+import '../../domain/value_objects/theme_preference.dart';
+import 'package:flutter/material.dart' show ThemeMode;
 
 class ConfigSettingsRepository implements SettingsRepository {
   final ConfigService _service;
@@ -17,9 +18,14 @@ class ConfigSettingsRepository implements SettingsRepository {
   bool isFeatureEnabled(String featureName) => _service.isFeatureEnabled(featureName);
 
   @override
-  Future<Result<void>> updateThemeMode(ThemeModeVO newThemeMode) async {
+  Future<Result<void>> updateThemeMode(ThemePreference newThemeMode) async {
     try {
-      final updated = currentConfig.theme.copyWith(themeMode: newThemeMode.mode);
+      final themeMode = switch (newThemeMode) {
+        ThemePreference.light => ThemeMode.light,
+        ThemePreference.dark => ThemeMode.dark,
+        ThemePreference.system => ThemeMode.system,
+      };
+      final updated = currentConfig.theme.copyWith(themeMode: themeMode);
       await _service.updateThemeConfig(updated);
       return const Success(null);
     } catch (e, s) {

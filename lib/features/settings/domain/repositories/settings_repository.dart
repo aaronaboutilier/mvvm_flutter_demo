@@ -2,12 +2,12 @@ import '../../../../models/app_config.dart';
 import '../../../../core/result/result.dart';
 import '../value_objects/text_scale.dart';
 import '../value_objects/language_code.dart';
-import '../value_objects/theme_mode_vo.dart';
+import '../value_objects/theme_preference.dart';
 
 abstract class SettingsRepository {
   AppConfig get currentConfig;
 
-  Future<Result<void>> updateThemeMode(ThemeModeVO newThemeMode);
+  Future<Result<void>> updateThemeMode(ThemePreference newThemeMode);
   Future<Result<void>> updateTextScaleFactor(TextScale newScaleFactor);
 
   Future<Result<void>> updateReduceAnimations(bool reduceAnimations);

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../viewmodels/details_viewmodel.dart';
+import '../core/di/locator.dart';
 
 /// DetailsView demonstrates a more complex MVVM implementation
 /// This view shows how to handle forms, lists, and user interactions
@@ -15,7 +16,7 @@ class DetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => DetailsViewModel(),
+      create: (context) => locator<DetailsViewModel>(),
       child: const _DetailsContent(),
     );
   }
@@ -121,7 +122,7 @@ class _DetailsContentState extends State<_DetailsContent> {
                 return FilterChip(
                   label: Text(color),
                   selected: isSelected,
-                  selectedColor: _getThemeColor(color).withOpacity(0.3),
+                  selectedColor: _getThemeColor(color).withValues(alpha: 0.3),
                   onSelected: (selected) {
                     if (selected) {
                       // Notice how we simply call the ViewModel method
@@ -145,7 +146,7 @@ class _DetailsContentState extends State<_DetailsContent> {
   /// Builds the summary section showing current state
   Widget _buildSummarySection(DetailsViewModel viewModel) {
     return Card(
-      color: _getThemeColor(viewModel.selectedColor).withOpacity(0.1),
+  color: _getThemeColor(viewModel.selectedColor).withValues(alpha: 0.1),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

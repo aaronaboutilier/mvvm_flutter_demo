@@ -7,7 +7,7 @@ import '../features/details/application/usecases/clear_detail_items.dart';
 import '../features/details/application/usecases/get_detail_items.dart';
 import '../features/details/application/usecases/remove_detail_item.dart';
 import '../features/details/application/usecases/reorder_detail_items.dart';
-import '../core/di/locator.dart';
+// DI is handled at the View level; dependencies are injected via constructor.
 import '../features/details/domain/entities/detail_item.dart';
 
 /// DetailsViewModel manages state and logic for the details screen
@@ -21,12 +21,17 @@ class DetailsViewModel extends ChangeNotifier {
   final ClearDetailItems _clearItemsUc;
   final ReorderDetailItems _reorderItemsUc;
 
-  DetailsViewModel()
-      : _getItems = locator<GetDetailItems>(),
-        _addItemUc = locator<AddDetailItem>(),
-        _removeItemUc = locator<RemoveDetailItem>(),
-        _clearItemsUc = locator<ClearDetailItems>(),
-        _reorderItemsUc = locator<ReorderDetailItems>();
+  DetailsViewModel({
+    required GetDetailItems getItems,
+    required AddDetailItem addItem,
+    required RemoveDetailItem removeItem,
+    required ClearDetailItems clearItems,
+    required ReorderDetailItems reorderItems,
+  })  : _getItems = getItems,
+        _addItemUc = addItem,
+        _removeItemUc = removeItem,
+        _clearItemsUc = clearItems,
+        _reorderItemsUc = reorderItems;
 
   // UI State
   String _selectedColor = 'Blue';

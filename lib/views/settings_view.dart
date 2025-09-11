@@ -7,6 +7,7 @@ import '../generated/l10n/app_localizations.dart';
 import '../services/config_service.dart';
 import '../models/app_config.dart';
 import '../viewmodels/settings_viewmodel.dart';
+import '../core/di/locator.dart';
 
 /// SettingsView demonstrates how configuration management integrates
 /// with your MVVM architecture. This view shows how users can customize
@@ -20,7 +21,7 @@ class SettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => SettingsViewModel(),
+      create: (context) => locator<SettingsViewModel>(),
       child: const _SettingsContent(),
     );
   }
@@ -317,7 +318,7 @@ class _SettingsContentState extends State<_SettingsContent> {
               ),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
-                value: config.localization.languageCode,
+                initialValue: config.localization.languageCode,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
                   labelText: localizations.language,

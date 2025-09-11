@@ -11,7 +11,11 @@ import '../../features/home/application/usecases/load_user.dart';
 import '../../features/home/infrastructure/repositories/in_memory_user_repository.dart';
 import '../../features/settings/application/usecases/settings_usecases.dart';
 import '../../features/settings/infrastructure/repositories/config_settings_repository.dart';
+import '../../features/settings/domain/repositories/settings_repository.dart';
 import '../../services/config_service.dart';
+import '../../viewmodels/home_viewmodel.dart';
+import '../../viewmodels/details_viewmodel.dart';
+import '../../viewmodels/settings_viewmodel.dart';
 
 final GetIt locator = GetIt.instance;
 
@@ -33,7 +37,7 @@ void setupLocator() {
   locator.registerFactory(() => ClearUser(locator()));
 
   // Settings feature
-  locator.registerLazySingleton(() => ConfigSettingsRepository(locator()));
+  locator.registerLazySingleton<SettingsRepository>(() => ConfigSettingsRepository(locator()));
   locator.registerFactory(() => UpdateThemeMode(locator()));
   locator.registerFactory(() => UpdateTextScale(locator()));
   locator.registerFactory(() => UpdateReduceAnimations(locator()));
@@ -45,4 +49,31 @@ void setupLocator() {
   locator.registerFactory(() => UpdateLanguageCode(locator()));
   locator.registerFactory(() => ExportConfiguration(locator()));
   locator.registerFactory(() => ResetToDefaults(locator()));
+
+  // Presentation: ViewModels
+  locator.registerFactory(() => HomeViewModel(
+        loadUser: locator(),
+        clearUser: locator(),
+      ));
+  locator.registerFactory(() => DetailsViewModel(
+        getItems: locator(),
+        addItem: locator(),
+        removeItem: locator(),
+        clearItems: locator(),
+        reorderItems: locator(),
+      ));
+  locator.registerFactory(() => SettingsViewModel(
+        repo: locator(),
+        updateThemeMode: locator(),
+        updateTextScale: locator(),
+        updateReduceAnimations: locator(),
+        updateHighContrast: locator(),
+        updateLargerTouchTargets: locator(),
+        updateVoiceGuidance: locator(),
+        updateHapticFeedback: locator(),
+        updateUseDeviceLocale: locator(),
+        updateLanguageCode: locator(),
+        exportConfiguration: locator(),
+        resetToDefaults: locator(),
+      ));
 }

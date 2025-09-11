@@ -1,14 +1,14 @@
 import '../../../../core/core.dart';
-import '../../domain/value_objects/theme_mode_vo.dart';
+import '../../domain/value_objects/theme_preference.dart';
 import '../../domain/value_objects/text_scale.dart';
 import '../../domain/value_objects/language_code.dart';
 import '../../domain/repositories/settings_repository.dart';
 
-class UpdateThemeMode implements UseCase<void, ThemeModeVO> {
+class UpdateThemeMode implements UseCase<void, ThemePreference> {
   final SettingsRepository repo;
   UpdateThemeMode(this.repo);
   @override
-  Future<Result<void>> call(ThemeModeVO params) => repo.updateThemeMode(params);
+  Future<Result<void>> call(ThemePreference params) => repo.updateThemeMode(params);
 }
 
 class UpdateTextScale implements UseCase<void, TextScale> {
