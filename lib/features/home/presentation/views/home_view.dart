@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../generated/l10n/app_localizations.dart';
+import 'package:mvvm_flutter_demo/core/localization/localization.dart';
 import '../../../../core/di/locator.dart';
 import '../viewmodels/home_viewmodel.dart';
 

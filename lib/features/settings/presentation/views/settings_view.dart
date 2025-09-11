@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../generated/l10n/app_localizations.dart';
-import '../../../../services/config_service.dart';
-import '../../../../models/app_config.dart';
+import 'package:mvvm_flutter_demo/core/localization/localization.dart';
+import 'package:mvvm_flutter_demo/core/configuration/configuration.dart';
 import '../../../../core/di/locator.dart';
 import '../viewmodels/settings_viewmodel.dart';
 
@@ -12,7 +11,7 @@ class SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
+  return ChangeNotifierProvider(
       create: (context) => locator<SettingsViewModel>(),
       child: const _SettingsContent(),
     );
@@ -30,7 +29,7 @@ class _SettingsContentState extends State<_SettingsContent> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
-    return Consumer2<SettingsViewModel, ConfigService>(
+  return Consumer2<SettingsViewModel, ConfigService>(
       builder: (context, settingsViewModel, configService, child) {
         final config = configService.currentConfig;
         return Scaffold(
