@@ -7,36 +7,36 @@ part of 'app_config.dart';
 // **************************************************************************
 
 AppConfig _$AppConfigFromJson(Map<String, dynamic> json) => AppConfig(
-      brand: BrandConfig.fromJson(json['brand'] as Map<String, dynamic>),
-      theme: ThemeConfig.fromJson(json['theme'] as Map<String, dynamic>),
-      accessibility: AccessibilityConfig.fromJson(
-        json['accessibility'] as Map<String, dynamic>,
-      ),
-      features: FeatureFlags.fromJson(json['features'] as Map<String, dynamic>),
-      localization: LocalizationConfig.fromJson(
-        json['localization'] as Map<String, dynamic>,
-      ),
-    );
+  brand: BrandConfig.fromJson(json['brand'] as Map<String, dynamic>),
+  theme: ThemeConfig.fromJson(json['theme'] as Map<String, dynamic>),
+  accessibility: AccessibilityConfig.fromJson(
+    json['accessibility'] as Map<String, dynamic>,
+  ),
+  features: FeatureFlags.fromJson(json['features'] as Map<String, dynamic>),
+  localization: LocalizationConfig.fromJson(
+    json['localization'] as Map<String, dynamic>,
+  ),
+);
 
 Map<String, dynamic> _$AppConfigToJson(AppConfig instance) => <String, dynamic>{
-      'brand': instance.brand,
-      'theme': instance.theme,
-      'accessibility': instance.accessibility,
-      'features': instance.features,
-      'localization': instance.localization,
-    };
+  'brand': instance.brand,
+  'theme': instance.theme,
+  'accessibility': instance.accessibility,
+  'features': instance.features,
+  'localization': instance.localization,
+};
 
 BrandConfig _$BrandConfigFromJson(Map<String, dynamic> json) => BrandConfig(
-      appName: json['appName'] as String,
-      logoPath: json['logoPath'] as String,
-      primaryColorHex: json['primaryColorHex'] as String,
-      secondaryColorHex: json['secondaryColorHex'] as String,
-      accentColorHex: json['accentColorHex'] as String,
-      fontFamily: json['fontFamily'] as String,
-      websiteUrl: json['websiteUrl'] as String,
-      supportEmail: json['supportEmail'] as String,
-      customAssets: Map<String, String>.from(json['customAssets'] as Map),
-    );
+  appName: json['appName'] as String,
+  logoPath: json['logoPath'] as String,
+  primaryColorHex: json['primaryColorHex'] as String,
+  secondaryColorHex: json['secondaryColorHex'] as String,
+  accentColorHex: json['accentColorHex'] as String,
+  fontFamily: json['fontFamily'] as String,
+  websiteUrl: json['websiteUrl'] as String,
+  supportEmail: json['supportEmail'] as String,
+  customAssets: Map<String, String>.from(json['customAssets'] as Map),
+);
 
 Map<String, dynamic> _$BrandConfigToJson(BrandConfig instance) =>
     <String, dynamic>{
@@ -52,15 +52,15 @@ Map<String, dynamic> _$BrandConfigToJson(BrandConfig instance) =>
     };
 
 ThemeConfig _$ThemeConfigFromJson(Map<String, dynamic> json) => ThemeConfig(
-      themeMode: $enumDecode(_$ThemeModeEnumMap, json['themeMode']),
-      textScaleFactor: (json['textScaleFactor'] as num).toDouble(),
-      visualDensity: const VisualDensityConverter().fromJson(
-        json['visualDensity'] as String,
-      ),
-      useSystemAccentColor: json['useSystemAccentColor'] as bool,
-      useMaterial3: json['useMaterial3'] as bool,
-      customColors: Map<String, String>.from(json['customColors'] as Map),
-    );
+  themeMode: $enumDecode(_$ThemeModeEnumMap, json['themeMode']),
+  textScaleFactor: (json['textScaleFactor'] as num).toDouble(),
+  visualDensity: const VisualDensityConverter().fromJson(
+    json['visualDensity'] as String,
+  ),
+  useSystemAccentColor: json['useSystemAccentColor'] as bool,
+  useMaterial3: json['useMaterial3'] as bool,
+  customColors: Map<String, String>.from(json['customColors'] as Map),
+);
 
 Map<String, dynamic> _$ThemeConfigToJson(ThemeConfig instance) =>
     <String, dynamic>{
@@ -93,28 +93,28 @@ AccessibilityConfig _$AccessibilityConfigFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$AccessibilityConfigToJson(
-        AccessibilityConfig instance) =>
-    <String, dynamic>{
-      'enableScreenReader': instance.enableScreenReader,
-      'enableVoiceGuidance': instance.enableVoiceGuidance,
-      'reduceAnimations': instance.reduceAnimations,
-      'increasedContrast': instance.increasedContrast,
-      'largerTouchTargets': instance.largerTouchTargets,
-      'minimumTouchSize': instance.minimumTouchSize,
-      'enableSemanticLabels': instance.enableSemanticLabels,
-      'enableHapticFeedback': instance.enableHapticFeedback,
-    };
+  AccessibilityConfig instance,
+) => <String, dynamic>{
+  'enableScreenReader': instance.enableScreenReader,
+  'enableVoiceGuidance': instance.enableVoiceGuidance,
+  'reduceAnimations': instance.reduceAnimations,
+  'increasedContrast': instance.increasedContrast,
+  'largerTouchTargets': instance.largerTouchTargets,
+  'minimumTouchSize': instance.minimumTouchSize,
+  'enableSemanticLabels': instance.enableSemanticLabels,
+  'enableHapticFeedback': instance.enableHapticFeedback,
+};
 
 FeatureFlags _$FeatureFlagsFromJson(Map<String, dynamic> json) => FeatureFlags(
-      enableUserProfiles: json['enableUserProfiles'] as bool,
-      enableItemReordering: json['enableItemReordering'] as bool,
-      enableColorCustomization: json['enableColorCustomization'] as bool,
-      enableDataExport: json['enableDataExport'] as bool,
-      enableOfflineMode: json['enableOfflineMode'] as bool,
-      enableAnalytics: json['enableAnalytics'] as bool,
-      enablePushNotifications: json['enablePushNotifications'] as bool,
-      customFeatures: Map<String, bool>.from(json['customFeatures'] as Map),
-    );
+  enableUserProfiles: json['enableUserProfiles'] as bool,
+  enableItemReordering: json['enableItemReordering'] as bool,
+  enableColorCustomization: json['enableColorCustomization'] as bool,
+  enableDataExport: json['enableDataExport'] as bool,
+  enableOfflineMode: json['enableOfflineMode'] as bool,
+  enableAnalytics: json['enableAnalytics'] as bool,
+  enablePushNotifications: json['enablePushNotifications'] as bool,
+  customFeatures: Map<String, bool>.from(json['customFeatures'] as Map),
+);
 
 Map<String, dynamic> _$FeatureFlagsToJson(FeatureFlags instance) =>
     <String, dynamic>{
@@ -138,8 +138,7 @@ LocalizationConfig _$LocalizationConfigFromJson(Map<String, dynamic> json) =>
       numberFormat: json['numberFormat'] as String,
     );
 
-Map<String, dynamic> _$LocalizationConfigToJson(
-        LocalizationConfig instance) =>
+Map<String, dynamic> _$LocalizationConfigToJson(LocalizationConfig instance) =>
     <String, dynamic>{
       'languageCode': instance.languageCode,
       'countryCode': instance.countryCode,

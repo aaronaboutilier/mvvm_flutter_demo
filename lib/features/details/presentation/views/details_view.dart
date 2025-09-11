@@ -4,13 +4,14 @@ import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/di/locator.dart';
 import '../viewmodels/details_viewmodel.dart';
+import '../viewmodels/details_view_state.dart';
 
 class DetailsView extends StatelessWidget {
   const DetailsView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
+    return Provider<DetailsViewModel>(
       create: (context) => locator<DetailsViewModel>(),
       child: const _DetailsContent(),
     );
@@ -43,8 +44,11 @@ class _DetailsContentState extends State<_DetailsContent> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<DetailsViewModel>(
-      builder: (context, viewModel, child) {
+    final viewModel = context.read<DetailsViewModel>();
+    return StreamBuilder<DetailsViewState>(
+      stream: viewModel.stateStream,
+      builder: (context, snapshot) {
+        final _ = snapshot.data; // trigger rebuilds
         return Scaffold(
           appBar: AppBar(
             title: const Text('MVVM Demo - Details'),
@@ -318,20 +322,20 @@ class _DetailsContentState extends State<_DetailsContent> {
   }
 
   void _showClearConfirmation(BuildContext context, DetailsViewModel viewModel) {
-    showDialog(
+  showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Clear All Items'),
         content: const Text('Are you sure you want to remove all items?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.of(context).pop<void>(),
             child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
               viewModel.clearAllItems();
-              Navigator.of(context).pop();
+              Navigator.of(context).pop<void>();
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
             child: const Text('Clear All'),

@@ -7,8 +7,9 @@ import '../../domain/value_objects/language_code.dart' as vo;
 import '../../domain/value_objects/theme_preference.dart' as vo;
 import '../../domain/repositories/settings_repository.dart';
 import '../../../../core/core.dart';
+import 'settings_view_state.dart';
 
-class SettingsViewModel extends BaseViewModel {
+class SettingsViewModel extends ChangeNotifierViewModel<SettingsViewState> {
   final SettingsRepository _repo;
   late final UpdateThemeMode _updateThemeMode;
   late final UpdateTextScale _updateTextScale;
@@ -46,13 +47,16 @@ class SettingsViewModel extends BaseViewModel {
         _updateUseDeviceLocale = updateUseDeviceLocale,
         _updateLanguageCode = updateLanguageCode,
         _exportConfiguration = exportConfiguration,
-        _resetToDefaults = resetToDefaults;
+        _resetToDefaults = resetToDefaults,
+        super(SettingsViewState.initial());
 
-  bool get isUpdating => isLoading;
+  bool get isUpdating => state.isLoading;
+  String? get errorMessage => state.errorMessage;
   AppConfig get currentConfig => _repo.currentConfig;
 
   Future<void> updateThemeMode(ThemeMode newThemeMode) async {
-    await performOperation('Updating theme mode', () async {
+  updateState(state.clearMessages().copyWith(isLoading: true));
+    try {
       final pref = switch (newThemeMode) {
         ThemeMode.light => vo.ThemePreference.light,
         ThemeMode.dark => vo.ThemePreference.dark,
@@ -60,89 +64,121 @@ class SettingsViewModel extends BaseViewModel {
       };
       await _updateThemeMode(pref);
       _maybeHapticSelection();
-    });
+    } finally {
+      updateState(state.copyWith(isLoading: false));
+    }
   }
 
   Future<void> updateTextScaleFactor(double newScaleFactor) async {
-    await performOperation('Updating text size', () async {
+  updateState(state.clearMessages().copyWith(isLoading: true));
+    try {
       await _updateTextScale(vo.TextScale(newScaleFactor));
       _maybeHapticLight();
-    });
+    } finally {
+      updateState(state.copyWith(isLoading: false));
+    }
   }
 
   Future<void> updateReduceAnimations(bool reduceAnimations) async {
-    await performOperation('Updating animation preferences', () async {
+  updateState(state.clearMessages().copyWith(isLoading: true));
+    try {
       await _updateReduceAnimations(reduceAnimations);
       if (!reduceAnimations) _maybeHapticSelection();
-    });
+    } finally {
+      updateState(state.copyWith(isLoading: false));
+    }
   }
 
   Future<void> updateHighContrast(bool highContrast) async {
-    await performOperation('Updating contrast settings', () async {
+  updateState(state.clearMessages().copyWith(isLoading: true));
+    try {
       await _updateHighContrast(highContrast);
       _maybeHapticSelection();
-    });
+    } finally {
+      updateState(state.copyWith(isLoading: false));
+    }
   }
 
   Future<void> updateLargerTouchTargets(bool largerTouchTargets) async {
-    await performOperation('Updating touch target size', () async {
+  updateState(state.clearMessages().copyWith(isLoading: true));
+    try {
       await _updateLargerTouchTargets(largerTouchTargets);
       _maybeHapticSelection();
-    });
+    } finally {
+      updateState(state.copyWith(isLoading: false));
+    }
   }
 
   Future<void> updateVoiceGuidance(bool enableVoiceGuidance) async {
-    await performOperation('Updating voice guidance', () async {
+  updateState(state.clearMessages().copyWith(isLoading: true));
+    try {
       await _updateVoiceGuidance(enableVoiceGuidance);
       _maybeHapticSelection();
-    });
+    } finally {
+      updateState(state.copyWith(isLoading: false));
+    }
   }
 
   Future<void> updateHapticFeedback(bool enableHapticFeedback) async {
-    await performOperation('Updating haptic feedback', () async {
+  updateState(state.clearMessages().copyWith(isLoading: true));
+    try {
       await _updateHapticFeedback(enableHapticFeedback);
       if (enableHapticFeedback) _maybeHapticSelection();
-    });
+    } finally {
+      updateState(state.copyWith(isLoading: false));
+    }
   }
 
   Future<void> updateUseDeviceLocale(bool useDeviceLocale) async {
-    await performOperation('Updating language preferences', () async {
+  updateState(state.clearMessages().copyWith(isLoading: true));
+    try {
       await _updateUseDeviceLocale(useDeviceLocale);
       _maybeHapticSelection();
-    });
+    } finally {
+      updateState(state.copyWith(isLoading: false));
+    }
   }
 
   Future<void> updateLanguageCode(String languageCode) async {
-    await performOperation('Updating language', () async {
+  updateState(state.clearMessages().copyWith(isLoading: true));
+    try {
       final res = await _updateLanguageCode(vo.LanguageCode(languageCode));
       res.fold(
-        failure: (f) => throw Exception(f.message),
+        failure: (f) => updateState(state.copyWith(errorMessage: f.message)),
         success: (_) {},
       );
       _maybeHapticSelection();
-    });
+    } finally {
+      updateState(state.copyWith(isLoading: false));
+    }
   }
 
   Future<void> exportConfiguration() async {
     if (!currentConfig.features.enableDataExport) {
-      setError('Export functionality is not available in this version');
+      updateState(state.copyWith(errorMessage: 'Export functionality is not available in this version'));
       return;
     }
-    await performOperation('Exporting configuration', () async {
+    updateState(state.clearMessages().copyWith(isLoading: true));
+    try {
       final res = await _exportConfiguration(const core.NoParams());
       res.fold(
         failure: (f) => throw Exception(f.message),
-        success: (path) => setSuccess('Configuration exported to: $path'),
+        success: (path) => updateState(state.copyWith(successMessage: 'Configuration exported to: $path')),
       );
-    });
+    } finally {
+      updateState(state.copyWith(isLoading: false));
+    }
   }
 
   Future<void> resetToDefaults() async {
-    await performOperation('Resetting to defaults', () async {
+  updateState(state.clearMessages().copyWith(isLoading: true));
+    try {
       await _resetToDefaults(const core.NoParams());
-      setSuccess('Settings reset to defaults');
+      updateState(state.copyWith(successMessage: 'Settings reset to defaults'));
       _maybeHapticHeavy();
-    });
+    } finally {
+      updateState(state.copyWith(isLoading: false));
+    }
   }
 
   bool isFeatureEnabled(String featureName) => _repo.isFeatureEnabled(featureName);

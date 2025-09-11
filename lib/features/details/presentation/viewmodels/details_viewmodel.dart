@@ -6,8 +6,9 @@ import '../../application/usecases/remove_detail_item.dart';
 import '../../application/usecases/reorder_detail_items.dart';
 import '../../domain/entities/detail_item.dart';
 import '../../../../core/core.dart';
+import 'details_view_state.dart';
 
-class DetailsViewModel extends BaseViewModel {
+class DetailsViewModel extends ChangeNotifierViewModel<DetailsViewState> {
   final GetDetailItems _getItems;
   final AddDetailItem _addItemUc;
   final RemoveDetailItem _removeItemUc;
@@ -24,44 +25,37 @@ class DetailsViewModel extends BaseViewModel {
         _addItemUc = addItem,
         _removeItemUc = removeItem,
         _clearItemsUc = clearItems,
-        _reorderItemsUc = reorderItems;
+        _reorderItemsUc = reorderItems,
+        super(DetailsViewState.initial());
 
-  String _selectedColor = 'Blue';
-  List<DetailItem> _items = [];
-  bool _isAddingItem = false;
-
-  String get selectedColor => _selectedColor;
-  List<String> get items => List.unmodifiable(_items.map((e) => '${e.name} (${e.displayTime})'));
-  bool get isAddingItem => _isAddingItem;
+  String get selectedColor => state.selectedColor;
+  List<String> get items => state.displayItems;
+  bool get isAddingItem => state.isAddingItem;
+  bool get hasItems => state.hasItems;
+  int get itemCount => state.itemCount;
+  String get summaryText => state.summaryText;
 
   static const List<String> availableColors = [
     'Red', 'Blue', 'Green', 'Yellow', 'Purple', 'Orange'
   ];
 
-  int get itemCount => _items.length;
-  bool get hasItems => _items.isNotEmpty;
-  String get summaryText => hasItems
-      ? 'You have $itemCount items in $_selectedColor theme'
-      : 'No items yet. Add some to get started!';
-
   void selectColor(String color) {
-    if (availableColors.contains(color) && color != _selectedColor) {
-      _selectedColor = color;
-      notifyListeners();
+    if (availableColors.contains(color) && color != state.selectedColor) {
+      updateState(state.copyWith(selectedColor: color));
     }
   }
 
   Future<void> addItem(String itemName) async {
     if (itemName.trim().isEmpty) return;
-    _isAddingItem = true;
-    notifyListeners();
-    await performOperation('Adding item', () async {
+    updateState(state.copyWith(isAddingItem: true));
+    try {
       final res = await _addItemUc(itemName);
       await _refreshItems();
       res.fold(failure: (_) {}, success: (_) {});
-    });
-    _isAddingItem = false;
-    notifyListeners();
+    } finally {
+      // handled below
+    }
+    updateState(state.copyWith(isAddingItem: false));
   }
 
   Future<void> removeItem(int index) async {
@@ -78,11 +72,9 @@ class DetailsViewModel extends BaseViewModel {
 
   void reorderItems(int oldIndex, int newIndex) {
     () async {
-      await performOperation('Reordering items', () async {
-        final res = await _reorderItemsUc(ReorderParams(oldIndex: oldIndex, newIndex: newIndex));
-        await _refreshItems();
-        res.fold(failure: (_) {}, success: (_) {});
-      });
+  final res = await _reorderItemsUc(ReorderParams(oldIndex: oldIndex, newIndex: newIndex));
+  await _refreshItems();
+  res.fold(failure: (_) {}, success: (_) {});
     }();
   }
 
@@ -91,10 +83,9 @@ class DetailsViewModel extends BaseViewModel {
     res.fold(
       failure: (_) {},
       success: (list) {
-        _items = List<DetailItem>.from(list);
+  updateState(state.copyWith(items: List<DetailItem>.from(list)));
       },
     );
-    notifyListeners();
   }
 
   Future<void> load() => _refreshItems();

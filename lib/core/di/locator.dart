@@ -19,6 +19,11 @@ import '../analytics/analytics.dart';
 import '../../features/home/presentation/viewmodels/home_viewmodel.dart';
 import '../../features/details/presentation/viewmodels/details_viewmodel.dart';
 import '../../features/settings/presentation/viewmodels/settings_viewmodel.dart';
+import '../presentation/view_model.dart';
+import '../../features/home/presentation/viewmodels/home_view_state.dart';
+import '../../features/details/presentation/viewmodels/details_view_state.dart';
+import '../../features/settings/presentation/viewmodels/settings_view_state.dart';
+import '../core.dart';
 
 final GetIt locator = GetIt.instance;
 
@@ -28,9 +33,12 @@ void setupLocator() {
   locator.registerLazySingleton<ThemeService>(() => DefaultThemeService());
   locator.registerLazySingleton<AccessibilityService>(() => NoopAccessibilityService());
   locator.registerLazySingleton<AnalyticsService>(() => DebugAnalyticsService());
+  // Logging & performance
+  locator.registerLazySingleton<Logger>(() => const DebugLogger());
+  locator.registerLazySingleton(() => PerformanceMonitor(locator()));
 
   // Details feature
-  locator.registerLazySingleton(() => InMemoryDetailsRepository());
+  locator.registerLazySingleton(() => InMemoryDetailsRepository(locator()));
   locator.registerFactory(() => GetDetailItems(locator()));
   locator.registerFactory(() => AddDetailItem(locator()));
   locator.registerFactory(() => RemoveDetailItem(locator()));
@@ -38,7 +46,7 @@ void setupLocator() {
   locator.registerFactory(() => ReorderDetailItems(locator()));
 
   // Home feature
-  locator.registerLazySingleton(() => InMemoryUserRepository());
+  locator.registerLazySingleton(() => InMemoryUserRepository(locator()));
   locator.registerFactory(() => LoadUser(locator()));
   locator.registerFactory(() => ClearUser(locator()));
 
@@ -57,18 +65,18 @@ void setupLocator() {
   locator.registerFactory(() => ResetToDefaults(locator()));
 
   // Presentation: ViewModels
-  locator.registerFactory(() => HomeViewModel(
+  locator.registerFactory<HomeViewModel>(() => HomeViewModel(
         loadUser: locator(),
         clearUser: locator(),
       ));
-  locator.registerFactory(() => DetailsViewModel(
+  locator.registerFactory<DetailsViewModel>(() => DetailsViewModel(
         getItems: locator(),
         addItem: locator(),
         removeItem: locator(),
         clearItems: locator(),
         reorderItems: locator(),
       ));
-  locator.registerFactory(() => SettingsViewModel(
+  locator.registerFactory<SettingsViewModel>(() => SettingsViewModel(
         repo: locator(),
         updateThemeMode: locator(),
         updateTextScale: locator(),
@@ -82,4 +90,9 @@ void setupLocator() {
         exportConfiguration: locator(),
         resetToDefaults: locator(),
       ));
+
+  // Interface registrations
+  locator.registerFactory<ViewModel<HomeViewState>>(() => locator<HomeViewModel>());
+  locator.registerFactory<ViewModel<DetailsViewState>>(() => locator<DetailsViewModel>());
+  locator.registerFactory<ViewModel<SettingsViewState>>(() => locator<SettingsViewModel>());
 }

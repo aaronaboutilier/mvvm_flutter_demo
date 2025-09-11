@@ -4,13 +4,14 @@ import 'package:go_router/go_router.dart';
 import 'package:mvvm_flutter_demo/core/localization/localization.dart';
 import '../../../../core/di/locator.dart';
 import '../viewmodels/home_viewmodel.dart';
+import '../viewmodels/home_view_state.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
+    return Provider<HomeViewModel>(
       create: (context) => locator<HomeViewModel>(),
       child: const _HomeContent(),
     );
@@ -35,8 +36,11 @@ class _HomeContentState extends State<_HomeContent> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<HomeViewModel>(
-      builder: (context, viewModel, child) {
+    final viewModel = context.read<HomeViewModel>();
+    return StreamBuilder<HomeViewState>(
+      stream: viewModel.stateStream,
+      builder: (context, snapshot) {
+        final _ = snapshot.data; // trigger rebuilds on state changes
         return Scaffold(
           appBar: AppBar(
             title: const Text('MVVM Demo - Home'),

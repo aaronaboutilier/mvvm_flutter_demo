@@ -5,13 +5,14 @@ import 'package:mvvm_flutter_demo/core/localization/localization.dart';
 import 'package:mvvm_flutter_demo/core/configuration/configuration.dart';
 import '../../../../core/di/locator.dart';
 import '../viewmodels/settings_viewmodel.dart';
+import '../viewmodels/settings_view_state.dart';
 
 class SettingsView extends StatelessWidget {
   const SettingsView({super.key});
 
   @override
   Widget build(BuildContext context) {
-  return ChangeNotifierProvider(
+  return Provider<SettingsViewModel>(
       create: (context) => locator<SettingsViewModel>(),
       child: const _SettingsContent(),
     );
@@ -29,10 +30,15 @@ class _SettingsContentState extends State<_SettingsContent> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
-  return Consumer2<SettingsViewModel, ConfigService>(
-      builder: (context, settingsViewModel, configService, child) {
+  final vm = context.read<SettingsViewModel>();
+  return Consumer<ConfigService>(
+      builder: (context, configService, child) {
         final config = configService.currentConfig;
-        return Scaffold(
+        return StreamBuilder<SettingsViewState>(
+          stream: vm.stateStream,
+          builder: (context, snapshot) {
+            final _ = snapshot.data; // rebuild on state
+            return Scaffold(
           appBar: AppBar(
             title: Text(localizations.settingsTitle),
             leading: IconButton(
@@ -46,19 +52,21 @@ class _SettingsContentState extends State<_SettingsContent> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildThemeSection(context, localizations, config, settingsViewModel),
+                _buildThemeSection(context, localizations, config, vm),
                 const SizedBox(height: 24),
-                _buildAccessibilitySection(context, localizations, config, settingsViewModel),
+                _buildAccessibilitySection(context, localizations, config, vm),
                 const SizedBox(height: 24),
-                _buildLanguageSection(context, localizations, config, settingsViewModel),
+                _buildLanguageSection(context, localizations, config, vm),
                 const SizedBox(height: 24),
                 if (config.features.enableDataExport)
-                  _buildAdvancedSection(context, localizations, config, settingsViewModel),
+                  _buildAdvancedSection(context, localizations, config, vm),
                 const SizedBox(height: 24),
                 _buildBrandSection(context, localizations, config),
               ],
             ),
           ),
+            );
+          },
         );
       },
     );
@@ -327,17 +335,17 @@ class _SettingsContentState extends State<_SettingsContent> {
   }
 
   void _showResetConfirmation(BuildContext context, AppLocalizations localizations, SettingsViewModel viewModel) {
-    showDialog(
+  showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(localizations.resetToDefaults),
         content: Text(localizations.resetConfirmation),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(localizations.cancel)),
+      TextButton(onPressed: () => Navigator.of(context).pop<void>(), child: Text(localizations.cancel)),
           TextButton(
             onPressed: () {
               viewModel.resetToDefaults();
-              Navigator.of(context).pop();
+        Navigator.of(context).pop<void>();
             },
             child: Text(localizations.reset),
           ),

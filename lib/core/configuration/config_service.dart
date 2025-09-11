@@ -44,8 +44,8 @@ class ConfigService extends ChangeNotifier {
         _currentConfig = _configCache[configPath]!;
         return;
       }
-      String configJson = await rootBundle.loadString(configPath);
-      Map<String, dynamic> configMap = json.decode(configJson);
+  String configJson = await rootBundle.loadString(configPath);
+  final Map<String, dynamic> configMap = json.decode(configJson) as Map<String, dynamic>;
       AppConfig config = AppConfig.fromJson(configMap);
       _configCache[configPath] = config;
       _currentConfig = config;

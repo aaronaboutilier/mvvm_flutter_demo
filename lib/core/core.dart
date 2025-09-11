@@ -5,8 +5,14 @@ export 'result/result_extensions.dart';
 export 'usecase_base/usecase.dart';
 export 'utils/guards.dart';
 export 'utils/error_mapper.dart';
+export 'utils/logger.dart';
+export 'utils/performance_monitor.dart';
+export 'utils/secure_storage.dart';
+export 'utils/value_objects.dart';
 export 'di/locator.dart';
 export 'presentation/base_view_model.dart';
+export 'presentation/view_model.dart';
+export 'presentation/change_notifier_view_model.dart';
 // Enterprise barrels
 export 'configuration/configuration.dart';
 export 'localization/localization.dart';
