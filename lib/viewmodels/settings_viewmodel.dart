@@ -6,6 +6,9 @@ import 'package:flutter/services.dart';
 import '../core/core.dart' as core;
 import '../models/app_config.dart';
 import '../features/settings/application/usecases/settings_usecases.dart';
+import '../features/settings/domain/value_objects/text_scale.dart' as vo;
+import '../features/settings/domain/value_objects/language_code.dart' as vo;
+import '../features/settings/domain/value_objects/theme_mode_vo.dart' as vo;
 import '../features/settings/infrastructure/repositories/config_settings_repository.dart';
 
 /// SettingsViewModel manages the business logic for user preference changes
@@ -62,7 +65,7 @@ class SettingsViewModel extends ChangeNotifier {
     await _performConfigUpdate(
       'Updating theme mode',
       () async {
-  await _updateThemeMode(newThemeMode);
+  await _updateThemeMode(vo.ThemeModeVO(newThemeMode));
         
         // Provide haptic feedback if enabled
         if (currentConfig.accessibility.enableHapticFeedback) {
@@ -78,7 +81,7 @@ class SettingsViewModel extends ChangeNotifier {
     await _performConfigUpdate(
       'Updating text size',
       () async {
-  await _updateTextScale(newScaleFactor);
+  await _updateTextScale(vo.TextScale(newScaleFactor));
         
         // Provide feedback for accessibility
         if (currentConfig.accessibility.enableHapticFeedback) {
@@ -183,7 +186,7 @@ class SettingsViewModel extends ChangeNotifier {
     await _performConfigUpdate(
       'Updating language',
       () async {
-  await _updateLanguageCode(languageCode);
+  await _updateLanguageCode(vo.LanguageCode(languageCode));
         
         if (currentConfig.accessibility.enableHapticFeedback) {
           HapticFeedback.selectionClick();

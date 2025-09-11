@@ -5,7 +5,7 @@ import '../core/core.dart' as core;
 import '../features/home/application/usecases/clear_user.dart';
 import '../features/home/application/usecases/load_user.dart';
 import '../features/home/domain/entities/user.dart' as domain;
-import '../features/home/infrastructure/repositories/in_memory_user_repository.dart';
+import '../core/di/locator.dart';
 
 /// HomeViewModel manages the state and business logic for the home screen
 /// This is the ViewModel part of MVVM - it sits between the View and Model
@@ -39,11 +39,8 @@ class HomeViewModel extends ChangeNotifier {
   final ClearUser _clearUser;
 
   HomeViewModel()
-      : this.withRepository(InMemoryUserRepository());
-
-  HomeViewModel.withRepository(InMemoryUserRepository repo)
-      : _loadUser = LoadUser(repo),
-        _clearUser = ClearUser(repo);
+      : _loadUser = locator<LoadUser>(),
+        _clearUser = locator<ClearUser>();
 
   Future<void> loadUser() async {
     // Set loading state and notify listeners

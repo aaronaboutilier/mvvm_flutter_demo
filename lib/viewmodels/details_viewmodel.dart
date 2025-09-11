@@ -7,7 +7,7 @@ import '../features/details/application/usecases/clear_detail_items.dart';
 import '../features/details/application/usecases/get_detail_items.dart';
 import '../features/details/application/usecases/remove_detail_item.dart';
 import '../features/details/application/usecases/reorder_detail_items.dart';
-import '../features/details/infrastructure/repositories/in_memory_details_repository.dart';
+import '../core/di/locator.dart';
 import '../features/details/domain/entities/detail_item.dart';
 
 /// DetailsViewModel manages state and logic for the details screen
@@ -22,14 +22,11 @@ class DetailsViewModel extends ChangeNotifier {
   final ReorderDetailItems _reorderItemsUc;
 
   DetailsViewModel()
-      : this.withRepository(InMemoryDetailsRepository());
-
-  DetailsViewModel.withRepository(InMemoryDetailsRepository repo)
-      : _getItems = GetDetailItems(repo),
-        _addItemUc = AddDetailItem(repo),
-        _removeItemUc = RemoveDetailItem(repo),
-        _clearItemsUc = ClearDetailItems(repo),
-        _reorderItemsUc = ReorderDetailItems(repo);
+      : _getItems = locator<GetDetailItems>(),
+        _addItemUc = locator<AddDetailItem>(),
+        _removeItemUc = locator<RemoveDetailItem>(),
+        _clearItemsUc = locator<ClearDetailItems>(),
+        _reorderItemsUc = locator<ReorderDetailItems>();
 
   // UI State
   String _selectedColor = 'Blue';

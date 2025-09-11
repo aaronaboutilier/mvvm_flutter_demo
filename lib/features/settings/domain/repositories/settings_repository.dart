@@ -1,12 +1,14 @@
-import 'package:flutter/material.dart';
 import '../../../../models/app_config.dart';
 import '../../../../core/result/result.dart';
+import '../value_objects/text_scale.dart';
+import '../value_objects/language_code.dart';
+import '../value_objects/theme_mode_vo.dart';
 
 abstract class SettingsRepository {
   AppConfig get currentConfig;
 
-  Future<Result<void>> updateThemeMode(ThemeMode newThemeMode);
-  Future<Result<void>> updateTextScaleFactor(double newScaleFactor);
+  Future<Result<void>> updateThemeMode(ThemeModeVO newThemeMode);
+  Future<Result<void>> updateTextScaleFactor(TextScale newScaleFactor);
 
   Future<Result<void>> updateReduceAnimations(bool reduceAnimations);
   Future<Result<void>> updateHighContrast(bool highContrast);
@@ -15,7 +17,7 @@ abstract class SettingsRepository {
   Future<Result<void>> updateHapticFeedback(bool enableHapticFeedback);
 
   Future<Result<void>> updateUseDeviceLocale(bool useDeviceLocale);
-  Future<Result<void>> updateLanguageCode(String languageCode);
+  Future<Result<void>> updateLanguageCode(LanguageCode languageCode);
 
   Future<Result<String>> exportConfiguration();
   Future<Result<void>> resetToDefaults();

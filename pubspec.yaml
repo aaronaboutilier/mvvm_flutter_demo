@@ -17,6 +17,9 @@ dependencies:
   # State management for MVVM - Provider is very stable
   provider: ^6.1.2
   
+  # Dependency Injection
+  get_it: ^8.0.0
+  
   # Navigation - Go Router has frequent updates but good backward compatibility
   go_router: ^16.2.1
   

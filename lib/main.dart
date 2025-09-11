@@ -12,6 +12,7 @@ import 'models/app_config.dart';
 import 'views/home_view.dart';
 import 'views/details_view.dart';
 import 'views/settings_view.dart';
+import 'core/di/locator.dart';
 
 /// The main entry point of our enhanced MVVM Flutter application
 /// This demonstrates how i18n, a11y, theming, and white-labeling 
@@ -22,6 +23,7 @@ void main() async {
   
   // Initialize the configuration service early in the app lifecycle
   // This loads brand configuration, user preferences, and accessibility settings
+  setupLocator();
   await ConfigService.instance.initialize(
     // You can specify a brand-specific config file for white-labeling
     // brandConfigPath: 'assets/config/brand_a_config.json',

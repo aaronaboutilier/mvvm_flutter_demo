@@ -1,19 +1,21 @@
-import 'package:flutter/material.dart';
 import '../../../../core/core.dart';
+import '../../domain/value_objects/theme_mode_vo.dart';
+import '../../domain/value_objects/text_scale.dart';
+import '../../domain/value_objects/language_code.dart';
 import '../../domain/repositories/settings_repository.dart';
 
-class UpdateThemeMode implements UseCase<void, ThemeMode> {
+class UpdateThemeMode implements UseCase<void, ThemeModeVO> {
   final SettingsRepository repo;
   UpdateThemeMode(this.repo);
   @override
-  Future<Result<void>> call(ThemeMode params) => repo.updateThemeMode(params);
+  Future<Result<void>> call(ThemeModeVO params) => repo.updateThemeMode(params);
 }
 
-class UpdateTextScale implements UseCase<void, double> {
+class UpdateTextScale implements UseCase<void, TextScale> {
   final SettingsRepository repo;
   UpdateTextScale(this.repo);
   @override
-  Future<Result<void>> call(double params) => repo.updateTextScaleFactor(params);
+  Future<Result<void>> call(TextScale params) => repo.updateTextScaleFactor(params);
 }
 
 class UpdateReduceAnimations implements UseCase<void, bool> {
@@ -58,11 +60,11 @@ class UpdateUseDeviceLocale implements UseCase<void, bool> {
   Future<Result<void>> call(bool params) => repo.updateUseDeviceLocale(params);
 }
 
-class UpdateLanguageCode implements UseCase<void, String> {
+class UpdateLanguageCode implements UseCase<void, LanguageCode> {
   final SettingsRepository repo;
   UpdateLanguageCode(this.repo);
   @override
-  Future<Result<void>> call(String params) => repo.updateLanguageCode(params);
+  Future<Result<void>> call(LanguageCode params) => repo.updateLanguageCode(params);
 }
 
 class ExportConfiguration implements UseCase<String, NoParams> {

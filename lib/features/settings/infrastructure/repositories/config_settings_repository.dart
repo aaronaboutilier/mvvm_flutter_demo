@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
-
 import '../../../../core/core.dart';
 import '../../../../models/app_config.dart';
 import '../../../../services/config_service.dart';
 import '../../domain/repositories/settings_repository.dart';
+import '../../domain/value_objects/language_code.dart';
+import '../../domain/value_objects/text_scale.dart';
+import '../../domain/value_objects/theme_mode_vo.dart';
 
 class ConfigSettingsRepository implements SettingsRepository {
   final ConfigService _service;
@@ -16,9 +17,9 @@ class ConfigSettingsRepository implements SettingsRepository {
   bool isFeatureEnabled(String featureName) => _service.isFeatureEnabled(featureName);
 
   @override
-  Future<Result<void>> updateThemeMode(ThemeMode newThemeMode) async {
+  Future<Result<void>> updateThemeMode(ThemeModeVO newThemeMode) async {
     try {
-      final updated = currentConfig.theme.copyWith(themeMode: newThemeMode);
+      final updated = currentConfig.theme.copyWith(themeMode: newThemeMode.mode);
       await _service.updateThemeConfig(updated);
       return const Success(null);
     } catch (e, s) {
@@ -27,9 +28,9 @@ class ConfigSettingsRepository implements SettingsRepository {
   }
 
   @override
-  Future<Result<void>> updateTextScaleFactor(double newScaleFactor) async {
+  Future<Result<void>> updateTextScaleFactor(TextScale newScaleFactor) async {
     try {
-      final updated = currentConfig.theme.copyWith(textScaleFactor: newScaleFactor);
+      final updated = currentConfig.theme.copyWith(textScaleFactor: newScaleFactor.value);
       await _service.updateThemeConfig(updated);
       return const Success(null);
     } catch (e, s) {
@@ -104,10 +105,10 @@ class ConfigSettingsRepository implements SettingsRepository {
   }
 
   @override
-  Future<Result<void>> updateLanguageCode(String languageCode) async {
+  Future<Result<void>> updateLanguageCode(LanguageCode languageCode) async {
     try {
       final updated = currentConfig.localization.copyWith(
-        languageCode: languageCode,
+        languageCode: languageCode.value,
         useDeviceLocale: false,
       );
       await _service.updateLocalizationConfig(updated);
