@@ -3,8 +3,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../services/config_service.dart';
+import '../core/core.dart' as core;
 import '../models/app_config.dart';
+import '../features/settings/application/usecases/settings_usecases.dart';
+import '../features/settings/infrastructure/repositories/config_settings_repository.dart';
 
 /// SettingsViewModel manages the business logic for user preference changes
 /// This demonstrates how configuration management integrates with MVVM patterns.
@@ -13,7 +15,32 @@ import '../models/app_config.dart';
 /// know anything about UI components, but it provides a clean interface
 /// for the View to interact with configuration settings.
 class SettingsViewModel extends ChangeNotifier {
-  final ConfigService _configService = ConfigService.instance;
+  final ConfigSettingsRepository _repo;
+  late final UpdateThemeMode _updateThemeMode;
+  late final UpdateTextScale _updateTextScale;
+  late final UpdateReduceAnimations _updateReduceAnimations;
+  late final UpdateHighContrast _updateHighContrast;
+  late final UpdateLargerTouchTargets _updateLargerTouchTargets;
+  late final UpdateVoiceGuidance _updateVoiceGuidance;
+  late final UpdateHapticFeedback _updateHapticFeedback;
+  late final UpdateUseDeviceLocale _updateUseDeviceLocale;
+  late final UpdateLanguageCode _updateLanguageCode;
+  late final ExportConfiguration _exportConfiguration;
+  late final ResetToDefaults _resetToDefaults;
+
+  SettingsViewModel() : _repo = ConfigSettingsRepository() {
+    _updateThemeMode = UpdateThemeMode(_repo);
+    _updateTextScale = UpdateTextScale(_repo);
+    _updateReduceAnimations = UpdateReduceAnimations(_repo);
+    _updateHighContrast = UpdateHighContrast(_repo);
+    _updateLargerTouchTargets = UpdateLargerTouchTargets(_repo);
+    _updateVoiceGuidance = UpdateVoiceGuidance(_repo);
+    _updateHapticFeedback = UpdateHapticFeedback(_repo);
+    _updateUseDeviceLocale = UpdateUseDeviceLocale(_repo);
+    _updateLanguageCode = UpdateLanguageCode(_repo);
+    _exportConfiguration = ExportConfiguration(_repo);
+    _resetToDefaults = ResetToDefaults(_repo);
+  }
   
   // State for tracking ongoing operations
   bool _isUpdating = false;
@@ -26,7 +53,7 @@ class SettingsViewModel extends ChangeNotifier {
   String? get successMessage => _successMessage;
   
   // Quick access to current configuration
-  AppConfig get currentConfig => _configService.currentConfig;
+  AppConfig get currentConfig => _repo.currentConfig;
 
   /// Updates the theme mode preference
   /// This method demonstrates how ViewModels handle user preference changes
@@ -35,10 +62,7 @@ class SettingsViewModel extends ChangeNotifier {
     await _performConfigUpdate(
       'Updating theme mode',
       () async {
-        final updatedTheme = currentConfig.theme.copyWith(
-          themeMode: newThemeMode,
-        );
-        await _configService.updateThemeConfig(updatedTheme);
+  await _updateThemeMode(newThemeMode);
         
         // Provide haptic feedback if enabled
         if (currentConfig.accessibility.enableHapticFeedback) {
@@ -54,10 +78,7 @@ class SettingsViewModel extends ChangeNotifier {
     await _performConfigUpdate(
       'Updating text size',
       () async {
-        final updatedTheme = currentConfig.theme.copyWith(
-          textScaleFactor: newScaleFactor,
-        );
-        await _configService.updateThemeConfig(updatedTheme);
+  await _updateTextScale(newScaleFactor);
         
         // Provide feedback for accessibility
         if (currentConfig.accessibility.enableHapticFeedback) {
@@ -73,10 +94,7 @@ class SettingsViewModel extends ChangeNotifier {
     await _performConfigUpdate(
       'Updating animation preferences',
       () async {
-        final updatedAccessibility = currentConfig.accessibility.copyWith(
-          reduceAnimations: reduceAnimations,
-        );
-        await _configService.updateAccessibilityConfig(updatedAccessibility);
+  await _updateReduceAnimations(reduceAnimations);
         
         // Only provide haptic feedback if the user hasn't disabled animations
         // This shows how settings can influence each other logically
@@ -92,10 +110,7 @@ class SettingsViewModel extends ChangeNotifier {
     await _performConfigUpdate(
       'Updating contrast settings',
       () async {
-        final updatedAccessibility = currentConfig.accessibility.copyWith(
-          increasedContrast: highContrast,
-        );
-        await _configService.updateAccessibilityConfig(updatedAccessibility);
+  await _updateHighContrast(highContrast);
         
         if (currentConfig.accessibility.enableHapticFeedback) {
           HapticFeedback.selectionClick();
@@ -109,10 +124,7 @@ class SettingsViewModel extends ChangeNotifier {
     await _performConfigUpdate(
       'Updating touch target size',
       () async {
-        final updatedAccessibility = currentConfig.accessibility.copyWith(
-          largerTouchTargets: largerTouchTargets,
-        );
-        await _configService.updateAccessibilityConfig(updatedAccessibility);
+  await _updateLargerTouchTargets(largerTouchTargets);
         
         if (currentConfig.accessibility.enableHapticFeedback) {
           HapticFeedback.selectionClick();
@@ -126,10 +138,7 @@ class SettingsViewModel extends ChangeNotifier {
     await _performConfigUpdate(
       'Updating voice guidance',
       () async {
-        final updatedAccessibility = currentConfig.accessibility.copyWith(
-          enableVoiceGuidance: enableVoiceGuidance,
-        );
-        await _configService.updateAccessibilityConfig(updatedAccessibility);
+  await _updateVoiceGuidance(enableVoiceGuidance);
         
         if (currentConfig.accessibility.enableHapticFeedback) {
           HapticFeedback.selectionClick();
@@ -143,10 +152,7 @@ class SettingsViewModel extends ChangeNotifier {
     await _performConfigUpdate(
       'Updating haptic feedback',
       () async {
-        final updatedAccessibility = currentConfig.accessibility.copyWith(
-          enableHapticFeedback: enableHapticFeedback,
-        );
-        await _configService.updateAccessibilityConfig(updatedAccessibility);
+  await _updateHapticFeedback(enableHapticFeedback);
         
         // Provide one last haptic feedback before potentially disabling it
         if (enableHapticFeedback) {
@@ -162,10 +168,7 @@ class SettingsViewModel extends ChangeNotifier {
     await _performConfigUpdate(
       'Updating language preferences',
       () async {
-        final updatedLocalization = currentConfig.localization.copyWith(
-          useDeviceLocale: useDeviceLocale,
-        );
-        await _configService.updateLocalizationConfig(updatedLocalization);
+  await _updateUseDeviceLocale(useDeviceLocale);
         
         if (currentConfig.accessibility.enableHapticFeedback) {
           HapticFeedback.selectionClick();
@@ -180,11 +183,7 @@ class SettingsViewModel extends ChangeNotifier {
     await _performConfigUpdate(
       'Updating language',
       () async {
-        final updatedLocalization = currentConfig.localization.copyWith(
-          languageCode: languageCode,
-          useDeviceLocale: false, // Automatically disable device locale when manually selecting
-        );
-        await _configService.updateLocalizationConfig(updatedLocalization);
+  await _updateLanguageCode(languageCode);
         
         if (currentConfig.accessibility.enableHapticFeedback) {
           HapticFeedback.selectionClick();
@@ -204,12 +203,11 @@ class SettingsViewModel extends ChangeNotifier {
     await _performConfigUpdate(
       'Exporting configuration',
       () async {
-        final file = await _configService.exportConfiguration();
-        if (file != null) {
-          _setSuccess('Configuration exported to: ${file.path}');
-        } else {
-          throw Exception('Failed to export configuration');
-        }
+        final res = await _exportConfiguration(const core.NoParams());
+        res.fold(
+          failure: (f) => throw Exception(f.message),
+          success: (path) => _setSuccess('Configuration exported to: $path'),
+        );
       },
     );
   }
@@ -220,7 +218,7 @@ class SettingsViewModel extends ChangeNotifier {
     await _performConfigUpdate(
       'Resetting to defaults',
       () async {
-        await _configService.resetToDefaults();
+  await _resetToDefaults(const core.NoParams());
         _setSuccess('Settings reset to defaults');
         
         // Provide strong haptic feedback for important actions
@@ -308,7 +306,7 @@ class SettingsViewModel extends ChangeNotifier {
   /// Checks if a specific feature is enabled
   /// This provides a convenient way for the View to check feature availability
   bool isFeatureEnabled(String featureName) {
-    return _configService.isFeatureEnabled(featureName);
+  return _repo.isFeatureEnabled(featureName);
   }
 
   /// Gets a user-friendly description of current accessibility settings

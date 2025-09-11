@@ -1,0 +1,142 @@
+import 'package:flutter/material.dart';
+
+import '../../../../core/core.dart';
+import '../../../../models/app_config.dart';
+import '../../../../services/config_service.dart';
+import '../../domain/repositories/settings_repository.dart';
+
+class ConfigSettingsRepository implements SettingsRepository {
+  final ConfigService _service;
+  ConfigSettingsRepository([ConfigService? service]) : _service = service ?? ConfigService.instance;
+
+  @override
+  AppConfig get currentConfig => _service.currentConfig;
+
+  @override
+  bool isFeatureEnabled(String featureName) => _service.isFeatureEnabled(featureName);
+
+  @override
+  Future<Result<void>> updateThemeMode(ThemeMode newThemeMode) async {
+    try {
+      final updated = currentConfig.theme.copyWith(themeMode: newThemeMode);
+      await _service.updateThemeConfig(updated);
+      return const Success(null);
+    } catch (e, s) {
+      return FailureResult(ErrorMapper.map(e, s));
+    }
+  }
+
+  @override
+  Future<Result<void>> updateTextScaleFactor(double newScaleFactor) async {
+    try {
+      final updated = currentConfig.theme.copyWith(textScaleFactor: newScaleFactor);
+      await _service.updateThemeConfig(updated);
+      return const Success(null);
+    } catch (e, s) {
+      return FailureResult(ErrorMapper.map(e, s));
+    }
+  }
+
+  @override
+  Future<Result<void>> updateReduceAnimations(bool reduceAnimations) async {
+    try {
+      final updated = currentConfig.accessibility.copyWith(reduceAnimations: reduceAnimations);
+      await _service.updateAccessibilityConfig(updated);
+      return const Success(null);
+    } catch (e, s) {
+      return FailureResult(ErrorMapper.map(e, s));
+    }
+  }
+
+  @override
+  Future<Result<void>> updateHighContrast(bool highContrast) async {
+    try {
+      final updated = currentConfig.accessibility.copyWith(increasedContrast: highContrast);
+      await _service.updateAccessibilityConfig(updated);
+      return const Success(null);
+    } catch (e, s) {
+      return FailureResult(ErrorMapper.map(e, s));
+    }
+  }
+
+  @override
+  Future<Result<void>> updateLargerTouchTargets(bool largerTouchTargets) async {
+    try {
+      final updated = currentConfig.accessibility.copyWith(largerTouchTargets: largerTouchTargets);
+      await _service.updateAccessibilityConfig(updated);
+      return const Success(null);
+    } catch (e, s) {
+      return FailureResult(ErrorMapper.map(e, s));
+    }
+  }
+
+  @override
+  Future<Result<void>> updateVoiceGuidance(bool enableVoiceGuidance) async {
+    try {
+      final updated = currentConfig.accessibility.copyWith(enableVoiceGuidance: enableVoiceGuidance);
+      await _service.updateAccessibilityConfig(updated);
+      return const Success(null);
+    } catch (e, s) {
+      return FailureResult(ErrorMapper.map(e, s));
+    }
+  }
+
+  @override
+  Future<Result<void>> updateHapticFeedback(bool enableHapticFeedback) async {
+    try {
+      final updated = currentConfig.accessibility.copyWith(enableHapticFeedback: enableHapticFeedback);
+      await _service.updateAccessibilityConfig(updated);
+      return const Success(null);
+    } catch (e, s) {
+      return FailureResult(ErrorMapper.map(e, s));
+    }
+  }
+
+  @override
+  Future<Result<void>> updateUseDeviceLocale(bool useDeviceLocale) async {
+    try {
+      final updated = currentConfig.localization.copyWith(useDeviceLocale: useDeviceLocale);
+      await _service.updateLocalizationConfig(updated);
+      return const Success(null);
+    } catch (e, s) {
+      return FailureResult(ErrorMapper.map(e, s));
+    }
+  }
+
+  @override
+  Future<Result<void>> updateLanguageCode(String languageCode) async {
+    try {
+      final updated = currentConfig.localization.copyWith(
+        languageCode: languageCode,
+        useDeviceLocale: false,
+      );
+      await _service.updateLocalizationConfig(updated);
+      return const Success(null);
+    } catch (e, s) {
+      return FailureResult(ErrorMapper.map(e, s));
+    }
+  }
+
+  @override
+  Future<Result<String>> exportConfiguration() async {
+    try {
+      final file = await _service.exportConfiguration();
+      if (file == null) {
+        return const FailureResult(ConfigFailure(message: 'Failed to export configuration'));
+      }
+      return Success(file.path);
+    } catch (e, s) {
+      return FailureResult(ErrorMapper.map(e, s));
+    }
+  }
+
+  @override
+  Future<Result<void>> resetToDefaults() async {
+    try {
+      await _service.resetToDefaults();
+      return const Success(null);
+    } catch (e, s) {
+      return FailureResult(ErrorMapper.map(e, s));
+    }
+  }
+}
