@@ -1,0 +1,21 @@
+name: core_design_system
+description: Design tokens, themes, and base UI components for the monorepo.
+version: 0.0.1
+publish_to: 'none'
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+  flutter: ">=3.22.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # Add material design icons/fonts as needed
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  lints: ^5.0.0
+
+flutter:
+  uses-material-design: true

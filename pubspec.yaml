@@ -39,16 +39,34 @@ dependencies:
   # Configuration management for white-labeling - Stable serialization
   json_annotation: ^4.9.0
 
+  # Immutable data classes
+  freezed_annotation: ^2.4.4
+
+  # Secure storage for sensitive data
+  flutter_secure_storage: ^9.2.2
+  
+  # Local core packages (Phase 1 extraction)
+  core_design_system:
+    path: packages/core/core_design_system
+  core_networking:
+    path: packages/core/core_networking
+  core_storage:
+    path: packages/core/core_storage
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   
   # Linting rules - Keep updated for best practices
   flutter_lints: ^6.0.0
+  very_good_analysis: ^6.0.0
   
   # Code generation for internationalization and JSON serialization
   build_runner: ^2.4.13
   json_serializable: ^6.8.0
+  
+  # Code generation for Freezed
+  freezed: ^2.5.4
 
 # Configuration for internationalization
 flutter:

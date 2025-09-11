@@ -1,0 +1,34 @@
+name: mvvm_flutter_demo
+
+# Packages included in this workspace
+packages:
+  - packages/**
+  - apps/**
+
+# Helpful scripts (require Melos installed)
+scripts:
+  bootstrap:
+    description: Link local packages and get dependencies across the workspace
+    run: melos bootstrap
+
+  analyze:all:
+    description: Run static analysis across all packages
+    run: flutter analyze
+
+  format:all:
+    description: Format code across all packages
+    run: dart format --set-exit-if-changed .
+
+  test:all:
+    description: Run tests across all packages
+    run: flutter test
+
+  generate:all:
+    description: Run build_runner in all packages that depend on it
+    run: flutter packages pub run build_runner build --delete-conflicting-outputs
+    packageFilters:
+      dependsOn: build_runner
+
+  clean:all:
+    description: Clean all packages
+    run: flutter clean
