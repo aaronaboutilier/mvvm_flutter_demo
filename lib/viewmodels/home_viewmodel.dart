@@ -1,7 +1,11 @@
 // lib/viewmodels/home_viewmodel.dart
 
 import 'package:flutter/foundation.dart';
-import '../models/user.dart';
+import '../core/core.dart' as core;
+import '../features/home/application/usecases/clear_user.dart';
+import '../features/home/application/usecases/load_user.dart';
+import '../features/home/domain/entities/user.dart' as domain;
+import '../features/home/infrastructure/repositories/in_memory_user_repository.dart';
 
 /// HomeViewModel manages the state and business logic for the home screen
 /// This is the ViewModel part of MVVM - it sits between the View and Model
@@ -10,14 +14,14 @@ import '../models/user.dart';
 /// This is crucial for reactive UI updates in MVVM
 class HomeViewModel extends ChangeNotifier {
   // Private fields to store state
-  User? _currentUser;
+  domain.User? _currentUser;
   bool _isLoading = false;
   String? _errorMessage;
   int _buttonClickCount = 0;
 
   // Public getters to expose state to the View
   // The View should never directly modify private fields
-  User? get currentUser => _currentUser;
+  domain.User? get currentUser => _currentUser;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   int get buttonClickCount => _buttonClickCount;
@@ -31,24 +35,35 @@ class HomeViewModel extends ChangeNotifier {
 
   /// Simulates loading a user (like from an API or database)
   /// This demonstrates how ViewModels handle asynchronous operations
+  final LoadUser _loadUser;
+  final ClearUser _clearUser;
+
+  HomeViewModel()
+      : this.withRepository(InMemoryUserRepository());
+
+  HomeViewModel.withRepository(InMemoryUserRepository repo)
+      : _loadUser = LoadUser(repo),
+        _clearUser = ClearUser(repo);
+
   Future<void> loadUser() async {
     // Set loading state and notify listeners
     _setLoading(true);
     _clearError();
 
     try {
-      // Simulate network delay
-      await Future.delayed(const Duration(seconds: 2));
-      
-      // Simulate loading user data
-      _currentUser = const User(
-        id: '1',
-        name: 'John Doe',
-        email: 'john.doe@example.com',
+      final res = await _loadUser(const core.NoParams());
+      res.fold(
+        failure: (f) {
+          _errorMessage = f.message;
+          _currentUser = null;
+        },
+        success: (user) {
+          _currentUser = user;
+          _errorMessage = null;
+        },
       );
 
       // Success - clear any previous errors
-      _errorMessage = null;
     } catch (error) {
       // Handle errors gracefully
       _errorMessage = 'Failed to load user: $error';
@@ -74,7 +89,8 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   /// Resets the user state (like logging out)
-  void clearUser() {
+  Future<void> clearUser() async {
+    await _clearUser(const core.NoParams());
     _currentUser = null;
     _buttonClickCount = 0;
     _clearError();
