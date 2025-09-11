@@ -1,19 +1,44 @@
 // lib/viewmodels/details_viewmodel.dart
 
 import 'package:flutter/foundation.dart';
+import '../core/core.dart' as core;
+import '../features/details/application/usecases/add_detail_item.dart';
+import '../features/details/application/usecases/clear_detail_items.dart';
+import '../features/details/application/usecases/get_detail_items.dart';
+import '../features/details/application/usecases/remove_detail_item.dart';
+import '../features/details/application/usecases/reorder_detail_items.dart';
+import '../features/details/infrastructure/repositories/in_memory_details_repository.dart';
+import '../features/details/domain/entities/detail_item.dart';
 
 /// DetailsViewModel manages state and logic for the details screen
 /// This demonstrates how each screen can have its own ViewModel
 /// keeping concerns separated and making the app more maintainable
 class DetailsViewModel extends ChangeNotifier {
-  // State for demonstration purposes
+  // Dependencies (temporary manual wiring; later via DI)
+  final GetDetailItems _getItems;
+  final AddDetailItem _addItemUc;
+  final RemoveDetailItem _removeItemUc;
+  final ClearDetailItems _clearItemsUc;
+  final ReorderDetailItems _reorderItemsUc;
+
+  DetailsViewModel()
+      : this.withRepository(InMemoryDetailsRepository());
+
+  DetailsViewModel.withRepository(InMemoryDetailsRepository repo)
+      : _getItems = GetDetailItems(repo),
+        _addItemUc = AddDetailItem(repo),
+        _removeItemUc = RemoveDetailItem(repo),
+        _clearItemsUc = ClearDetailItems(repo),
+        _reorderItemsUc = ReorderDetailItems(repo);
+
+  // UI State
   String _selectedColor = 'Blue';
-  List<String> _items = [];
+  List<DetailItem> _items = [];
   bool _isAddingItem = false;
 
   // Public getters to expose state
   String get selectedColor => _selectedColor;
-  List<String> get items => List.unmodifiable(_items); // Return immutable copy
+  List<String> get items => List.unmodifiable(_items.map((e) => '${e.name} (${e.displayTime})'));
   bool get isAddingItem => _isAddingItem;
   
   // Available colors for selection
@@ -46,13 +71,12 @@ class DetailsViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      // Simulate some processing time (like saving to a database)
-      await Future.delayed(const Duration(milliseconds: 500));
-      
-      // Add the item with a timestamp to make it unique
-      final timestamp = DateTime.now().millisecondsSinceEpoch;
-      _items.add('$itemName (${_formatTimestamp(timestamp)})');
-      
+      final res = await _addItemUc(itemName);
+      await _refreshItems();
+      res.fold(
+        failure: (_) {},
+        success: (_) {},
+      );
     } catch (error) {
       // In a real app, you'd handle errors appropriately
       debugPrint('Error adding item: $error');
@@ -63,41 +87,42 @@ class DetailsViewModel extends ChangeNotifier {
   }
 
   /// Removes an item at the specified index
-  void removeItem(int index) {
-    if (index >= 0 && index < _items.length) {
-      _items.removeAt(index);
-      notifyListeners();
-    }
+  Future<void> removeItem(int index) async {
+    final res = await _removeItemUc(index);
+    await _refreshItems();
+    res.fold(failure: (_) {}, success: (_) {});
   }
 
   /// Clears all items
-  void clearAllItems() {
-    if (_items.isNotEmpty) {
-      _items.clear();
-      notifyListeners();
-    }
+  Future<void> clearAllItems() async {
+    final res = await _clearItemsUc(const core.NoParams());
+    await _refreshItems();
+    res.fold(failure: (_) {}, success: (_) {});
   }
 
   /// Reorders items in the list
   /// This shows how to handle more complex list operations
   void reorderItems(int oldIndex, int newIndex) {
-    if (oldIndex < newIndex) {
-      newIndex -= 1;
-    }
-    
-    if (oldIndex >= 0 && oldIndex < _items.length && 
-        newIndex >= 0 && newIndex < _items.length) {
-      final item = _items.removeAt(oldIndex);
-      _items.insert(newIndex, item);
-      notifyListeners();
-    }
+    () async {
+      final res = await _reorderItemsUc(ReorderParams(oldIndex: oldIndex, newIndex: newIndex));
+      await _refreshItems();
+      res.fold(failure: (_) {}, success: (_) {});
+    }();
   }
 
   // Private helper method
-  String _formatTimestamp(int timestamp) {
-    final date = DateTime.fromMillisecondsSinceEpoch(timestamp);
-    return '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+  Future<void> _refreshItems() async {
+    final res = await _getItems(const core.NoParams());
+    res.fold(
+      failure: (_) {},
+      success: (list) {
+        _items = List<DetailItem>.from(list);
+      },
+    );
+    notifyListeners();
   }
+
+  Future<void> load() => _refreshItems();
 
   @override
   void dispose() {

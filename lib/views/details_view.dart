@@ -32,6 +32,13 @@ class _DetailsContentState extends State<_DetailsContent> {
   final TextEditingController _textController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<DetailsViewModel>().load();
+    });
+  }
+  @override
   void dispose() {
     _textController.dispose();
     super.dispose();
