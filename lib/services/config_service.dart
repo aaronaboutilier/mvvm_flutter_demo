@@ -1,3 +1,5 @@
+// Deprecated shim: re-export moved ConfigService
+export 'package:mvvm_flutter_demo/core/configuration/config_service.dart';
 // lib/services/config_service.dart
 
 import 'dart:convert';
