@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:mvvm_flutter_demo/core/result/result.dart';
-import 'package:mvvm_flutter_demo/core/errors/failure.dart';
+import 'package:core_foundation/core/result/result.dart';
+import 'package:core_foundation/core/errors/failure.dart';
 
 class _DummyFailure extends Failure {
   const _DummyFailure(String message) : super(message: message, code: 'dummy');

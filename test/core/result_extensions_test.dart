@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:mvvm_flutter_demo/core/result/result.dart';
-import 'package:mvvm_flutter_demo/core/result/result_extensions.dart';
-import 'package:mvvm_flutter_demo/core/errors/failure.dart';
+import 'package:core_foundation/core/result/result.dart';
+import 'package:core_foundation/core/result/result_extensions.dart';
+import 'package:core_foundation/core/errors/failure.dart';
 
 class _F extends Failure {
   const _F(String m) : super(message: m);

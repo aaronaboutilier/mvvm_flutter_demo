@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mvvm_flutter_demo/core/errors/failures.dart';
-import 'package:mvvm_flutter_demo/core/utils/error_mapper.dart';
+import 'package:core_foundation/core/errors/failures.dart';
+import 'package:core_foundation/core/utils/error_mapper.dart';
 
 void main() {
   group('Failures', () {
