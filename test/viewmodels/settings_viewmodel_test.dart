@@ -1,92 +1,158 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mvvm_flutter_demo/core/errors/failures.dart';
-import 'package:mvvm_flutter_demo/core/result/result.dart';
-import 'package:mvvm_flutter_demo/features/settings/application/usecases/settings_usecases.dart';
-import 'package:mvvm_flutter_demo/features/settings/domain/repositories/settings_repository.dart';
-import 'package:mvvm_flutter_demo/features/settings/domain/value_objects/language_code.dart' as vo;
-import 'package:mvvm_flutter_demo/features/settings/domain/value_objects/text_scale.dart' as vo;
-import 'package:mvvm_flutter_demo/features/settings/domain/value_objects/theme_preference.dart' as vo;
-import 'package:mvvm_flutter_demo/core/configuration/configuration.dart';
-import 'package:mvvm_flutter_demo/features/settings/presentation/viewmodels/settings_viewmodel.dart';
+import 'package:core_foundation/core/core.dart' as foundation;
+import 'package:feature_settings/feature_settings.dart';
 
 class _FakeSettingsRepo implements SettingsRepository {
-  AppConfig _config = AppConfig.defaultConfig();
+  SettingsConfig _config = const SettingsConfig(
+    theme: ThemeSettings(themeMode: ThemeMode.system, textScaleFactor: 1.0),
+    accessibility: AccessibilitySettings(
+      reduceAnimations: false,
+      increasedContrast: false,
+      largerTouchTargets: false,
+      enableVoiceGuidance: false,
+      enableHapticFeedback: true,
+    ),
+    localization: LocalizationSettings(useDeviceLocale: true, languageCode: 'en'),
+    brand: BrandInfo(appName: 'Test', websiteUrl: 'https://example.com', supportEmail: 'support@example.com'),
+    features: FeatureSettings(enableDataExport: true),
+  );
 
   bool failLanguage = false;
   bool failExport = false;
 
   @override
-  AppConfig get currentConfig => _config;
+  SettingsConfig get currentConfig => _config;
 
   @override
   bool isFeatureEnabled(String featureName) => true;
 
   @override
-  Future<Result<String>> exportConfiguration() async {
-    if (failExport) return const FailureResult(ConfigFailure(message: 'export failed'));
-    return const Success('test/path.json');
+  Future<foundation.Result<String>> exportConfiguration() async {
+    if (failExport) return const foundation.FailureResult(foundation.Failure(message: 'export failed', code: 'config'));
+    return const foundation.Success('test/path.json');
   }
 
   @override
-  Future<Result<void>> resetToDefaults() async {
-    _config = AppConfig.defaultConfig();
-    return const Success(null);
+  Future<foundation.Result<void>> resetToDefaults() async {
+    _config = const SettingsConfig(
+      theme: ThemeSettings(themeMode: ThemeMode.system, textScaleFactor: 1.0),
+      accessibility: AccessibilitySettings(
+        reduceAnimations: false,
+        increasedContrast: false,
+        largerTouchTargets: false,
+        enableVoiceGuidance: false,
+        enableHapticFeedback: true,
+      ),
+      localization: LocalizationSettings(useDeviceLocale: true, languageCode: 'en'),
+      brand: BrandInfo(appName: 'Test', websiteUrl: 'https://example.com', supportEmail: 'support@example.com'),
+      features: FeatureSettings(enableDataExport: true),
+    );
+    return const foundation.Success(null);
   }
 
   @override
-  Future<Result<void>> updateHighContrast(bool highContrast) async {
-    _config = _config.copyWith(accessibility: _config.accessibility.copyWith(increasedContrast: highContrast));
-    return const Success(null);
+  Future<foundation.Result<void>> updateHighContrast(bool highContrast) async {
+    _config = SettingsConfig(
+      theme: _config.theme,
+      accessibility: _config.accessibility.copyWith(increasedContrast: highContrast),
+      localization: _config.localization,
+      brand: _config.brand,
+      features: _config.features,
+    );
+    return const foundation.Success(null);
   }
 
   @override
-  Future<Result<void>> updateHapticFeedback(bool enableHapticFeedback) async {
-    _config = _config.copyWith(accessibility: _config.accessibility.copyWith(enableHapticFeedback: enableHapticFeedback));
-    return const Success(null);
+  Future<foundation.Result<void>> updateHapticFeedback(bool enableHapticFeedback) async {
+    _config = SettingsConfig(
+      theme: _config.theme,
+      accessibility: _config.accessibility.copyWith(enableHapticFeedback: enableHapticFeedback),
+      localization: _config.localization,
+      brand: _config.brand,
+      features: _config.features,
+    );
+    return const foundation.Success(null);
   }
 
   @override
-  Future<Result<void>> updateVoiceGuidance(bool enableVoiceGuidance) async {
-    _config = _config.copyWith(accessibility: _config.accessibility.copyWith(enableVoiceGuidance: enableVoiceGuidance));
-    return const Success(null);
+  Future<foundation.Result<void>> updateVoiceGuidance(bool enableVoiceGuidance) async {
+    _config = SettingsConfig(
+      theme: _config.theme,
+      accessibility: _config.accessibility.copyWith(enableVoiceGuidance: enableVoiceGuidance),
+      localization: _config.localization,
+      brand: _config.brand,
+      features: _config.features,
+    );
+    return const foundation.Success(null);
   }
 
   @override
-  Future<Result<void>> updateLanguageCode(vo.LanguageCode languageCode) async {
-    if (failLanguage) return const FailureResult(ValidationFailure(message: 'bad language'));
-    _config = _config.copyWith(localization: _config.localization.copyWith(languageCode: languageCode.value, useDeviceLocale: false));
-    return const Success(null);
+  Future<foundation.Result<void>> updateLanguageCode(LanguageCode languageCode) async {
+    if (failLanguage) return const foundation.FailureResult(foundation.Failure(message: 'bad language', code: 'validation'));
+    _config = SettingsConfig(
+      theme: _config.theme,
+      accessibility: _config.accessibility,
+      localization: _config.localization.copyWith(languageCode: languageCode.value, useDeviceLocale: false),
+      brand: _config.brand,
+      features: _config.features,
+    );
+    return const foundation.Success(null);
   }
 
   @override
-  Future<Result<void>> updateLargerTouchTargets(bool largerTouchTargets) async {
-    _config = _config.copyWith(accessibility: _config.accessibility.copyWith(largerTouchTargets: largerTouchTargets));
-    return const Success(null);
+  Future<foundation.Result<void>> updateLargerTouchTargets(bool largerTouchTargets) async {
+    _config = SettingsConfig(
+      theme: _config.theme,
+      accessibility: _config.accessibility.copyWith(largerTouchTargets: largerTouchTargets),
+      localization: _config.localization,
+      brand: _config.brand,
+      features: _config.features,
+    );
+    return const foundation.Success(null);
   }
 
   @override
-  Future<Result<void>> updateReduceAnimations(bool reduceAnimations) async {
-    _config = _config.copyWith(accessibility: _config.accessibility.copyWith(reduceAnimations: reduceAnimations));
-    return const Success(null);
+  Future<foundation.Result<void>> updateReduceAnimations(bool reduceAnimations) async {
+    _config = SettingsConfig(
+      theme: _config.theme,
+      accessibility: _config.accessibility.copyWith(reduceAnimations: reduceAnimations),
+      localization: _config.localization,
+      brand: _config.brand,
+      features: _config.features,
+    );
+    return const foundation.Success(null);
   }
 
   @override
-  Future<Result<void>> updateTextScaleFactor(vo.TextScale newScaleFactor) async {
-    _config = _config.copyWith(theme: _config.theme.copyWith(textScaleFactor: newScaleFactor.value));
-    return const Success(null);
+  Future<foundation.Result<void>> updateTextScaleFactor(TextScale newScaleFactor) async {
+    _config = SettingsConfig(
+      theme: _config.theme.copyWith(textScaleFactor: newScaleFactor.value),
+      accessibility: _config.accessibility,
+      localization: _config.localization,
+      brand: _config.brand,
+      features: _config.features,
+    );
+    return const foundation.Success(null);
   }
 
   @override
-  Future<Result<void>> updateThemeMode(vo.ThemePreference newThemeMode) async {
+  Future<foundation.Result<void>> updateThemeMode(ThemePreference newThemeMode) async {
     // We don't need to map here for tests; just flip text to ensure flow works
-    return const Success(null);
+    return const foundation.Success(null);
   }
 
   @override
-  Future<Result<void>> updateUseDeviceLocale(bool useDeviceLocale) async {
-    _config = _config.copyWith(localization: _config.localization.copyWith(useDeviceLocale: useDeviceLocale));
-    return const Success(null);
+  Future<foundation.Result<void>> updateUseDeviceLocale(bool useDeviceLocale) async {
+    _config = SettingsConfig(
+      theme: _config.theme,
+      accessibility: _config.accessibility,
+      localization: _config.localization.copyWith(useDeviceLocale: useDeviceLocale),
+      brand: _config.brand,
+      features: _config.features,
+    );
+    return const foundation.Success(null);
   }
 }
 
@@ -139,7 +205,7 @@ void main() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockMethodCallHandler(SystemChannels.platform, (_) async => null);
 
-      await vm.updateLanguageCode('xx');
+  await vm.updateLanguageCode('xx');
 
       expect(vm.errorMessage, isNotNull);
       expect(vm.isUpdating, isFalse);

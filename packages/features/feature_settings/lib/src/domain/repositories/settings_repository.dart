@@ -1,11 +1,11 @@
-import '../../../../core/configuration/configuration.dart';
-import '../../../../core/result/result.dart';
+import 'package:core_foundation/core/core.dart';
+import '../entities/settings_config.dart';
 import '../value_objects/text_scale.dart';
 import '../value_objects/language_code.dart';
 import '../value_objects/theme_preference.dart';
 
 abstract class SettingsRepository {
-  AppConfig get currentConfig;
+  SettingsConfig get currentConfig;
 
   Future<Result<void>> updateThemeMode(ThemePreference newThemeMode);
   Future<Result<void>> updateTextScaleFactor(TextScale newScaleFactor);

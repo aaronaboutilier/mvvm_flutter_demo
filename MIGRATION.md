@@ -39,7 +39,7 @@ mkdir -p packages/shared/shared_user
 # Move authentication and user management code
 # Update imports across the application to use the new packages
 ```
-
+<!-- 
 **Phase 3: Extract Feature Domains**
 
 Extract complete feature domains into their own packages, ensuring each feature maintains clean architecture principles. With Melos v7 and Pub Workspaces, add the packages and wire them in the root `pubspec.yaml`:
@@ -67,7 +67,7 @@ dart run melos bootstrap
 
 # Move feature-specific code while maintaining layer separation
 # Update routing and navigation to work with the new package structure (e.g., GoRouter routes provided by feature packages)
-```
+``` -->
 
 **Phase 4: Create Application Packages**
 

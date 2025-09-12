@@ -26,6 +26,8 @@ dependencies:
     path: packages/features/feature_products
   feature_details:
     path: packages/features/feature_details
+  feature_settings:
+    path: packages/features/feature_settings
   flutter:
     sdk: flutter
   flutter_localizations:
@@ -72,6 +74,7 @@ workspace:
   - packages/features/feature_dashboard
   - packages/features/feature_products
   - packages/features/feature_details
+  - packages/features/feature_settings
   - packages/shared/shared_auth
   - packages/shared/shared_user
   - packages/shared/shared_configuration

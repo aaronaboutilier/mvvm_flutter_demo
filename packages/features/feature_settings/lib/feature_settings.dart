@@ -1,0 +1,12 @@
+// Public API for the Settings feature
+export 'src/domain/repositories/settings_repository.dart';
+export 'src/domain/value_objects/language_code.dart';
+export 'src/domain/value_objects/text_scale.dart';
+export 'src/domain/value_objects/theme_preference.dart';
+export 'src/application/usecases/settings_usecases.dart';
+export 'src/domain/entities/settings_config.dart';
+export 'src/presentation/viewmodels/settings_view_state.dart';
+export 'src/presentation/viewmodels/settings_viewmodel.dart';
+export 'src/presentation/views/settings_page.dart';
+export 'src/routes.dart' show featureSettingsRoutes, SettingsRoutes, SettingsRouteHelper;
+export 'src/di.dart' show registerFeatureSettings;

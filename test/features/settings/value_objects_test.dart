@@ -1,7 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mvvm_flutter_demo/features/settings/domain/value_objects/text_scale.dart';
-import 'package:mvvm_flutter_demo/features/settings/domain/value_objects/language_code.dart';
-import 'package:mvvm_flutter_demo/features/settings/domain/value_objects/theme_preference.dart';
+import 'package:feature_settings/feature_settings.dart';
 
 void main() {
   group('TextScale', () {

@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:core_foundation/core/core.dart';
-import '../../../../core/core.dart' as core;
+import 'package:core_foundation/core/core.dart' as foundation;
+import '../../domain/entities/settings_config.dart';
 import '../../application/usecases/settings_usecases.dart';
 import '../../domain/value_objects/text_scale.dart' as vo;
 import '../../domain/value_objects/language_code.dart' as vo;
 import '../../domain/value_objects/theme_preference.dart' as vo;
 import '../../domain/repositories/settings_repository.dart';
-import '../../../../core/core.dart';
 import 'settings_view_state.dart';
 
-class SettingsViewModel extends ChangeNotifierViewModel<SettingsViewState> {
+class SettingsViewModel extends foundation.ChangeNotifierViewModel<SettingsViewState> {
   final SettingsRepository _repo;
   late final UpdateThemeMode _updateThemeMode;
   late final UpdateTextScale _updateTextScale;
@@ -53,10 +52,10 @@ class SettingsViewModel extends ChangeNotifierViewModel<SettingsViewState> {
 
   bool get isUpdating => state.isLoading;
   String? get errorMessage => state.errorMessage;
-  AppConfig get currentConfig => _repo.currentConfig;
+  SettingsConfig get currentConfig => _repo.currentConfig;
 
   Future<void> updateThemeMode(ThemeMode newThemeMode) async {
-  updateState(state.clearMessages().copyWith(isLoading: true));
+    updateState(state.clearMessages().copyWith(isLoading: true));
     try {
       final pref = switch (newThemeMode) {
         ThemeMode.light => vo.ThemePreference.light,
@@ -71,7 +70,7 @@ class SettingsViewModel extends ChangeNotifierViewModel<SettingsViewState> {
   }
 
   Future<void> updateTextScaleFactor(double newScaleFactor) async {
-  updateState(state.clearMessages().copyWith(isLoading: true));
+    updateState(state.clearMessages().copyWith(isLoading: true));
     try {
       await _updateTextScale(vo.TextScale(newScaleFactor));
       _maybeHapticLight();
@@ -81,7 +80,7 @@ class SettingsViewModel extends ChangeNotifierViewModel<SettingsViewState> {
   }
 
   Future<void> updateReduceAnimations(bool reduceAnimations) async {
-  updateState(state.clearMessages().copyWith(isLoading: true));
+    updateState(state.clearMessages().copyWith(isLoading: true));
     try {
       await _updateReduceAnimations(reduceAnimations);
       if (!reduceAnimations) _maybeHapticSelection();
@@ -91,7 +90,7 @@ class SettingsViewModel extends ChangeNotifierViewModel<SettingsViewState> {
   }
 
   Future<void> updateHighContrast(bool highContrast) async {
-  updateState(state.clearMessages().copyWith(isLoading: true));
+    updateState(state.clearMessages().copyWith(isLoading: true));
     try {
       await _updateHighContrast(highContrast);
       _maybeHapticSelection();
@@ -101,7 +100,7 @@ class SettingsViewModel extends ChangeNotifierViewModel<SettingsViewState> {
   }
 
   Future<void> updateLargerTouchTargets(bool largerTouchTargets) async {
-  updateState(state.clearMessages().copyWith(isLoading: true));
+    updateState(state.clearMessages().copyWith(isLoading: true));
     try {
       await _updateLargerTouchTargets(largerTouchTargets);
       _maybeHapticSelection();
@@ -111,7 +110,7 @@ class SettingsViewModel extends ChangeNotifierViewModel<SettingsViewState> {
   }
 
   Future<void> updateVoiceGuidance(bool enableVoiceGuidance) async {
-  updateState(state.clearMessages().copyWith(isLoading: true));
+    updateState(state.clearMessages().copyWith(isLoading: true));
     try {
       await _updateVoiceGuidance(enableVoiceGuidance);
       _maybeHapticSelection();
@@ -121,7 +120,7 @@ class SettingsViewModel extends ChangeNotifierViewModel<SettingsViewState> {
   }
 
   Future<void> updateHapticFeedback(bool enableHapticFeedback) async {
-  updateState(state.clearMessages().copyWith(isLoading: true));
+    updateState(state.clearMessages().copyWith(isLoading: true));
     try {
       await _updateHapticFeedback(enableHapticFeedback);
       if (enableHapticFeedback) _maybeHapticSelection();
@@ -131,7 +130,7 @@ class SettingsViewModel extends ChangeNotifierViewModel<SettingsViewState> {
   }
 
   Future<void> updateUseDeviceLocale(bool useDeviceLocale) async {
-  updateState(state.clearMessages().copyWith(isLoading: true));
+    updateState(state.clearMessages().copyWith(isLoading: true));
     try {
       await _updateUseDeviceLocale(useDeviceLocale);
       _maybeHapticSelection();
@@ -141,7 +140,7 @@ class SettingsViewModel extends ChangeNotifierViewModel<SettingsViewState> {
   }
 
   Future<void> updateLanguageCode(String languageCode) async {
-  updateState(state.clearMessages().copyWith(isLoading: true));
+    updateState(state.clearMessages().copyWith(isLoading: true));
     try {
       final res = await _updateLanguageCode(vo.LanguageCode(languageCode));
       res.fold(
@@ -161,7 +160,7 @@ class SettingsViewModel extends ChangeNotifierViewModel<SettingsViewState> {
     }
     updateState(state.clearMessages().copyWith(isLoading: true));
     try {
-      final res = await _exportConfiguration(const core.NoParams());
+      final res = await _exportConfiguration(const foundation.NoParams());
       res.fold(
         failure: (f) => throw Exception(f.message),
         success: (path) => updateState(state.copyWith(successMessage: 'Configuration exported to: $path')),
@@ -172,9 +171,9 @@ class SettingsViewModel extends ChangeNotifierViewModel<SettingsViewState> {
   }
 
   Future<void> resetToDefaults() async {
-  updateState(state.clearMessages().copyWith(isLoading: true));
+    updateState(state.clearMessages().copyWith(isLoading: true));
     try {
-      await _resetToDefaults(const core.NoParams());
+      await _resetToDefaults(const foundation.NoParams());
       updateState(state.copyWith(successMessage: 'Settings reset to defaults'));
       _maybeHapticHeavy();
     } finally {

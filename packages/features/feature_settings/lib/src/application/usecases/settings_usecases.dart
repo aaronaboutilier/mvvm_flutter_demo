@@ -1,4 +1,4 @@
-import '../../../../core/core.dart';
+import 'package:core_foundation/core/core.dart';
 import '../../domain/value_objects/theme_preference.dart';
 import '../../domain/value_objects/text_scale.dart';
 import '../../domain/value_objects/language_code.dart';
