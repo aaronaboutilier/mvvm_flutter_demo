@@ -3,8 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mvvm_flutter_demo/core/localization/localization.dart';
 import '../../../../core/di/locator.dart';
-import '../viewmodels/home_viewmodel.dart';
-import '../viewmodels/home_view_state.dart';
+import 'package:feature_dashboard/feature_dashboard.dart' show HomeViewModel, HomeViewState;
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});

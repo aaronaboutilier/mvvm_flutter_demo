@@ -6,12 +6,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-import 'core/localization/localization.dart';
-import 'core/configuration/configuration.dart';
-import 'features/home/presentation/views/home_view.dart';
-import 'features/details/presentation/views/details_view.dart';
-import 'features/settings/presentation/views/settings_view.dart';
-import 'core/di/locator.dart';
+import 'package:mvvm_flutter_demo/core/localization/localization.dart';
+import 'package:mvvm_flutter_demo/core/configuration/configuration.dart';
+import 'package:mvvm_flutter_demo/core/di/locator.dart';
+import 'package:mvvm_flutter_demo/features/home/presentation/views/home_view.dart';
+import 'package:mvvm_flutter_demo/features/details/presentation/views/details_view.dart';
+import 'package:mvvm_flutter_demo/features/settings/presentation/views/settings_view.dart';
+import 'package:feature_dashboard/feature_dashboard.dart';
+import 'package:feature_products/feature_products.dart';
 
 /// The main entry point of our enhanced MVVM Flutter application
 /// This demonstrates how i18n, a11y, theming, and white-labeling 
@@ -196,6 +198,11 @@ class MVVMDemoApp extends StatelessWidget {
 
   /// Builds router configuration with feature flag integration
   GoRouter _buildRouter(AppConfig config) {
+    final featureRoutes = <RouteBase>[
+      ...featureDashboardRoutes(),
+      ...featureProductsRoutes(),
+    ];
+
     return GoRouter(
       initialLocation: '/',
       routes: [
@@ -216,8 +223,10 @@ class MVVMDemoApp extends StatelessWidget {
             name: 'settings',
             builder: (context, state) => const SettingsView(),
           ),
+        // Feature routes
+        ...featureRoutes,
       ],
-      
+
       // Accessibility-aware error page
       errorBuilder: (context, state) => _ErrorPage(
         error: state.error.toString(),

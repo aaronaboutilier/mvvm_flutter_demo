@@ -1,0 +1,20 @@
+name: shared_user
+description: Shared user domain (contracts and models) used across features.
+version: 0.0.1
+publish_to: 'none'
+resolution: workspace
+
+environment:
+  sdk: '^3.9.2'
+  flutter: ">=3.22.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  core_networking:
+    path: ../../core/core_networking
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  lints: ^6.0.0

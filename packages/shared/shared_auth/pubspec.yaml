@@ -1,0 +1,22 @@
+name: shared_auth
+description: Shared authentication domain (contracts and simple models).
+version: 0.0.1
+publish_to: 'none'
+resolution: workspace
+
+environment:
+  sdk: '^3.9.2'
+  flutter: ">=3.22.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  core_networking:
+    path: ../../core/core_networking
+  core_storage:
+    path: ../../core/core_storage
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  lints: ^6.0.0

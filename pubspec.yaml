@@ -11,62 +11,89 @@ environment:
   sdk: '>=3.8.0 <4.0.0'
 
 dependencies:
-  flutter:
-    sdk: flutter
-  
-  # State management for MVVM - Provider is very stable
-  provider: ^6.1.2
-  
-  # Dependency Injection
-  get_it: ^8.0.0
-  
-  # Navigation - Go Router has frequent updates but good backward compatibility
-  go_router: ^16.2.1
-  
-  # Internationalization and localization - These are essential and stable
-  flutter_localizations:
-    sdk: flutter
-  # intl is provided by flutter_localizations, so we don't need to specify it separately
-  
-  # Accessibility helpers - Enhanced for 2025
-  flutter_tts: ^4.2.0
-  accessibility_tools: ^2.2.0  # New addition for comprehensive a11y testing
-  
-  # Persistence and file system access - These are mature packages
-  shared_preferences: ^2.3.3
-  path_provider: ^2.1.5
-  
-  # Configuration management for white-labeling - Stable serialization
-  json_annotation: ^4.9.0
-
-  # Immutable data classes
-  freezed_annotation: ^2.4.4
-
-  # Secure storage for sensitive data
-  flutter_secure_storage: ^9.2.2
-  
-  # Local core packages (Phase 1 extraction)
+  accessibility_tools: ^2.2.0
   core_design_system:
     path: packages/core/core_design_system
   core_networking:
     path: packages/core/core_networking
   core_storage:
     path: packages/core/core_storage
+  core_foundation:
+    path: packages/core/core_foundation
+  feature_dashboard:
+    path: packages/features/feature_dashboard
+  feature_products:
+    path: packages/features/feature_products
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  flutter_secure_storage: ^9.2.2
+  flutter_tts: ^4.2.0
+  freezed_annotation: ^2.4.4
+  get_it: ^8.0.0
+  go_router: ^16.2.1
+  json_annotation: ^4.9.0
+  path_provider: ^2.1.5
+  provider: ^6.1.2
+  shared_auth:
+    path: packages/shared/shared_auth
+  shared_configuration:
+    path: packages/shared/shared_configuration
+  shared_navigation:
+    path: packages/shared/shared_navigation
+  shared_preferences: ^2.3.3
+  shared_user:
+    path: packages/shared/shared_user
 
 dev_dependencies:
+  # Code generation for internationalization and JSON serialization
+  build_runner: ^2.4.13
+
+  # Linting rules - Keep updated for best practices
+  flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
   
-  # Linting rules - Keep updated for best practices
-  flutter_lints: ^6.0.0
-  very_good_analysis: ^6.0.0
-  
-  # Code generation for internationalization and JSON serialization
-  build_runner: ^2.4.13
-  json_serializable: ^6.8.0
-  
   # Code generation for Freezed
   freezed: ^2.5.4
+  json_serializable: ^6.8.0
+  melos: ^7.1.0
+  very_good_analysis: ^6.0.0
+
+# Melos v7 workspace definition and scripts
+workspace:
+  - packages/core/core_design_system
+  - packages/core/core_networking
+  - packages/core/core_storage
+  - packages/core/core_foundation
+  - packages/features/feature_dashboard
+  - packages/features/feature_products
+  - packages/shared/shared_auth
+  - packages/shared/shared_user
+  - packages/shared/shared_configuration
+  - packages/shared/shared_navigation
+
+melos:
+  scripts:
+    analyze:all:
+      description: Run static analysis across all packages
+      run: flutter analyze
+    format:all:
+      description: Format code across all packages
+      run: dart format --set-exit-if-changed .
+    test:all:
+      description: Run tests across all packages
+      run: flutter test
+    generate:all:
+      description: Run build_runner in all packages that depend on it
+      run: melos exec --depends-on build_runner -- flutter packages pub run build_runner build --delete-conflicting-outputs
+    generate:app:
+      description: Run build_runner in the application (root) package
+      run: dart run build_runner build --delete-conflicting-outputs
+    clean:all:
+      description: Clean all packages
+      run: flutter clean
 
 # Configuration for internationalization
 flutter:

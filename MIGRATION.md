@@ -42,15 +42,31 @@ mkdir -p packages/shared/shared_user
 
 **Phase 3: Extract Feature Domains**
 
-Extract complete feature domains into their own packages, ensuring each feature maintains clean architecture principles:
+Extract complete feature domains into their own packages, ensuring each feature maintains clean architecture principles. With Melos v7 and Pub Workspaces, add the packages and wire them in the root `pubspec.yaml`:
 
 ```bash
 # Create feature packages
 mkdir -p packages/features/feature_products
 mkdir -p packages/features/feature_dashboard
 
+# In each new feature package, add a minimal pubspec.yaml with:
+#   name: feature_<name>
+#   resolution: workspace
+#   environment: sdk: '^3.9.2', flutter ">=3.22.0"
+#   dependencies:
+#     flutter:
+#       sdk: flutter
+
+# Update root pubspec.yaml:
+# - Add the new feature package paths under `workspace:`
+# - Add path dependencies for the app under `dependencies:` if the app consumes the features
+
+# Bootstrap the workspace and fetch dependencies
+dart run melos list
+dart run melos bootstrap
+
 # Move feature-specific code while maintaining layer separation
-# Update routing and navigation to work with the new package structure
+# Update routing and navigation to work with the new package structure (e.g., GoRouter routes provided by feature packages)
 ```
 
 **Phase 4: Create Application Packages**

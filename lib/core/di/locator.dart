@@ -6,9 +6,7 @@ import '../../features/details/application/usecases/get_detail_items.dart';
 import '../../features/details/application/usecases/remove_detail_item.dart';
 import '../../features/details/application/usecases/reorder_detail_items.dart';
 import '../../features/details/infrastructure/repositories/in_memory_details_repository.dart';
-import '../../features/home/application/usecases/clear_user.dart';
-import '../../features/home/application/usecases/load_user.dart';
-import '../../features/home/infrastructure/repositories/in_memory_user_repository.dart';
+// Home (migrated to feature_dashboard)
 import '../../features/settings/application/usecases/settings_usecases.dart';
 import '../../features/settings/infrastructure/repositories/config_settings_repository.dart';
 import '../../features/settings/domain/repositories/settings_repository.dart';
@@ -16,14 +14,14 @@ import '../configuration/configuration.dart';
 import '../theming/theming.dart';
 import '../accessibility/accessibility.dart';
 import '../analytics/analytics.dart';
-import '../../features/home/presentation/viewmodels/home_viewmodel.dart';
 import '../../features/details/presentation/viewmodels/details_viewmodel.dart';
 import '../../features/settings/presentation/viewmodels/settings_viewmodel.dart';
-import '../presentation/view_model.dart';
-import '../../features/home/presentation/viewmodels/home_view_state.dart';
 import '../../features/details/presentation/viewmodels/details_view_state.dart';
 import '../../features/settings/presentation/viewmodels/settings_view_state.dart';
 import '../core.dart';
+// Feature package DI hooks
+import 'package:feature_dashboard/feature_dashboard.dart' as feature_dashboard;
+import 'package:feature_products/feature_products.dart' as feature_products;
 
 final GetIt locator = GetIt.instance;
 
@@ -45,10 +43,7 @@ void setupLocator() {
   locator.registerFactory(() => ClearDetailItems(locator()));
   locator.registerFactory(() => ReorderDetailItems(locator()));
 
-  // Home feature
-  locator.registerLazySingleton(() => InMemoryUserRepository(locator()));
-  locator.registerFactory(() => LoadUser(locator()));
-  locator.registerFactory(() => ClearUser(locator()));
+  // Home/Dashboard feature registrations now live in feature_dashboard.registerFeatureDashboard
 
   // Settings feature
   locator.registerLazySingleton<SettingsRepository>(() => ConfigSettingsRepository(locator()));
@@ -65,10 +60,6 @@ void setupLocator() {
   locator.registerFactory(() => ResetToDefaults(locator()));
 
   // Presentation: ViewModels
-  locator.registerFactory<HomeViewModel>(() => HomeViewModel(
-        loadUser: locator(),
-        clearUser: locator(),
-      ));
   locator.registerFactory<DetailsViewModel>(() => DetailsViewModel(
         getItems: locator(),
         addItem: locator(),
@@ -92,7 +83,10 @@ void setupLocator() {
       ));
 
   // Interface registrations
-  locator.registerFactory<ViewModel<HomeViewState>>(() => locator<HomeViewModel>());
   locator.registerFactory<ViewModel<DetailsViewState>>(() => locator<DetailsViewModel>());
   locator.registerFactory<ViewModel<SettingsViewState>>(() => locator<SettingsViewModel>());
+
+  // Feature packages: allow each feature to register its own dependencies
+  feature_dashboard.registerFeatureDashboard(locator);
+  feature_products.registerFeatureProducts(locator);
 }
