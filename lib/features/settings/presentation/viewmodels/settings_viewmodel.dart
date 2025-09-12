@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:core_foundation/core/core.dart';
 import '../../../../core/core.dart' as core;
 import '../../application/usecases/settings_usecases.dart';
 import '../../domain/value_objects/text_scale.dart' as vo;

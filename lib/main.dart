@@ -9,11 +9,11 @@ import 'package:go_router/go_router.dart';
 import 'package:mvvm_flutter_demo/core/localization/localization.dart';
 import 'package:mvvm_flutter_demo/core/configuration/configuration.dart';
 import 'package:mvvm_flutter_demo/core/di/locator.dart';
-import 'package:mvvm_flutter_demo/features/home/presentation/views/home_view.dart';
-import 'package:mvvm_flutter_demo/features/details/presentation/views/details_view.dart';
+// Details feature now provided via feature_details package
 import 'package:mvvm_flutter_demo/features/settings/presentation/views/settings_view.dart';
 import 'package:feature_dashboard/feature_dashboard.dart';
 import 'package:feature_products/feature_products.dart';
+import 'package:feature_details/feature_details.dart';
 
 /// The main entry point of our enhanced MVVM Flutter application
 /// This demonstrates how i18n, a11y, theming, and white-labeling 
@@ -201,21 +201,14 @@ class MVVMDemoApp extends StatelessWidget {
     final featureRoutes = <RouteBase>[
       ...featureDashboardRoutes(),
       ...featureProductsRoutes(),
+      ...featureDetailsRoutes(),
     ];
 
     return GoRouter(
-      initialLocation: '/',
+  initialLocation: DashboardRoutes.path,
       routes: [
-        GoRoute(
-          path: '/',
-          name: 'home',
-          builder: (context, state) => const HomeView(),
-        ),
-        GoRoute(
-          path: '/details',
-          name: 'details',
-          builder: (context, state) => const DetailsView(),
-        ),
+  // Home route moved to feature_dashboard (Dashboard)
+  // Details route provided by feature_details package
         // Conditionally include settings route based on feature flags
         if (config.features.enableUserProfiles)
           GoRoute(
@@ -379,7 +372,7 @@ class _ErrorPage extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: () => context.go('/'),
+              onPressed: () => context.go(DashboardRoutes.path),
               child: Text(localizations.goHome),
             ),
             if (config.features.enableDataExport) ...[

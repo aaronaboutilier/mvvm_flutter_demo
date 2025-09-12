@@ -24,6 +24,8 @@ dependencies:
     path: packages/features/feature_dashboard
   feature_products:
     path: packages/features/feature_products
+  feature_details:
+    path: packages/features/feature_details
   flutter:
     sdk: flutter
   flutter_localizations:
@@ -69,10 +71,12 @@ workspace:
   - packages/core/core_foundation
   - packages/features/feature_dashboard
   - packages/features/feature_products
+  - packages/features/feature_details
   - packages/shared/shared_auth
   - packages/shared/shared_user
   - packages/shared/shared_configuration
   - packages/shared/shared_navigation
+  - apps/consumer_app
 
 melos:
   scripts:

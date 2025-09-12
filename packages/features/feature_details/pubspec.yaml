@@ -1,0 +1,26 @@
+name: feature_details
+version: 0.0.1
+publish_to: 'none'
+resolution: workspace
+
+environment:
+  sdk: '^3.9.2'
+  flutter: ">=3.22.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  core_foundation:
+    path: ../../core/core_foundation
+  go_router: ^16.2.1
+  get_it: ^8.0.0
+  freezed_annotation: ^2.4.4
+  provider: ^6.1.2
+  feature_dashboard:
+    path: ../feature_dashboard
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  build_runner: ^2.4.13
+  freezed: ^2.5.4

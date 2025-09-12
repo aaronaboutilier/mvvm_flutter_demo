@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:feature_dashboard/feature_dashboard.dart' show DashboardRoutes;
 import 'package:mvvm_flutter_demo/core/localization/localization.dart';
 import 'package:mvvm_flutter_demo/core/configuration/configuration.dart';
 import '../../../../core/di/locator.dart';
@@ -43,7 +44,7 @@ class _SettingsContentState extends State<_SettingsContent> {
             title: Text(localizations.settingsTitle),
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
-              onPressed: () => context.go('/'),
+              onPressed: () => context.go(DashboardRoutes.path),
               tooltip: localizations.backToHome,
             ),
           ),

@@ -10,9 +10,7 @@ export 'utils/performance_monitor.dart';
 export 'utils/secure_storage.dart';
 export 'utils/value_objects.dart';
 export 'di/locator.dart';
-export 'presentation/base_view_model.dart';
-export 'presentation/view_model.dart';
-export 'presentation/change_notifier_view_model.dart';
+// Prefer core_foundation for ViewModel abstractions across features
 // Enterprise barrels
 export 'configuration/configuration.dart';
 export 'localization/localization.dart';

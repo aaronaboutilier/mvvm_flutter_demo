@@ -1,44 +1,37 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mvvm_flutter_demo/core/result/result.dart';
-import 'package:mvvm_flutter_demo/features/details/application/usecases/add_detail_item.dart';
-import 'package:mvvm_flutter_demo/features/details/application/usecases/clear_detail_items.dart';
-import 'package:mvvm_flutter_demo/features/details/application/usecases/get_detail_items.dart';
-import 'package:mvvm_flutter_demo/features/details/application/usecases/remove_detail_item.dart';
-import 'package:mvvm_flutter_demo/features/details/application/usecases/reorder_detail_items.dart';
-import 'package:mvvm_flutter_demo/features/details/domain/entities/detail_item.dart';
-import 'package:mvvm_flutter_demo/features/details/domain/repositories/details_repository.dart';
-import 'package:mvvm_flutter_demo/features/details/presentation/viewmodels/details_viewmodel.dart';
+import 'package:core_foundation/core/core.dart' as foundation;
+import 'package:feature_details/feature_details.dart';
 
 class _FakeDetailsRepo implements DetailsRepository {
   final List<DetailItem> _items = [];
 
   @override
-  Future<Result<void>> addItem(String name) async {
+  Future<foundation.Result<void>> addItem(String name) async {
     _items.add(DetailItem(name: name, timestampMillis: DateTime(2024, 1, 1).millisecondsSinceEpoch));
-    return const Success(null);
+    return const foundation.Success(null);
   }
 
   @override
-  Future<Result<void>> clearAll() async {
+  Future<foundation.Result<void>> clearAll() async {
     _items.clear();
-    return const Success(null);
+    return const foundation.Success(null);
   }
 
   @override
-  Future<Result<List<DetailItem>>> getItems() async => Success(List.unmodifiable(_items));
+  Future<foundation.Result<List<DetailItem>>> getItems() async => foundation.Success(List.unmodifiable(_items));
 
   @override
-  Future<Result<void>> removeAt(int index) async {
+  Future<foundation.Result<void>> removeAt(int index) async {
     _items.removeAt(index);
-    return const Success(null);
+    return const foundation.Success(null);
   }
 
   @override
-  Future<Result<void>> reorder({required int oldIndex, required int newIndex}) async {
+  Future<foundation.Result<void>> reorder({required int oldIndex, required int newIndex}) async {
     if (newIndex > oldIndex) newIndex -= 1;
     final item = _items.removeAt(oldIndex);
     _items.insert(newIndex, item);
-    return const Success(null);
+    return const foundation.Success(null);
   }
 }
 
