@@ -1,12 +1,14 @@
-export 'errors/failure.dart';
-export 'errors/failures.dart';
-export 'result/result.dart';
-export 'result/result_extensions.dart';
-export 'usecase_base/usecase.dart';
+// Re-export core foundations from the dedicated package to ensure a single source of truth.
+export 'package:core_foundation/core/errors/failure.dart';
+export 'package:core_foundation/core/errors/failures.dart';
+export 'package:core_foundation/core/result/result.dart';
+export 'package:core_foundation/core/result/result_extensions.dart';
+export 'package:core_foundation/core/usecase_base/usecase.dart';
+export 'package:core_foundation/core/utils/error_mapper.dart';
+export 'package:core_foundation/core/utils/logger.dart';
+export 'package:core_foundation/core/utils/performance_monitor.dart';
+// Local utilities that are still app-specific remain exported here.
 export 'utils/guards.dart';
-export 'utils/error_mapper.dart';
-export 'utils/logger.dart';
-export 'utils/performance_monitor.dart';
 export 'utils/secure_storage.dart';
 export 'utils/value_objects.dart';
 export 'di/locator.dart';

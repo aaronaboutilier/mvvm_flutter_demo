@@ -1,5 +1,2 @@
-// Core analytics barrel to centralize telemetry contracts and providers.
-// Example future exports:
-// export 'package:mvvm_flutter_demo/core/analytics/analytics_service.dart';
-// export 'package:mvvm_flutter_demo/core/analytics/events.dart';
-export 'package:mvvm_flutter_demo/core/analytics/analytics_service.dart';
+// Delegates analytics API to the core_analytics package during migration.
+export 'package:core_analytics/core_analytics.dart';

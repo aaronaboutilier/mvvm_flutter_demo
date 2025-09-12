@@ -1,0 +1,21 @@
+name: core_accessibility
+description: Accessibility services and contracts for the monorepo.
+version: 0.0.1
+publish_to: 'none'
+resolution: workspace
+
+environment:
+  sdk: '^3.9.2'
+  flutter: ">=3.22.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

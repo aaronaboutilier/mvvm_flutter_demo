@@ -6,8 +6,8 @@ import 'package:feature_settings/feature_settings.dart' as feature_settings;
 import '../../features/settings/infrastructure/repositories/config_settings_repository_adapter.dart';
 import '../configuration/configuration.dart';
 import '../theming/theming.dart';
-import '../accessibility/accessibility.dart';
-import '../analytics/analytics.dart';
+import 'package:core_accessibility/core_accessibility.dart';
+import 'package:core_analytics/core_analytics.dart';
 // Presentation types come from feature_settings now
 import '../core.dart';
 // Feature package DI hooks
@@ -21,7 +21,13 @@ void setupLocator() {
   // Core services
   locator.registerLazySingleton<ConfigService>(() => ConfigService.instance);
   locator.registerLazySingleton<ThemeService>(() => DefaultThemeService());
-  locator.registerLazySingleton<AccessibilityService>(() => DefaultAccessibilityService(locator()));
+  locator.registerLazySingleton<AccessibilityService>(() {
+    final config = locator<ConfigService>().currentConfig;
+    return DefaultAccessibilityService(
+      reduceMotion: config.accessibility.reduceAnimations,
+      highContrast: config.accessibility.increasedContrast,
+    );
+  });
   locator.registerLazySingleton<AnalyticsService>(() => DebugAnalyticsService());
   // Logging & performance
   locator.registerLazySingleton<Logger>(() => const DebugLogger());
