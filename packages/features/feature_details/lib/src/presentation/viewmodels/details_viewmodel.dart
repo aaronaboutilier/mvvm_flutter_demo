@@ -1,3 +1,4 @@
+import 'package:core_analytics/core_analytics.dart';
 import 'package:core_foundation/core/core.dart' as core;
 import 'package:core_foundation/core/core.dart';
 import 'package:feature_details/src/application/usecases/add_detail_item.dart';
@@ -63,28 +64,45 @@ class DetailsViewModel extends ChangeNotifierViewModel<DetailsViewState> {
   /// Adds a new item with the given [itemName].
   Future<void> addItem(String itemName) async {
     if (itemName.trim().isEmpty) return;
-    updateState(state.copyWith(isAddingItem: true));
-    try {
-      final res = await _addItemUc(itemName);
-      await _refreshItems();
-      res.fold(failure: (_) {}, success: (_) {});
-    } finally {
-      updateState(state.copyWith(isAddingItem: false));
-    }
+    final run = Analytics.trackedAsyncAction(
+      'details_add_item',
+      () async {
+        updateState(state.copyWith(isAddingItem: true));
+        try {
+          final res = await _addItemUc(itemName);
+          await _refreshItems();
+          res.fold(failure: (_) {}, success: (_) {});
+        } finally {
+          updateState(state.copyWith(isAddingItem: false));
+        }
+      },
+      parameters: () => <String, Object?>{'name_length': itemName.length},
+    );
+    await run();
   }
 
   /// Removes the item at the given [index].
   Future<void> removeItem(int index) async {
-    final res = await _removeItemUc(index);
-    await _refreshItems();
-    res.fold(failure: (_) {}, success: (_) {});
+    final run = Analytics.trackedAsyncAction('details_remove_item', () async {
+      final res = await _removeItemUc(index);
+      await _refreshItems();
+      res.fold(failure: (_) {}, success: (_) {});
+    }, parameters: () => <String, Object?>{'index': index});
+    await run();
   }
 
   /// Clears all items.
   Future<void> clearAllItems() async {
-    final res = await _clearItemsUc(const core.NoParams());
-    await _refreshItems();
-    res.fold(failure: (_) {}, success: (_) {});
+    final run = Analytics.trackedAsyncAction(
+      'details_clear_all_items',
+      () async {
+        final res = await _clearItemsUc(const core.NoParams());
+        await _refreshItems();
+        res.fold(failure: (_) {}, success: (_) {});
+      },
+      parameters: () => <String, Object?>{'count_before': state.itemCount},
+    );
+    await run();
   }
 
   /// Reorders items from [oldIndex] to [newIndex].

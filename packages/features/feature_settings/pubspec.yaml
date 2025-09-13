@@ -8,6 +8,8 @@ environment:
   flutter: ">=3.22.0"
 
 dependencies:
+  core_analytics:
+    path: ../../core/core_analytics
   core_design_system:
     path: ../../core/core_design_system
   core_foundation:

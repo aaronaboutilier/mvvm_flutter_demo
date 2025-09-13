@@ -1,4 +1,5 @@
 import 'package:consumer_app/settings/consumer_settings_repository.dart';
+import 'package:core_analytics/core_analytics.dart';
 import 'package:core_foundation/core/core.dart';
 import 'package:core_localization/generated/l10n/app_localizations.dart' as loc;
 import 'package:feature_dashboard/feature_dashboard.dart';
@@ -33,6 +34,9 @@ void main() async {
   registerFeatureProducts(locator);
   registerFeatureDetails(locator);
   registerFeatureSettings(locator);
+  // Configure cross-cutting analytics
+  //(replace with real implementation in prod)
+  Analytics.backend = DebugAnalyticsService();
   runApp(const ConsumerApp());
 }
 
@@ -55,6 +59,9 @@ class _ConsumerAppState extends State<ConsumerApp> {
         GetIt.I<SettingsRepository>() as ConsumerSettingsRepository;
     _router = GoRouter(
       initialLocation: DashboardRoutes.path,
+      observers: <NavigatorObserver>[
+        AnalyticsNavigatorObserver(Analytics.instance),
+      ],
       routes: [
         ...featureDashboardRoutes(),
         ...featureProductsRoutes(),

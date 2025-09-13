@@ -1,3 +1,4 @@
+import 'package:core_analytics/core_analytics.dart';
 import 'package:core_foundation/core/core.dart' as foundation;
 import 'package:feature_settings/src/application/usecases/settings_usecases.dart';
 import 'package:feature_settings/src/domain/entities/settings_config.dart';
@@ -72,18 +73,25 @@ class SettingsViewModel
 
   /// Updates the app's theme mode.
   Future<void> updateThemeMode(ThemeMode newThemeMode) async {
-    updateState(state.clearMessages().copyWith(isLoading: true));
-    try {
-      final pref = switch (newThemeMode) {
-        ThemeMode.light => vo.ThemePreference.light,
-        ThemeMode.dark => vo.ThemePreference.dark,
-        ThemeMode.system => vo.ThemePreference.system,
-      };
-      await _updateThemeMode(pref);
-      _maybeHapticSelection();
-    } finally {
-      updateState(state.copyWith(isLoading: false));
-    }
+    final run = Analytics.trackedAsyncAction(
+      'settings_change_theme_mode',
+      () async {
+        updateState(state.clearMessages().copyWith(isLoading: true));
+        try {
+          final pref = switch (newThemeMode) {
+            ThemeMode.light => vo.ThemePreference.light,
+            ThemeMode.dark => vo.ThemePreference.dark,
+            ThemeMode.system => vo.ThemePreference.system,
+          };
+          await _updateThemeMode(pref);
+          _maybeHapticSelection();
+        } finally {
+          updateState(state.copyWith(isLoading: false));
+        }
+      },
+      parameters: () => <String, Object?>{'to': newThemeMode.name},
+    );
+    await run();
   }
 
   /// Updates the text scale factor.
@@ -200,30 +208,46 @@ class SettingsViewModel
       );
       return;
     }
-    updateState(state.clearMessages().copyWith(isLoading: true));
-    try {
-      final res = await _exportConfiguration(const foundation.NoParams());
-      res.fold(
-        failure: (f) => throw Exception(f.message),
-        success: (path) => updateState(
-          state.copyWith(successMessage: 'Configuration exported to: $path'),
-        ),
-      );
-    } finally {
-      updateState(state.copyWith(isLoading: false));
-    }
+    final run = Analytics.trackedAsyncAction(
+      'settings_export_configuration',
+      () async {
+        updateState(state.clearMessages().copyWith(isLoading: true));
+        try {
+          final res = await _exportConfiguration(const foundation.NoParams());
+          res.fold(
+            failure: (f) => throw Exception(f.message),
+            success: (path) => updateState(
+              state.copyWith(
+                successMessage: 'Configuration exported to: $path',
+              ),
+            ),
+          );
+        } finally {
+          updateState(state.copyWith(isLoading: false));
+        }
+      },
+    );
+    await run();
   }
 
   /// Resets all settings to their default values.
   Future<void> resetToDefaults() async {
-    updateState(state.clearMessages().copyWith(isLoading: true));
-    try {
-      await _resetToDefaults(const foundation.NoParams());
-      updateState(state.copyWith(successMessage: 'Settings reset to defaults'));
-      _maybeHapticHeavy();
-    } finally {
-      updateState(state.copyWith(isLoading: false));
-    }
+    final run = Analytics.trackedAsyncAction(
+      'settings_reset_to_defaults',
+      () async {
+        updateState(state.clearMessages().copyWith(isLoading: true));
+        try {
+          await _resetToDefaults(const foundation.NoParams());
+          updateState(
+            state.copyWith(successMessage: 'Settings reset to defaults'),
+          );
+          _maybeHapticHeavy();
+        } finally {
+          updateState(state.copyWith(isLoading: false));
+        }
+      },
+    );
+    await run();
   }
 
   /// Checks if a specific feature is enabled.

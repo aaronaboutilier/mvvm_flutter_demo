@@ -1,3 +1,4 @@
+import 'package:core_analytics/core_analytics.dart';
 import 'package:core_foundation/core/core.dart' as core;
 import 'package:core_foundation/core/core.dart';
 import 'package:feature_dashboard/src/application/usecases/clear_user.dart';
@@ -71,7 +72,18 @@ class HomeViewModel extends ChangeNotifierViewModel<HomeViewState> {
 
   /// Handles button press and updates the click count.
   void onButtonPressed() {
-    updateState(state.copyWith(buttonClickCount: state.buttonClickCount + 1));
+    final action = Analytics.trackedAction(
+      'dashboard_button_pressed',
+      () {
+        updateState(
+          state.copyWith(buttonClickCount: state.buttonClickCount + 1),
+        );
+      },
+      parameters: () => <String, Object?>{
+        'count_before': state.buttonClickCount,
+      },
+    );
+    action();
   }
 
   /// Clears the user and resets the state.
