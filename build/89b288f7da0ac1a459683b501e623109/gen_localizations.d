@@ -1,1 +1,0 @@
- D:\\code\\mvvm_flutter_demo\\lib\\generated\\l10n\\app_localizations_en.dart D:\\code\\mvvm_flutter_demo\\lib\\generated\\l10n\\app_localizations_es.dart D:\\code\\mvvm_flutter_demo\\lib\\generated\\l10n\\app_localizations.dart:  D:\\code\\mvvm_flutter_demo\\l10n.yaml D:\\code\\mvvm_flutter_demo\\lib\\l10n\\app_en.arb D:\\code\\mvvm_flutter_demo\\lib\\l10n\\app_es.arb
