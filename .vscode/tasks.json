@@ -17,7 +17,7 @@
 			"command": "flutter analyze",
 			"isBackground": false,
 			"problemMatcher": [
-				"$dart-code"
+				"$dart-build_runner"
 			],
 			"group": "build"
 		}
