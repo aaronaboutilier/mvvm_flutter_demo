@@ -68,7 +68,7 @@ class _DetailsContentState extends State<_DetailsContent> {
         return Scaffold(
           appBar: AppBar(
             title: Text(AppLocalizations.of(context).detailsTitle),
-            backgroundColor: _getThemeColor(viewModel.selectedColor),
+            backgroundColor: Theme.of(context).colorScheme.primary,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () => context.go(DashboardRoutes.path),
@@ -87,8 +87,6 @@ class _DetailsContentState extends State<_DetailsContent> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _buildColorSelectionSection(viewModel),
-                const SizedBox(height: 24),
                 _buildSummarySection(viewModel),
                 const SizedBox(height: 24),
                 _buildAddItemSection(context, viewModel),
@@ -104,49 +102,10 @@ class _DetailsContentState extends State<_DetailsContent> {
     );
   }
 
-  /// Builds the color selection section card.
-  Widget _buildColorSelectionSection(DetailsViewModel viewModel) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              AppLocalizations.of(context).chooseThemeColor,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              children: DetailsViewModel.availableColors.map((color) {
-                final isSelected = color == viewModel.selectedColor;
-                return FilterChip(
-                  label: Text(color),
-                  selected: isSelected,
-                  selectedColor: _getThemeColor(color).withValues(alpha: 0.3),
-                  onSelected: (selected) {
-                    if (selected) {
-                      viewModel.selectColor(color);
-                    }
-                  },
-                  avatar: CircleAvatar(
-                    backgroundColor: _getThemeColor(color),
-                    radius: 8,
-                  ),
-                );
-              }).toList(),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   /// Builds the summary section card.
   Widget _buildSummarySection(DetailsViewModel viewModel) {
     return Card(
-      color: _getThemeColor(viewModel.selectedColor).withValues(alpha: 0.1),
+      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -154,7 +113,7 @@ class _DetailsContentState extends State<_DetailsContent> {
             Icon(
               viewModel.hasItems ? Icons.inventory : Icons.inventory_2_outlined,
               size: 32,
-              color: _getThemeColor(viewModel.selectedColor),
+              color: Theme.of(context).colorScheme.primary,
             ),
             const SizedBox(height: 8),
             Text(
@@ -210,7 +169,7 @@ class _DetailsContentState extends State<_DetailsContent> {
                       ? null
                       : () => _addItem(viewModel),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _getThemeColor(viewModel.selectedColor),
+                    backgroundColor: Theme.of(context).colorScheme.primary,
                     foregroundColor: Colors.white,
                   ),
                   child: viewModel.isAddingItem
@@ -281,7 +240,7 @@ class _DetailsContentState extends State<_DetailsContent> {
                   return ListTile(
                     key: ValueKey(item),
                     leading: CircleAvatar(
-                      backgroundColor: _getThemeColor(viewModel.selectedColor),
+                      backgroundColor: Theme.of(context).colorScheme.primary,
                       child: Text(
                         '${index + 1}',
                         style: const TextStyle(
@@ -375,25 +334,5 @@ class _DetailsContentState extends State<_DetailsContent> {
         ],
       ),
     );
-  }
-
-  /// Gets the theme color for the given [colorName].
-  Color _getThemeColor(String colorName) {
-    switch (colorName) {
-      case 'Red':
-        return Colors.red;
-      case 'Blue':
-        return Colors.blue;
-      case 'Green':
-        return Colors.green;
-      case 'Yellow':
-        return Colors.orange;
-      case 'Purple':
-        return Colors.purple;
-      case 'Orange':
-        return Colors.deepOrange;
-      default:
-        return Colors.blue;
-    }
   }
 }

@@ -4,7 +4,6 @@ import 'package:feature_details/src/domain/entities/detail_item.dart';
 class DetailsViewState {
   /// Creates a [DetailsViewState].
   const DetailsViewState({
-    this.selectedColor = 'Blue',
     this.items = const <DetailItem>[],
     this.isAddingItem = false,
     this.isLoading = false,
@@ -15,8 +14,7 @@ class DetailsViewState {
   /// Returns the initial [DetailsViewState].
   factory DetailsViewState.initial() => const DetailsViewState();
 
-  /// The selected color theme.
-  final String selectedColor;
+  // Theme color is now controlled by Settings; no local color state.
 
   /// The list of detail items.
   final List<DetailItem> items;
@@ -46,12 +44,11 @@ class DetailsViewState {
 
   /// Returns a summary text for the view.
   String get summaryText => hasItems
-      ? 'You have $itemCount items in $selectedColor theme'
+      ? 'You have $itemCount items'
       : 'No items yet. Add some to get started!';
 
   /// Returns a copy of this state with updated fields.
   DetailsViewState copyWith({
-    String? selectedColor,
     List<DetailItem>? items,
     bool? isAddingItem,
     bool? isLoading,
@@ -59,7 +56,6 @@ class DetailsViewState {
     String? successMessage,
   }) {
     return DetailsViewState(
-      selectedColor: selectedColor ?? this.selectedColor,
       items: items ?? this.items,
       isAddingItem: isAddingItem ?? this.isAddingItem,
       isLoading: isLoading ?? this.isLoading,

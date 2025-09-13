@@ -20,6 +20,7 @@ class SettingsViewModel
     required SettingsRepository repo,
     required UpdateThemeMode updateThemeMode,
     required UpdateTextScale updateTextScale,
+    required UpdateAccentColorKey updateAccentColorKey,
     required UpdateReduceAnimations updateReduceAnimations,
     required UpdateHighContrast updateHighContrast,
     required UpdateLargerTouchTargets updateLargerTouchTargets,
@@ -32,6 +33,7 @@ class SettingsViewModel
   }) : _repo = repo,
        _updateThemeMode = updateThemeMode,
        _updateTextScale = updateTextScale,
+       _updateAccentColorKey = updateAccentColorKey,
        _updateReduceAnimations = updateReduceAnimations,
        _updateHighContrast = updateHighContrast,
        _updateLargerTouchTargets = updateLargerTouchTargets,
@@ -45,6 +47,7 @@ class SettingsViewModel
   final SettingsRepository _repo;
   late final UpdateThemeMode _updateThemeMode;
   late final UpdateTextScale _updateTextScale;
+  late final UpdateAccentColorKey _updateAccentColorKey;
   late final UpdateReduceAnimations _updateReduceAnimations;
   late final UpdateHighContrast _updateHighContrast;
   late final UpdateLargerTouchTargets _updateLargerTouchTargets;
@@ -278,5 +281,33 @@ class SettingsViewModel
     if (currentConfig.accessibility.enableHapticFeedback) {
       HapticFeedback.heavyImpact();
     }
+  }
+
+  /// Selects a brand accent color via token key mapping and persists via repo.
+  Future<void> selectBrandAccentColor(Color color) async {
+    updateState(state.clearMessages().copyWith(isLoading: true));
+    try {
+      // Map Color to token key (simple heuristic to our AppColors set).
+      final key = _mapColorToTokenKey(color);
+      await _updateAccentColorKey(key);
+      final msg = 'Accent color set to ${key.toUpperCase()}';
+      updateState(state.copyWith(successMessage: msg));
+      _maybeHapticSelection();
+    } finally {
+      updateState(state.copyWith(isLoading: false));
+    }
+  }
+
+  String _mapColorToTokenKey(Color color) {
+    // Simple match against known token colors; default to 'primary'.
+    const primary = Color(0xFF3F51B5);
+    const secondary = Color(0xFFFF9800);
+    const success = Color(0xFF4CAF50);
+    const danger = Color(0xFFF44336);
+    if (color == primary) return 'primary';
+    if (color == secondary) return 'secondary';
+    if (color == success) return 'success';
+    if (color == danger) return 'danger';
+    return 'primary';
   }
 }

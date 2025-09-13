@@ -78,13 +78,27 @@ class _ConsumerAppState extends State<ConsumerApp> {
               .watch<ConsumerSettingsRepository>()
               .currentConfig;
 
+          Color seedFromKey(String key) {
+            switch (key) {
+              case 'secondary':
+                return const Color(0xFFFF9800);
+              case 'success':
+                return const Color(0xFF4CAF50);
+              case 'danger':
+                return const Color(0xFFF44336);
+              case 'primary':
+              default:
+                return const Color(0xFF3F51B5);
+            }
+          }
+
           return MaterialApp.router(
             debugShowCheckedModeBanner: false,
             onGenerateTitle: (context) =>
                 loc.AppLocalizations.of(context).appTitle,
             theme: ThemeData(
               useMaterial3: true,
-              colorSchemeSeed: Colors.blue,
+              colorSchemeSeed: seedFromKey(config.theme.accentColorKey),
               visualDensity: config.accessibility.largerTouchTargets
                   ? VisualDensity.comfortable
                   : VisualDensity.standard,
@@ -95,7 +109,7 @@ class _ConsumerAppState extends State<ConsumerApp> {
             ),
             darkTheme: ThemeData(
               useMaterial3: true,
-              colorSchemeSeed: Colors.blue,
+              colorSchemeSeed: seedFromKey(config.theme.accentColorKey),
               visualDensity: config.accessibility.largerTouchTargets
                   ? VisualDensity.comfortable
                   : VisualDensity.standard,

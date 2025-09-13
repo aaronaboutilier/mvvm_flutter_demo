@@ -193,6 +193,19 @@ class ConsumerSettingsRepository extends ChangeNotifier
   }
 
   @override
+  Future<Result<void>> updateAccentColorKey(String accentColorKey) async {
+    _config = SettingsConfig(
+      theme: _config.theme.copyWith(accentColorKey: accentColorKey),
+      accessibility: _config.accessibility,
+      localization: _config.localization,
+      brand: _config.brand,
+      features: _config.features,
+    );
+    notifyListeners();
+    return const Success(null);
+  }
+
+  @override
   bool isFeatureEnabled(String featureName) {
     if (featureName.toLowerCase() == 'data_export') {
       return _config.features.enableDataExport;

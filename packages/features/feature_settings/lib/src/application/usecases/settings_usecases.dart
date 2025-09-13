@@ -144,3 +144,15 @@ class ResetToDefaults {
   /// Calls the use case to reset settings to defaults.
   Future<Result<void>> call(NoParams params) => repo.resetToDefaults();
 }
+
+/// Use case for updating the accent color token key.
+class UpdateAccentColorKey {
+  /// Creates an [UpdateAccentColorKey] use case.
+  UpdateAccentColorKey(this.repo);
+
+  /// The settings repository.
+  final SettingsRepository repo;
+
+  /// Calls the use case to update the accent color key.
+  Future<Result<void>> call(String key) => repo.updateAccentColorKey(key);
+}

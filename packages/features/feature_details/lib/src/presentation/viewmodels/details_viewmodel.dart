@@ -40,7 +40,8 @@ class DetailsViewModel extends ChangeNotifierViewModel<DetailsViewState> {
   final ReorderDetailItems _reorderItemsUc;
 
   /// The selected color.
-  String get selectedColor => state.selectedColor;
+  // Theme color is now managed globally in Settings via core_design_system.
+  // Kept for backward compatibility removal; no longer used.
 
   /// The list of display items.
   List<String> get items => state.displayItems;
@@ -57,22 +58,7 @@ class DetailsViewModel extends ChangeNotifierViewModel<DetailsViewState> {
   /// The summary text for the view.
   String get summaryText => state.summaryText;
 
-  /// The available colors.
-  static const List<String> availableColors = [
-    'Red',
-    'Blue',
-    'Green',
-    'Yellow',
-    'Purple',
-    'Orange',
-  ];
-
-  /// Selects a color if it is available and different from the current color.
-  void selectColor(String color) {
-    if (availableColors.contains(color) && color != state.selectedColor) {
-      updateState(state.copyWith(selectedColor: color));
-    }
-  }
+  // Removed local color selection and available colors.
 
   /// Adds a new item with the given [itemName].
   Future<void> addItem(String itemName) async {

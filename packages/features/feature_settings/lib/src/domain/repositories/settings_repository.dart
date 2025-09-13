@@ -46,6 +46,10 @@ abstract class SettingsRepository {
   /// Reset settings back to default values.
   Future<Result<void>> resetToDefaults();
 
+  /// Update the accent/seed color preference using a token key.
+  /// Expected values include 'primary', 'secondary', 'success', 'danger'.
+  Future<Result<void>> updateAccentColorKey(String accentColorKey);
+
   /// Whether a feature flag is enabled for the provided [featureName].
   bool isFeatureEnabled(String featureName);
 }

@@ -11,6 +11,7 @@ void registerFeatureSettings(GetIt locator) {
   locator
     ..registerFactory(() => UpdateThemeMode(locator()))
     ..registerFactory(() => UpdateTextScale(locator()))
+    ..registerFactory(() => UpdateAccentColorKey(locator()))
     ..registerFactory(() => UpdateReduceAnimations(locator()))
     ..registerFactory(() => UpdateHighContrast(locator()))
     ..registerFactory(() => UpdateLargerTouchTargets(locator()))
@@ -26,6 +27,7 @@ void registerFeatureSettings(GetIt locator) {
         repo: locator<SettingsRepository>(),
         updateThemeMode: locator(),
         updateTextScale: locator(),
+        updateAccentColorKey: locator(),
         updateReduceAnimations: locator(),
         updateHighContrast: locator(),
         updateLargerTouchTargets: locator(),

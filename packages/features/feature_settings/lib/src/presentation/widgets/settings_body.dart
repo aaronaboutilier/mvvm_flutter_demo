@@ -1,3 +1,4 @@
+import 'package:core_design_system/core_design_system.dart';
 import 'package:core_localization/generated/l10n/app_localizations.dart';
 import 'package:feature_settings/src/domain/entities/settings_config.dart';
 import 'package:feature_settings/src/presentation/viewmodels/settings_view_state.dart';
@@ -27,6 +28,8 @@ class SettingsBody extends StatelessWidget {
             children: [
               _buildThemeSection(context, config, vm),
               const SizedBox(height: 24),
+              _buildBrandColorsSection(context, config, vm),
+              const SizedBox(height: 24),
               _buildAccessibilitySection(context, config, vm),
               const SizedBox(height: 24),
               _buildLanguageSection(context, config, vm),
@@ -37,6 +40,73 @@ class SettingsBody extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildBrandColorsSection(
+    BuildContext context,
+    SettingsConfig config,
+    SettingsViewModel viewModel,
+  ) {
+    // Temporary brand color choices using core_design_system tokens.
+    final swatches = <_BrandColorChoice>[
+      const _BrandColorChoice('primary', 'Primary', AppColors.primary),
+      const _BrandColorChoice('secondary', 'Secondary', AppColors.secondary),
+      const _BrandColorChoice('success', 'Success', AppColors.success),
+      const _BrandColorChoice('danger', 'Danger', AppColors.danger),
+    ];
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.color_lens,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Brand colors',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Text('Accent color', style: Theme.of(context).textTheme.bodyMedium),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final choice in swatches)
+                  ChoiceChip(
+                    label: Text(choice.label),
+                    avatar: CircleAvatar(backgroundColor: choice.color),
+                    selected: config.theme.accentColorKey == choice.key,
+                    onSelected: (_) {
+                      // Delegate to VM for future wiring (no-op for now)
+                      viewModel.selectBrandAccentColor(choice.color);
+                    },
+                  ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'These colors come from core_design_system tokens '
+              'and will be integrated with ThemeService.',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).hintColor,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -295,4 +365,11 @@ class SettingsBody extends StatelessWidget {
       ),
     );
   }
+}
+
+class _BrandColorChoice {
+  const _BrandColorChoice(this.key, this.label, this.color);
+  final String key;
+  final String label;
+  final Color color;
 }

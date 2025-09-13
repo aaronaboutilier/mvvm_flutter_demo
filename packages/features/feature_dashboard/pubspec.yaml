@@ -11,12 +11,12 @@ environment:
 dependencies:
   core_foundation:
     path: ../../core/core_foundation
+  core_localization:
+    path: ../../core/core_localization
   feature_settings:
     path: ../feature_settings
   flutter:
     sdk: flutter
-  core_localization:
-    path: ../../core/core_localization
   freezed_annotation: ^2.4.4
   get_it: ^8.0.0
   go_router: ^16.2.1

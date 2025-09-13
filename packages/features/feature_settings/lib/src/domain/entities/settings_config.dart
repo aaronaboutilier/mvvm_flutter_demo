@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 /// Theme-related user preferences.
 class ThemeSettings {
   /// Creates theme settings with a [themeMode] and [textScaleFactor].
-  const ThemeSettings({required this.themeMode, required this.textScaleFactor});
+  const ThemeSettings({
+    required this.themeMode,
+    required this.textScaleFactor,
+    this.accentColorKey = 'primary',
+  });
 
   /// The current theme mode.
   final ThemeMode themeMode;
@@ -11,12 +15,20 @@ class ThemeSettings {
   /// The text scale factor applied to the UI (1.0 is default).
   final double textScaleFactor;
 
+  /// Key for accent/seed color, matched to core_design_system tokens.
+  /// e.g. 'primary' | 'secondary' | 'success' | 'danger'.
+  final String accentColorKey;
+
   /// Returns a new [ThemeSettings] with selectively overridden values.
-  ThemeSettings copyWith({ThemeMode? themeMode, double? textScaleFactor}) =>
-      ThemeSettings(
-        themeMode: themeMode ?? this.themeMode,
-        textScaleFactor: textScaleFactor ?? this.textScaleFactor,
-      );
+  ThemeSettings copyWith({
+    ThemeMode? themeMode,
+    double? textScaleFactor,
+    String? accentColorKey,
+  }) => ThemeSettings(
+    themeMode: themeMode ?? this.themeMode,
+    textScaleFactor: textScaleFactor ?? this.textScaleFactor,
+    accentColorKey: accentColorKey ?? this.accentColorKey,
+  );
 }
 
 /// Accessibility options that improve usability for different needs.

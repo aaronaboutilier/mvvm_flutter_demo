@@ -209,6 +209,20 @@ class _FakeSettingsRepo implements SettingsRepository {
     );
     return const foundation.Success(null);
   }
+
+  @override
+  Future<foundation.Result<void>> updateAccentColorKey(
+    String accentColorKey,
+  ) async {
+    _config = SettingsConfig(
+      theme: _config.theme.copyWith(accentColorKey: accentColorKey),
+      accessibility: _config.accessibility,
+      localization: _config.localization,
+      brand: _config.brand,
+      features: _config.features,
+    );
+    return const foundation.Success(null);
+  }
 }
 
 void main() {
@@ -221,6 +235,7 @@ void main() {
         repo: repo,
         updateThemeMode: UpdateThemeMode(repo),
         updateTextScale: UpdateTextScale(repo),
+        updateAccentColorKey: UpdateAccentColorKey(repo),
         updateReduceAnimations: UpdateReduceAnimations(repo),
         updateHighContrast: UpdateHighContrast(repo),
         updateLargerTouchTargets: UpdateLargerTouchTargets(repo),
@@ -245,6 +260,7 @@ void main() {
         repo: repo,
         updateThemeMode: UpdateThemeMode(repo),
         updateTextScale: UpdateTextScale(repo),
+        updateAccentColorKey: UpdateAccentColorKey(repo),
         updateReduceAnimations: UpdateReduceAnimations(repo),
         updateHighContrast: UpdateHighContrast(repo),
         updateLargerTouchTargets: UpdateLargerTouchTargets(repo),

@@ -89,6 +89,11 @@ class _Repo implements SettingsRepository {
   Future<foundation.Result<void>> updateVoiceGuidance({
     required bool enableVoiceGuidance,
   }) async => const foundation.Success(null);
+
+  @override
+  Future<foundation.Result<void>> updateAccentColorKey(
+    String accentColorKey,
+  ) async => const foundation.Success(null);
 }
 
 void main() {
