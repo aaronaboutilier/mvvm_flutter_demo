@@ -215,6 +215,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  core_localization:
+    dependency: transitive
+    description:
+      path: "packages/core/core_localization"
+      relative: true
+    source: path
+    version: "0.0.1"
   crypto:
     dependency: transitive
     description:

@@ -1,5 +1,8 @@
+import 'package:core_localization/generated/l10n/app_localizations.dart';
 import 'package:feature_dashboard/src/presentation/viewmodels/home_view_state.dart';
 import 'package:feature_dashboard/src/presentation/viewmodels/home_viewmodel.dart';
+import 'package:feature_settings/feature_settings.dart'
+    show showSettingsOverlay;
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
@@ -51,13 +54,13 @@ class _DashboardContentState extends State<_DashboardContent> {
         final _ = snapshot.data; // trigger rebuilds on state changes
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Dashboard'),
+            title: Text(AppLocalizations.of(context).dashboard),
             actions: [
               if (viewModel.hasUser)
                 IconButton(
                   onPressed: viewModel.clearUser,
                   icon: const Icon(Icons.logout),
-                  tooltip: 'Clear User',
+                  tooltip: AppLocalizations.of(context).clearUser,
                 ),
             ],
           ),
@@ -109,14 +112,14 @@ class _DashboardContentState extends State<_DashboardContent> {
   /// Builds the user info section card.
   Widget _buildUserInfoSection(HomeViewModel viewModel) {
     if (viewModel.isLoading) {
-      return const Card(
+      return Card(
         child: Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 8),
-              Text('Loading user information...'),
+              const CircularProgressIndicator(),
+              const SizedBox(height: 8),
+              Text(AppLocalizations.of(context).loadingUserInformation),
             ],
           ),
         ),
@@ -140,7 +143,7 @@ class _DashboardContentState extends State<_DashboardContent> {
               const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: viewModel.loadUser,
-                child: const Text('Retry'),
+                child: Text(AppLocalizations.of(context).retry),
               ),
             ],
           ),
@@ -156,9 +159,12 @@ class _DashboardContentState extends State<_DashboardContent> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'User Information:',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              Text(
+                AppLocalizations.of(context).userInformation,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8),
               Text('ID: ${user.id}'),
@@ -181,7 +187,9 @@ class _DashboardContentState extends State<_DashboardContent> {
         child: Column(
           children: [
             Text(
-              'Button clicked ${viewModel.buttonClickCount} times',
+              AppLocalizations.of(
+                context,
+              ).buttonClickedTimes(viewModel.buttonClickCount),
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 16),
@@ -193,7 +201,7 @@ class _DashboardContentState extends State<_DashboardContent> {
                   vertical: 16,
                 ),
               ),
-              child: const Text('Click Me!'),
+              child: Text(AppLocalizations.of(context).clickMe),
             ),
           ],
         ),
@@ -211,21 +219,27 @@ class _DashboardContentState extends State<_DashboardContent> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            const Text(
-              'Navigation Example',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Text(
+              AppLocalizations.of(context).navigationExample,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             ElevatedButton.icon(
               onPressed: () => context.go('/details'),
               icon: const Icon(Icons.arrow_forward),
-              label: const Text('Go to Details'),
+              label: Text(AppLocalizations.of(context).goToDetails),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 32,
                   vertical: 16,
                 ),
               ),
+            ),
+            const SizedBox(height: 12),
+            OutlinedButton.icon(
+              onPressed: () => showSettingsOverlay(context),
+              icon: const Icon(Icons.settings),
+              label: Text(AppLocalizations.of(context).openSettings),
             ),
           ],
         ),

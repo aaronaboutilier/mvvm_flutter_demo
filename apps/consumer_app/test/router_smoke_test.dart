@@ -1,7 +1,10 @@
 import 'package:core_foundation/core/core.dart';
+import 'package:core_localization/generated/l10n/app_localizations.dart'
+    as l10n;
 import 'package:feature_dashboard/feature_dashboard.dart';
 import 'package:feature_products/feature_products.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
@@ -28,7 +31,19 @@ void main() {
       routes: [...featureDashboardRoutes(), ...featureProductsRoutes()],
     );
 
-    await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+    await tester.pumpWidget(
+      MaterialApp.router(
+        routerConfig: router,
+        localizationsDelegates: const [
+          l10n.AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: l10n.AppLocalizations.supportedLocales,
+        locale: const Locale('en'),
+      ),
+    );
     // Allow async user load (simulated 800ms) to complete
     await tester.pump(const Duration(seconds: 1));
     await tester.pumpAndSettle();

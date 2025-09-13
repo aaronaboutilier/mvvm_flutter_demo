@@ -10,6 +10,8 @@ environment:
 dependencies:
   core_foundation:
     path: ../../core/core_foundation
+  core_localization:
+    path: ../../core/core_localization
   feature_dashboard:
     path: ../feature_dashboard
   flutter:

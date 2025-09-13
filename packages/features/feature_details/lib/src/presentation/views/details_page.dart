@@ -1,8 +1,11 @@
 import 'dart:math' as math;
 
+import 'package:core_localization/generated/l10n/app_localizations.dart';
 import 'package:feature_dashboard/feature_dashboard.dart' show DashboardRoutes;
 import 'package:feature_details/src/presentation/viewmodels/details_view_state.dart';
 import 'package:feature_details/src/presentation/viewmodels/details_viewmodel.dart';
+import 'package:feature_settings/feature_settings.dart'
+    show showSettingsOverlay;
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
@@ -64,7 +67,7 @@ class _DetailsContentState extends State<_DetailsContent> {
         final _ = snapshot.data; // trigger rebuilds
         return Scaffold(
           appBar: AppBar(
-            title: const Text('MVVM Demo - Details'),
+            title: Text(AppLocalizations.of(context).detailsTitle),
             backgroundColor: _getThemeColor(viewModel.selectedColor),
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
@@ -75,7 +78,7 @@ class _DetailsContentState extends State<_DetailsContent> {
                 IconButton(
                   onPressed: () => _showClearConfirmation(context, viewModel),
                   icon: const Icon(Icons.clear_all),
-                  tooltip: 'Clear All Items',
+                  tooltip: AppLocalizations.of(context).clearAllItems,
                 ),
             ],
           ),
@@ -109,9 +112,9 @@ class _DetailsContentState extends State<_DetailsContent> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Choose Your Theme Color:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Text(
+              AppLocalizations.of(context).chooseThemeColor,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             Wrap(
@@ -162,7 +165,7 @@ class _DetailsContentState extends State<_DetailsContent> {
             if (viewModel.hasItems) ...[
               const SizedBox(height: 8),
               Text(
-                'Items: ${viewModel.itemCount}',
+                AppLocalizations.of(context).itemsCount(viewModel.itemCount),
                 style: TextStyle(fontSize: 14, color: Colors.grey[600]),
               ),
             ],
@@ -183,9 +186,9 @@ class _DetailsContentState extends State<_DetailsContent> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Add New Item:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Text(
+              AppLocalizations.of(context).addNewItem,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             Row(
@@ -193,9 +196,9 @@ class _DetailsContentState extends State<_DetailsContent> {
                 Expanded(
                   child: TextField(
                     controller: _textController,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter item name...',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      hintText: AppLocalizations.of(context).enterItemNameHint,
+                      border: const OutlineInputBorder(),
                     ),
                     enabled: !viewModel.isAddingItem,
                     onSubmitted: (value) => _addItem(viewModel),
@@ -242,12 +245,12 @@ class _DetailsContentState extends State<_DetailsContent> {
               Icon(Icons.inbox, size: 48, color: Colors.grey[400]),
               const SizedBox(height: 16),
               Text(
-                'No items yet',
+                AppLocalizations.of(context).noItemsYet,
                 style: TextStyle(fontSize: 18, color: Colors.grey[600]),
               ),
               const SizedBox(height: 8),
               Text(
-                'Add your first item above to get started!',
+                AppLocalizations.of(context).addFirstItemHelp,
                 style: TextStyle(fontSize: 14, color: Colors.grey[500]),
                 textAlign: TextAlign.center,
               ),
@@ -264,7 +267,7 @@ class _DetailsContentState extends State<_DetailsContent> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Your Items (${viewModel.itemCount}):',
+              AppLocalizations.of(context).yourItemsCount(viewModel.itemCount),
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
@@ -309,21 +312,27 @@ class _DetailsContentState extends State<_DetailsContent> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            const Text(
-              'Navigation',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Text(
+              AppLocalizations.of(context).navigation,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             ElevatedButton.icon(
               onPressed: () => context.go(DashboardRoutes.path),
               icon: const Icon(Icons.home),
-              label: const Text('Back to Home'),
+              label: Text(AppLocalizations.of(context).backToHome),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 32,
                   vertical: 16,
                 ),
               ),
+            ),
+            const SizedBox(height: 12),
+            OutlinedButton.icon(
+              onPressed: () => showSettingsOverlay(context),
+              icon: const Icon(Icons.settings),
+              label: Text(AppLocalizations.of(context).openSettings),
             ),
           ],
         ),
@@ -348,12 +357,12 @@ class _DetailsContentState extends State<_DetailsContent> {
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Clear All Items'),
-        content: const Text('Are you sure you want to remove all items?'),
+        title: Text(AppLocalizations.of(context).clearAllItems),
+        content: Text(AppLocalizations.of(context).clearAllConfirmation),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop<void>(),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context).cancel),
           ),
           TextButton(
             onPressed: () {
@@ -361,7 +370,7 @@ class _DetailsContentState extends State<_DetailsContent> {
               Navigator.of(context).pop<void>();
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Clear All'),
+            child: Text(AppLocalizations.of(context).clearAll),
           ),
         ],
       ),

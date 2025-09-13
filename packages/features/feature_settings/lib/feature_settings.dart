@@ -8,6 +8,7 @@ export 'src/domain/value_objects/text_scale.dart';
 export 'src/domain/value_objects/theme_preference.dart';
 export 'src/presentation/viewmodels/settings_view_state.dart';
 export 'src/presentation/viewmodels/settings_viewmodel.dart';
+export 'src/presentation/views/settings_overlay.dart' show showSettingsOverlay;
 export 'src/presentation/views/settings_page.dart';
-export 'src/routes.dart'
-    show SettingsRouteHelper, SettingsRoutes, featureSettingsRoutes;
+export 'src/presentation/widgets/settings_body.dart' show SettingsBody;
+export 'src/presentation/widgets/settings_button.dart' show SettingsButton;

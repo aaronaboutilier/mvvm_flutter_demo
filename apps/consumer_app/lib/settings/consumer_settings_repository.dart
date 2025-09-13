@@ -3,7 +3,8 @@ import 'package:feature_settings/feature_settings.dart';
 import 'package:flutter/material.dart';
 
 /// Simple in-memory implementation of [SettingsRepository] for the demo app.
-class ConsumerSettingsRepository implements SettingsRepository {
+class ConsumerSettingsRepository extends ChangeNotifier
+    implements SettingsRepository {
   ///
   ConsumerSettingsRepository()
     : _config = const SettingsConfig(
@@ -46,6 +47,7 @@ class ConsumerSettingsRepository implements SettingsRepository {
       brand: _config.brand,
       features: _config.features,
     );
+    notifyListeners();
     return const Success(null);
   }
 
@@ -58,6 +60,7 @@ class ConsumerSettingsRepository implements SettingsRepository {
       brand: _config.brand,
       features: _config.features,
     );
+    notifyListeners();
     return const Success(null);
   }
 
@@ -74,6 +77,7 @@ class ConsumerSettingsRepository implements SettingsRepository {
       brand: _config.brand,
       features: _config.features,
     );
+    notifyListeners();
     return const Success(null);
   }
 
@@ -88,6 +92,7 @@ class ConsumerSettingsRepository implements SettingsRepository {
       brand: _config.brand,
       features: _config.features,
     );
+    notifyListeners();
     return const Success(null);
   }
 
@@ -104,6 +109,7 @@ class ConsumerSettingsRepository implements SettingsRepository {
       brand: _config.brand,
       features: _config.features,
     );
+    notifyListeners();
     return const Success(null);
   }
 
@@ -120,6 +126,7 @@ class ConsumerSettingsRepository implements SettingsRepository {
       brand: _config.brand,
       features: _config.features,
     );
+    notifyListeners();
     return const Success(null);
   }
 
@@ -136,6 +143,7 @@ class ConsumerSettingsRepository implements SettingsRepository {
       brand: _config.brand,
       features: _config.features,
     );
+    notifyListeners();
     return const Success(null);
   }
 
@@ -152,6 +160,7 @@ class ConsumerSettingsRepository implements SettingsRepository {
       brand: _config.brand,
       features: _config.features,
     );
+    notifyListeners();
     return const Success(null);
   }
 
@@ -166,6 +175,7 @@ class ConsumerSettingsRepository implements SettingsRepository {
       brand: _config.brand,
       features: _config.features,
     );
+    notifyListeners();
     return const Success(null);
   }
 
@@ -178,6 +188,7 @@ class ConsumerSettingsRepository implements SettingsRepository {
   @override
   Future<Result<void>> resetToDefaults() async {
     _config = ConsumerSettingsRepository().currentConfig;
+    notifyListeners();
     return const Success(null);
   }
 

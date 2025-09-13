@@ -20,6 +20,41 @@
 				"$dart-build_runner"
 			],
 			"group": "build"
+		},
+		{
+			"label": "Analyze Flutter workspace",
+			"type": "shell",
+			"command": "flutter analyze",
+			"isBackground": false,
+			"group": "build"
+		},
+		{
+			"label": "Dart Fix (apply all)",
+			"type": "shell",
+			"command": "dart fix --apply",
+			"isBackground": false,
+			"group": "build",
+			"problemMatcher": []
+		},
+		{
+			"label": "Dart Fix (apply all)",
+			"type": "shell",
+			"command": "dart fix --apply",
+			"isBackground": false,
+			"group": "build"
+		},
+		{
+			"label": "Generate intl code",
+			"type": "shell",
+			"command": "dart run build_runner build --delete-conflicting-outputs",
+			"isBackground": false,
+			"group": "build"
+		},
+		{
+			"label": "Pub get (workspace)",
+			"type": "shell",
+			"command": "melos bootstrap",
+			"group": "build"
 		}
 	]
 }

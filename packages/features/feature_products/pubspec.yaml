@@ -11,6 +11,8 @@ environment:
 dependencies:
   core_foundation:
     path: ../../core/core_foundation
+  core_localization:
+    path: ../../core/core_localization
   flutter:
     sdk: flutter
   get_it: ^8.0.0

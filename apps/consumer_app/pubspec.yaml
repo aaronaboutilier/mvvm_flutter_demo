@@ -13,6 +13,8 @@ dependencies:
     path: ../../packages/core/core_design_system
   core_foundation:
     path: ../../packages/core/core_foundation
+  core_localization:
+    path: ../../packages/core/core_localization
   core_networking:
     path: ../../packages/core/core_networking
   core_storage:
@@ -21,14 +23,18 @@ dependencies:
     path: ../../packages/features/feature_dashboard
   feature_details:
     path: ../../packages/features/feature_details
-  feature_settings:
-    path: ../../packages/features/feature_settings
   feature_products:
     path: ../../packages/features/feature_products
+  feature_settings:
+    path: ../../packages/features/feature_settings
   flutter:
+    sdk: flutter
+  flutter_localizations:
     sdk: flutter
   get_it: ^8.0.0
   go_router: ^16.2.1
+  mvvm_flutter_demo:
+    path: ../..
   provider: ^6.1.2
   shared_auth:
     path: ../../packages/shared/shared_auth

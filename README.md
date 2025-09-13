@@ -31,7 +31,7 @@ The monorepo structure organizes your application as a collection of focused pac
 ```
 enterprise_flutter_monorepo/
 ├── melos.yaml                              # Workspace orchestration and command configuration
-├── analysis_options.yaml                   # Shared code quality standards across all packages
+├── analysis_options.yaml                   # Shared lints (includes package:very_good_analysis rules)
 ├── packages/
 │   ├── core/                              # Foundation packages that provide infrastructure
 │   │   ├── core_design_system/            # Theme management, design tokens, base UI components
@@ -412,7 +412,7 @@ dev_dependencies:
   freezed: ^2.4.6
   json_serializable: ^6.7.1
   # Ensure code quality standards
-  flutter_lints: ^3.0.0
+  very_good_analysis: ^5.1.0
   # Testing utilities that will be shared across packages
   mocktail: ^0.3.0
 ```
@@ -453,8 +453,8 @@ The design token system provides the foundation for consistent visual design acr
 
 ```dart
 // packages/core/core_design_system/lib/src/tokens/color_tokens.dart
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'color_tokens.freezed.dart';
 part 'color_tokens.g.dart';
@@ -569,6 +569,7 @@ The theme service provides runtime theme management that integrates with the zer
 
 ```dart
 // packages/core/core_design_system/lib/src/services/theme_service.dart
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:dartz/dartz.dart';
 import '../tokens/color_tokens.dart';
@@ -606,8 +607,9 @@ abstract class ThemeService {
 /// Implementation of theme service that manages themes locally
 /// and provides the foundation for more complex theme management
 class LocalThemeService implements ThemeService {
-  final StreamController<ColorTokens> _colorTokenController = StreamController<ColorTokens>.broadcast();
-  
+  final StreamController<ColorTokens> _colorTokenController =
+      StreamController<ColorTokens>.broadcast();
+
   ColorTokens _currentColorTokens = ColorTokens.light();
   TypographyTokens _currentTypographyTokens = TypographyTokens.standard();
   ThemeMode _currentMode = ThemeMode.light;
@@ -641,46 +643,37 @@ class LocalThemeService implements ThemeService {
   Stream<ColorTokens> get colorTokenChanges => _colorTokenController.stream;
   
   @override
-  Color getButtonColor(ButtonType type, ButtonState state) {
-    // Centralized logic for determining button colors based on type and state
-    // This keeps color logic out of individual button widgets
-    switch (type) {
-      case ButtonType.primary:
-        switch (state) {
-          case ButtonState.enabled:
-            return _currentColorTokens.interactive;
-          case ButtonState.hovered:
-            return _currentColorTokens.interactiveHovered;
-          case ButtonState.pressed:
-            return _currentColorTokens.interactivePressed;
-          case ButtonState.disabled:
-            return _currentColorTokens.interactiveDisabled;
-        }
-      case ButtonType.secondary:
-        switch (state) {
-          case ButtonState.enabled:
-            return _currentColorTokens.secondary;
-          case ButtonState.hovered:
-            return _currentColorTokens.secondaryVariant;
-          case ButtonState.pressed:
-            return _currentColorTokens.secondaryVariant.withOpacity(0.8);
-          case ButtonState.disabled:
-            return _currentColorTokens.interactiveDisabled;
-        }
-      case ButtonType.danger:
-        switch (state) {
-          case ButtonState.enabled:
-            return _currentColorTokens.error;
-          case ButtonState.hovered:
-            return _currentColorTokens.error.withOpacity(0.8);
-          case ButtonState.pressed:
-            return _currentColorTokens.error.withOpacity(0.6);
-          case ButtonState.disabled:
-            return _currentColorTokens.interactiveDisabled;
-        }
+  bool supportsFeature(String featureName) {
+    // Minimal placeholder; expand per real features
+    return featureName.isNotEmpty;
+  }
+
+  @override
+  Color getCardBackground(CardElevation elevation) {
+    switch (elevation) {
+      case CardElevation.low:
+        return _currentColorTokens.surface;
+      case CardElevation.medium:
+        return _currentColorTokens.surfaceVariant;
+      case CardElevation.high:
+        return _currentColorTokens.surfaceVariant.withOpacity(0.9);
     }
   }
-  
+
+  @override
+  Color getTextColor(TextContext context) {
+    switch (context) {
+      case TextContext.primary:
+        return _currentColorTokens.textPrimary;
+      case TextContext.secondary:
+        return _currentColorTokens.textSecondary;
+      case TextContext.tertiary:
+        return _currentColorTokens.textTertiary;
+      case TextContext.inverse:
+        return _currentColorTokens.textInverse;
+    }
+  }
+
   void dispose() {
     _colorTokenController.close();
   }
@@ -752,7 +745,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  # Testing utilities from core package
   core_testing:
     path: ../../core/core_testing
   # Code generation dependencies
@@ -761,6 +753,7 @@ dev_dependencies:
   json_serializable: ^6.7.1
   # Mocking for unit tests
   mocktail: ^0.3.0
+  very_good_analysis: ^5.1.0
 ```
 
 The feature package public API defines what other packages can access from this feature:
@@ -807,7 +800,6 @@ The domain layer contains the core business logic and entities that define what 
 ```dart
 // packages/features/feature_products/lib/src/domain/entities/product.dart
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:equatable/equatable.dart';
 
 part 'product.freezed.dart';
 
@@ -1017,10 +1009,10 @@ class GetProductsUseCase {
 class GetProductsRequest with _$GetProductsRequest {
   const factory GetProductsRequest({
     @Default(20) int pageSize,
-    @Default(null) String? pageToken,
+    String? pageToken, // removed @Default(null)
     @Default([]) List<ProductFilter> filters,
     @Default([]) List<String> categoryIds,
-    @Default(null) PriceRange? priceRange,
+    PriceRange? priceRange, // removed @Default(null)
     @Default(ProductSortOrder.relevance) ProductSortOrder sortOrder,
     @Default(false) bool showOnlyAvailable,
   }) = _GetProductsRequest;
@@ -1031,11 +1023,13 @@ The presentation layer implements zero-logic views and comprehensive ViewModels 
 
 ```dart
 // packages/features/feature_products/lib/src/presentation/view_models/product_list_view_model.dart
+import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:core_design_system/core_design_system.dart';
 import 'package:core_localization/core_localization.dart';
 import 'package:core_accessibility/core_accessibility.dart';
 import 'package:core_analytics/core_analytics.dart';
-import 'package:dartz/dartz.dart';
+import 'package:shared_navigation/shared_navigation.dart';
 import '../../domain/usecases/get_products_usecase.dart';
 import '../../domain/usecases/search_products_usecase.dart';
 import '../view_states/product_list_view_state.dart';
@@ -1050,7 +1044,8 @@ class ProductListViewModel extends BaseViewModel<ProductListViewState> {
   final LocalizationService _localizationService;
   final AccessibilityService _accessibilityService;
   final AnalyticsService _analyticsService;
-  
+  final NavigationService _navigationService;
+
   ProductListViewModel({
     required GetProductsUseCase getProductsUseCase,
     required SearchProductsUseCase searchProductsUseCase,
@@ -1058,13 +1053,15 @@ class ProductListViewModel extends BaseViewModel<ProductListViewState> {
     required LocalizationService localizationService,
     required AccessibilityService accessibilityService,
     required AnalyticsService analyticsService,
-  }) : _getProductsUseCase = getProductsUseCase,
-       _searchProductsUseCase = searchProductsUseCase,
-       _themeService = themeService,
-       _localizationService = localizationService,
-       _accessibilityService = accessibilityService,
-       _analyticsService = analyticsService,
-       super(ProductListViewState.initial());
+    required NavigationService navigationService,
+  })  : _getProductsUseCase = getProductsUseCase,
+        _searchProductsUseCase = searchProductsUseCase,
+        _themeService = themeService,
+        _localizationService = localizationService,
+        _accessibilityService = accessibilityService,
+        _analyticsService = analyticsService,
+        _navigationService = navigationService,
+        super(ProductListViewState.initial());
   
   /// Load the initial list of products when the screen is first displayed
   Future<void> loadProducts() async {
@@ -1294,14 +1291,12 @@ class ProductListViewModel extends BaseViewModel<ProductListViewState> {
       'product_name': product.name,
       'source': 'product_list',
     });
-    
-    // Navigation would be handled through a navigation service
-    // keeping the ViewModel decoupled from navigation implementation
-    navigationService.navigateToProductDetail(product.id);
+
+    _navigationService.navigateToProductDetail(product.id);
   }
-  
+
   Timer? _searchDebounceTimer;
-  
+
   @override
   void dispose() {
     _searchDebounceTimer?.cancel();
@@ -1315,7 +1310,6 @@ The zero-logic view simply displays the pre-calculated state from the ViewModel:
 ```dart
 // packages/features/feature_products/lib/src/presentation/pages/product_list_page.dart
 import 'package:flutter/material.dart';
-import 'package:core_design_system/core_design_system.dart';
 import '../view_models/product_list_view_model.dart';
 import '../view_states/product_list_view_state.dart';
 
@@ -1564,9 +1558,9 @@ Future<void> _registerCoreServices(AppConfiguration config) async {
   
   // Design system and theming services
   getIt.registerSingleton<ThemeService>(
-    LocalThemeService(config: config.themeConfig),
+    LocalThemeService(), // removed unused config param to match example
   );
-  
+
   // Localization services for internationalization
   getIt.registerSingleton<LocalizationService>(
     ArfLocalizationService(config: config.localizationConfig),
@@ -1699,4 +1693,33 @@ Future<void> _registerApplicationServices() async {
     ),
   );
 }
+```
+
+## Shared Lints with very_good_analysis
+
+Use a single lint baseline across the monorepo.
+
+- Add very_good_analysis to all packages:
+  ```
+  melos exec -- flutter pub add --dev very_good_analysis
+  ```
+- Root analysis options:
+```yaml
+# analysis_options.yaml (root)
+include: package:very_good_analysis/analysis_options.yaml
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+
+linter:
+  rules:
+    public_member_api_docs: false
+    sort_pub_dependencies: false
+```
+- In each package:
+```yaml
+# packages/<any>/analysis_options.yaml
+include: ../../analysis_options.yaml
 ```

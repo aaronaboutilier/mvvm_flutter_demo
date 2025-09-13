@@ -22,3 +22,5 @@ linter:
     prefer_const_literals_to_create_immutables: true
     sort_constructors_first: true
     curly_braces_in_flow_control_structures: true
+    # Ensure pubspec.yaml dependencies/dev_dependencies are sorted A->Z
+    sort_pub_dependencies: true

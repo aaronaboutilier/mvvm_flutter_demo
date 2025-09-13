@@ -1,0 +1,9 @@
+# l10n config for core_localization
+arb-dir: lib/l10n
+output-dir: lib/generated/l10n
+output-class: AppLocalizations
+nullable-getter: false
+preferred-supported-locales:
+  - en
+  - es
+use-deferred-loading: false

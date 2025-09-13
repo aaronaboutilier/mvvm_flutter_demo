@@ -1,0 +1,22 @@
+name: core_localization
+version: 0.0.1
+publish_to: none
+resolution: workspace
+
+description: Shared localization package providing AppLocalizations and delegates.
+
+environment:
+  sdk: '>=3.8.0 <4.0.0'
+  flutter: ">=3.22.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+flutter:
+  generate: true
+  uses-material-design: true
+  assets:
+    - lib/l10n/

@@ -2,16 +2,41 @@
     // Apply Dart/Flutter fixes automatically on save
     "[dart]": {
         "editor.formatOnSave": true,
+        "editor.codeActionsOnSave.mode": "all",
         "editor.codeActionsOnSave": {
-            // Use "explicit" to avoid validation errors in some schemas. Change to true to auto-run on every save.
-            "source.fixAll": "explicit",
-            "source.fixAll.dart": "explicit",
-            // Keep imports tidy when saving (set to true for always-on)
-            "source.organizeImports": "explicit"
+            // Auto-run fixes on save
+            "source.fixAll": "always",
+            "source.fixAll.dart": "always",
+            // Keep imports tidy when saving
+            "source.organizeImports": "always"
         }
     },
     // Run formatter for non-language-override saves (kept conservative)
     "editor.formatOnSave": true,
+    "editor.codeActionsOnSave.mode": "all",
+    // Apply formatting in more cases
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": true,
+    // Visual guide to match very_good_analysis 80-char line length
+    "editor.rulers": [
+        80
+    ],
     // Use Dart-Code extension formatter for Dart files
-    "editor.defaultFormatter": "Dart-Code.dart-code"
+    "editor.defaultFormatter": "Dart-Code.dart-code",
+    // Keep dart style consistent with VGV
+    "dart.lineLength": 80,
+    // Auto-run pub get when pubspec.yaml changes
+    "dart.runPubGetOnPubspecChanges": "prompt",
+    // Save automatically so fixes/format run often
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1000,
+    // Ensure fixes also run when editing YAML (pubspec.yaml)
+    "[yaml]": {
+        "editor.codeActionsOnSave.mode": "all",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            // Fully automatic fixes on save
+            "source.fixAll": "always"
+        }
+    }
 }
