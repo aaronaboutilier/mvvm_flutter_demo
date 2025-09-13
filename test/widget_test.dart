@@ -19,7 +19,8 @@ void main() {
       ),
     );
 
-    // The app should show a loading indicator before ConfigService initializes in tests.
+    // The app should show a loading indicator before ConfigService initializes
+    //in tests.
     expect(find.text('Loading...'), findsOneWidget);
   });
 }

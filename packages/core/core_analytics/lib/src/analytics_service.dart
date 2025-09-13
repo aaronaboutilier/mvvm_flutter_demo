@@ -8,6 +8,7 @@ Future<void> logEvent(
 
 /// Debug implementation that stores events in memory.
 class DebugAnalyticsService {
+  /// Creates a [DebugAnalyticsService].
   final List<Map<String, Object?>> events = [];
 
   /// Logs an analytics event and stores it in memory.

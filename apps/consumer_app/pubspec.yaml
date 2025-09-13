@@ -19,6 +19,10 @@ dependencies:
     path: ../../packages/core/core_storage
   feature_dashboard:
     path: ../../packages/features/feature_dashboard
+  feature_details:
+    path: ../../packages/features/feature_details
+  feature_settings:
+    path: ../../packages/features/feature_settings
   feature_products:
     path: ../../packages/features/feature_products
   flutter:
