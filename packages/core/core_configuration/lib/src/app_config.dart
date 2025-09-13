@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
+
 part 'app_config.g.dart';
 
-/// Custom converter for VisualDensity
+/// Custom converter for [VisualDensity].
 class VisualDensityConverter implements JsonConverter<VisualDensity, String> {
+  /// Creates a [VisualDensityConverter].
   const VisualDensityConverter();
 
+  /// Converts a JSON string to [VisualDensity].
   @override
   VisualDensity fromJson(String json) {
     switch (json) {
@@ -19,6 +22,7 @@ class VisualDensityConverter implements JsonConverter<VisualDensity, String> {
     }
   }
 
+  /// Converts a [VisualDensity] to a JSON string.
   @override
   String toJson(VisualDensity object) {
     if (object == VisualDensity.compact) return 'compact';
@@ -27,14 +31,10 @@ class VisualDensityConverter implements JsonConverter<VisualDensity, String> {
   }
 }
 
+/// App configuration model.
 @JsonSerializable()
 class AppConfig {
-  final BrandConfig brand;
-  final ThemeConfig theme;
-  final AccessibilityConfig accessibility;
-  final FeatureFlags features;
-  final LocalizationConfig localization;
-
+  /// Creates an [AppConfig].
   const AppConfig({
     required this.brand,
     required this.theme,
@@ -43,9 +43,11 @@ class AppConfig {
     required this.localization,
   });
 
-  factory AppConfig.fromJson(Map<String, dynamic> json) => _$AppConfigFromJson(json);
-  Map<String, dynamic> toJson() => _$AppConfigToJson(this);
+  /// Creates an [AppConfig] from JSON.
+  factory AppConfig.fromJson(Map<String, dynamic> json) =>
+      _$AppConfigFromJson(json);
 
+  /// Returns the default [AppConfig].
   factory AppConfig.defaultConfig() {
     return AppConfig(
       brand: BrandConfig.defaultBrand(),
@@ -56,6 +58,25 @@ class AppConfig {
     );
   }
 
+  /// Brand configuration.
+  final BrandConfig brand;
+
+  /// Theme configuration.
+  final ThemeConfig theme;
+
+  /// Accessibility configuration.
+  final AccessibilityConfig accessibility;
+
+  /// Feature flags.
+  final FeatureFlags features;
+
+  /// Localization configuration.
+  final LocalizationConfig localization;
+
+  /// Converts this object to JSON.
+  Map<String, dynamic> toJson() => _$AppConfigToJson(this);
+
+  /// Returns a copy of this object with updated fields.
   AppConfig copyWith({
     BrandConfig? brand,
     ThemeConfig? theme,
@@ -73,18 +94,10 @@ class AppConfig {
   }
 }
 
+/// Brand configuration model.
 @JsonSerializable()
 class BrandConfig {
-  final String appName;
-  final String logoPath;
-  final String primaryColorHex;
-  final String secondaryColorHex;
-  final String accentColorHex;
-  final String fontFamily;
-  final String websiteUrl;
-  final String supportEmail;
-  final Map<String, String> customAssets;
-
+  /// Creates a [BrandConfig].
   const BrandConfig({
     required this.appName,
     required this.logoPath,
@@ -97,9 +110,11 @@ class BrandConfig {
     required this.customAssets,
   });
 
-  factory BrandConfig.fromJson(Map<String, dynamic> json) => _$BrandConfigFromJson(json);
-  Map<String, dynamic> toJson() => _$BrandConfigToJson(this);
+  /// Creates a [BrandConfig] from JSON.
+  factory BrandConfig.fromJson(Map<String, dynamic> json) =>
+      _$BrandConfigFromJson(json);
 
+  /// Returns the default [BrandConfig].
   factory BrandConfig.defaultBrand() {
     return const BrandConfig(
       appName: 'MVVM Demo',
@@ -114,10 +129,49 @@ class BrandConfig {
     );
   }
 
-  Color get primaryColor => Color(int.parse(primaryColorHex.substring(1), radix: 16) + 0xFF000000);
-  Color get secondaryColor => Color(int.parse(secondaryColorHex.substring(1), radix: 16) + 0xFF000000);
-  Color get accentColor => Color(int.parse(accentColorHex.substring(1), radix: 16) + 0xFF000000);
+  /// Application name.
+  final String appName;
 
+  /// Path to the logo asset.
+  final String logoPath;
+
+  /// Primary color in hex.
+  final String primaryColorHex;
+
+  /// Secondary color in hex.
+  final String secondaryColorHex;
+
+  /// Accent color in hex.
+  final String accentColorHex;
+
+  /// Font family.
+  final String fontFamily;
+
+  /// Website URL.
+  final String websiteUrl;
+
+  /// Support email address.
+  final String supportEmail;
+
+  /// Custom assets.
+  final Map<String, String> customAssets;
+
+  /// Converts this object to JSON.
+  Map<String, dynamic> toJson() => _$BrandConfigToJson(this);
+
+  /// Gets the primary color.
+  Color get primaryColor =>
+      Color(int.parse(primaryColorHex.substring(1), radix: 16) + 0xFF000000);
+
+  /// Gets the secondary color.
+  Color get secondaryColor =>
+      Color(int.parse(secondaryColorHex.substring(1), radix: 16) + 0xFF000000);
+
+  /// Gets the accent color.
+  Color get accentColor =>
+      Color(int.parse(accentColorHex.substring(1), radix: 16) + 0xFF000000);
+
+  /// Returns a copy of this object with updated fields.
   BrandConfig copyWith({
     String? appName,
     String? logoPath,
@@ -143,16 +197,10 @@ class BrandConfig {
   }
 }
 
+/// Theme configuration model.
 @JsonSerializable()
 class ThemeConfig {
-  final ThemeMode themeMode;
-  final double textScaleFactor;
-  @VisualDensityConverter()
-  final VisualDensity visualDensity;
-  final bool useSystemAccentColor;
-  final bool useMaterial3;
-  final Map<String, String> customColors;
-
+  /// Creates a [ThemeConfig].
   const ThemeConfig({
     required this.themeMode,
     required this.textScaleFactor,
@@ -162,13 +210,15 @@ class ThemeConfig {
     required this.customColors,
   });
 
-  factory ThemeConfig.fromJson(Map<String, dynamic> json) => _$ThemeConfigFromJson(json);
-  Map<String, dynamic> toJson() => _$ThemeConfigToJson(this);
+  /// Creates a [ThemeConfig] from JSON.
+  factory ThemeConfig.fromJson(Map<String, dynamic> json) =>
+      _$ThemeConfigFromJson(json);
 
+  /// Returns the default [ThemeConfig].
   factory ThemeConfig.defaultTheme() {
     return const ThemeConfig(
       themeMode: ThemeMode.system,
-      textScaleFactor: 1.0,
+      textScaleFactor: 1,
       visualDensity: VisualDensity.standard,
       useSystemAccentColor: true,
       useMaterial3: true,
@@ -176,6 +226,29 @@ class ThemeConfig {
     );
   }
 
+  /// Theme mode.
+  final ThemeMode themeMode;
+
+  /// Text scale factor.
+  final double textScaleFactor;
+
+  /// Visual density.
+  @VisualDensityConverter()
+  final VisualDensity visualDensity;
+
+  /// Whether to use system accent color.
+  final bool useSystemAccentColor;
+
+  /// Whether to use Material 3.
+  final bool useMaterial3;
+
+  /// Custom colors.
+  final Map<String, String> customColors;
+
+  /// Converts this object to JSON.
+  Map<String, dynamic> toJson() => _$ThemeConfigToJson(this);
+
+  /// Returns a copy of this object with updated fields.
   ThemeConfig copyWith({
     ThemeMode? themeMode,
     double? textScaleFactor,
@@ -195,17 +268,10 @@ class ThemeConfig {
   }
 }
 
+/// Accessibility configuration model.
 @JsonSerializable()
 class AccessibilityConfig {
-  final bool enableScreenReader;
-  final bool enableVoiceGuidance;
-  final bool reduceAnimations;
-  final bool increasedContrast;
-  final bool largerTouchTargets;
-  final double minimumTouchSize;
-  final bool enableSemanticLabels;
-  final bool enableHapticFeedback;
-
+  /// Creates an [AccessibilityConfig].
   const AccessibilityConfig({
     required this.enableScreenReader,
     required this.enableVoiceGuidance,
@@ -217,9 +283,11 @@ class AccessibilityConfig {
     required this.enableHapticFeedback,
   });
 
-  factory AccessibilityConfig.fromJson(Map<String, dynamic> json) => _$AccessibilityConfigFromJson(json);
-  Map<String, dynamic> toJson() => _$AccessibilityConfigToJson(this);
+  /// Creates an [AccessibilityConfig] from JSON.
+  factory AccessibilityConfig.fromJson(Map<String, dynamic> json) =>
+      _$AccessibilityConfigFromJson(json);
 
+  /// Returns the default [AccessibilityConfig].
   factory AccessibilityConfig.defaultConfig() {
     return const AccessibilityConfig(
       enableScreenReader: true,
@@ -227,12 +295,40 @@ class AccessibilityConfig {
       reduceAnimations: false,
       increasedContrast: false,
       largerTouchTargets: false,
-      minimumTouchSize: 44.0,
+      minimumTouchSize: 44,
       enableSemanticLabels: true,
       enableHapticFeedback: true,
     );
   }
 
+  /// Whether screen reader is enabled.
+  final bool enableScreenReader;
+
+  /// Whether voice guidance is enabled.
+  final bool enableVoiceGuidance;
+
+  /// Whether animations are reduced.
+  final bool reduceAnimations;
+
+  /// Whether contrast is increased.
+  final bool increasedContrast;
+
+  /// Whether larger touch targets are enabled.
+  final bool largerTouchTargets;
+
+  /// Minimum touch size.
+  final double minimumTouchSize;
+
+  /// Whether semantic labels are enabled.
+  final bool enableSemanticLabels;
+
+  /// Whether haptic feedback is enabled.
+  final bool enableHapticFeedback;
+
+  /// Converts this object to JSON.
+  Map<String, dynamic> toJson() => _$AccessibilityConfigToJson(this);
+
+  /// Returns a copy of this object with updated fields.
   AccessibilityConfig copyWith({
     bool? enableScreenReader,
     bool? enableVoiceGuidance,
@@ -256,17 +352,10 @@ class AccessibilityConfig {
   }
 }
 
+/// Feature flags configuration model.
 @JsonSerializable()
 class FeatureFlags {
-  final bool enableUserProfiles;
-  final bool enableItemReordering;
-  final bool enableColorCustomization;
-  final bool enableDataExport;
-  final bool enableOfflineMode;
-  final bool enableAnalytics;
-  final bool enablePushNotifications;
-  final Map<String, bool> customFeatures;
-
+  /// Creates a [FeatureFlags].
   const FeatureFlags({
     required this.enableUserProfiles,
     required this.enableItemReordering,
@@ -278,9 +367,11 @@ class FeatureFlags {
     required this.customFeatures,
   });
 
-  factory FeatureFlags.fromJson(Map<String, dynamic> json) => _$FeatureFlagsFromJson(json);
-  Map<String, dynamic> toJson() => _$FeatureFlagsToJson(this);
+  /// Creates a [FeatureFlags] from JSON.
+  factory FeatureFlags.fromJson(Map<String, dynamic> json) =>
+      _$FeatureFlagsFromJson(json);
 
+  /// Returns the default [FeatureFlags].
   factory FeatureFlags.defaultFlags() {
     return const FeatureFlags(
       enableUserProfiles: true,
@@ -294,6 +385,34 @@ class FeatureFlags {
     );
   }
 
+  /// Whether user profiles are enabled.
+  final bool enableUserProfiles;
+
+  /// Whether item reordering is enabled.
+  final bool enableItemReordering;
+
+  /// Whether color customization is enabled.
+  final bool enableColorCustomization;
+
+  /// Whether data export is enabled.
+  final bool enableDataExport;
+
+  /// Whether offline mode is enabled.
+  final bool enableOfflineMode;
+
+  /// Whether analytics is enabled.
+  final bool enableAnalytics;
+
+  /// Whether push notifications are enabled.
+  final bool enablePushNotifications;
+
+  /// Custom feature flags.
+  final Map<String, bool> customFeatures;
+
+  /// Converts this object to JSON.
+  Map<String, dynamic> toJson() => _$FeatureFlagsToJson(this);
+
+  /// Returns a copy of this object with updated fields.
   FeatureFlags copyWith({
     bool? enableUserProfiles,
     bool? enableItemReordering,
@@ -307,37 +426,36 @@ class FeatureFlags {
     return FeatureFlags(
       enableUserProfiles: enableUserProfiles ?? this.enableUserProfiles,
       enableItemReordering: enableItemReordering ?? this.enableItemReordering,
-      enableColorCustomization: enableColorCustomization ?? this.enableColorCustomization,
+      enableColorCustomization:
+          enableColorCustomization ?? this.enableColorCustomization,
       enableDataExport: enableDataExport ?? this.enableDataExport,
       enableOfflineMode: enableOfflineMode ?? this.enableOfflineMode,
       enableAnalytics: enableAnalytics ?? this.enableAnalytics,
-      enablePushNotifications: enablePushNotifications ?? this.enablePushNotifications,
+      enablePushNotifications:
+          enablePushNotifications ?? this.enablePushNotifications,
       customFeatures: customFeatures ?? this.customFeatures,
     );
   }
 }
 
+/// Localization configuration model.
 @JsonSerializable()
 class LocalizationConfig {
-  final String languageCode;
-  final String? countryCode;
-  final bool useDeviceLocale;
-  final String dateFormat;
-  final String timeFormat;
-  final String numberFormat;
-
+  /// Creates a [LocalizationConfig].
   const LocalizationConfig({
     required this.languageCode,
-    this.countryCode,
     required this.useDeviceLocale,
     required this.dateFormat,
     required this.timeFormat,
     required this.numberFormat,
+    this.countryCode,
   });
 
-  factory LocalizationConfig.fromJson(Map<String, dynamic> json) => _$LocalizationConfigFromJson(json);
-  Map<String, dynamic> toJson() => _$LocalizationConfigToJson(this);
+  /// Creates a [LocalizationConfig] from JSON.
+  factory LocalizationConfig.fromJson(Map<String, dynamic> json) =>
+      _$LocalizationConfigFromJson(json);
 
+  /// Returns the default [LocalizationConfig].
   factory LocalizationConfig.defaultConfig() {
     return const LocalizationConfig(
       languageCode: 'en',
@@ -349,8 +467,31 @@ class LocalizationConfig {
     );
   }
 
+  /// Language code.
+  final String languageCode;
+
+  /// Country code.
+  final String? countryCode;
+
+  /// Whether to use device locale.
+  final bool useDeviceLocale;
+
+  /// Date format.
+  final String dateFormat;
+
+  /// Time format.
+  final String timeFormat;
+
+  /// Number format.
+  final String numberFormat;
+
+  /// Converts this object to JSON.
+  Map<String, dynamic> toJson() => _$LocalizationConfigToJson(this);
+
+  /// Gets the [Locale] for this configuration.
   Locale get locale => Locale(languageCode, countryCode);
 
+  /// Returns a copy of this object with updated fields.
   LocalizationConfig copyWith({
     String? languageCode,
     String? countryCode,

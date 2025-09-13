@@ -1,12 +1,12 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:feature_settings/feature_settings.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('TextScale', () {
     test('accepts values in range [0.5, 3.0]', () {
       expect(TextScale(0.5).value, 0.5);
-      expect(TextScale(1.0).value, 1.0);
-      expect(TextScale(3.0).value, 3.0);
+      expect(TextScale(1).value, 1.0);
+      expect(TextScale(3).value, 3.0);
     });
 
     test('throws for out-of-range values', () {

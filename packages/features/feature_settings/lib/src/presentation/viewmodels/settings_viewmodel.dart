@@ -1,28 +1,21 @@
+import 'package:core_foundation/core/core.dart' as foundation;
+import 'package:feature_settings/src/application/usecases/settings_usecases.dart';
+import 'package:feature_settings/src/domain/entities/settings_config.dart';
+import 'package:feature_settings/src/domain/repositories/settings_repository.dart';
+import 'package:feature_settings/src/domain/value_objects/language_code.dart'
+    as vo;
+import 'package:feature_settings/src/domain/value_objects/text_scale.dart'
+    as vo;
+import 'package:feature_settings/src/domain/value_objects/theme_preference.dart'
+    as vo;
+import 'package:feature_settings/src/presentation/viewmodels/settings_view_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:core_foundation/core/core.dart' as foundation;
-import '../../domain/entities/settings_config.dart';
-import '../../application/usecases/settings_usecases.dart';
-import '../../domain/value_objects/text_scale.dart' as vo;
-import '../../domain/value_objects/language_code.dart' as vo;
-import '../../domain/value_objects/theme_preference.dart' as vo;
-import '../../domain/repositories/settings_repository.dart';
-import 'settings_view_state.dart';
 
-class SettingsViewModel extends foundation.ChangeNotifierViewModel<SettingsViewState> {
-  final SettingsRepository _repo;
-  late final UpdateThemeMode _updateThemeMode;
-  late final UpdateTextScale _updateTextScale;
-  late final UpdateReduceAnimations _updateReduceAnimations;
-  late final UpdateHighContrast _updateHighContrast;
-  late final UpdateLargerTouchTargets _updateLargerTouchTargets;
-  late final UpdateVoiceGuidance _updateVoiceGuidance;
-  late final UpdateHapticFeedback _updateHapticFeedback;
-  late final UpdateUseDeviceLocale _updateUseDeviceLocale;
-  late final UpdateLanguageCode _updateLanguageCode;
-  late final ExportConfiguration _exportConfiguration;
-  late final ResetToDefaults _resetToDefaults;
-
+/// ViewModel for managing settings state and operations.
+class SettingsViewModel
+    extends foundation.ChangeNotifierViewModel<SettingsViewState> {
+  /// Creates a SettingsViewModel.
   SettingsViewModel({
     required SettingsRepository repo,
     required UpdateThemeMode updateThemeMode,
@@ -36,24 +29,45 @@ class SettingsViewModel extends foundation.ChangeNotifierViewModel<SettingsViewS
     required UpdateLanguageCode updateLanguageCode,
     required ExportConfiguration exportConfiguration,
     required ResetToDefaults resetToDefaults,
-  })  : _repo = repo,
-        _updateThemeMode = updateThemeMode,
-        _updateTextScale = updateTextScale,
-        _updateReduceAnimations = updateReduceAnimations,
-        _updateHighContrast = updateHighContrast,
-        _updateLargerTouchTargets = updateLargerTouchTargets,
-        _updateVoiceGuidance = updateVoiceGuidance,
-        _updateHapticFeedback = updateHapticFeedback,
-        _updateUseDeviceLocale = updateUseDeviceLocale,
-        _updateLanguageCode = updateLanguageCode,
-        _exportConfiguration = exportConfiguration,
-        _resetToDefaults = resetToDefaults,
-        super(SettingsViewState.initial());
+  }) : _repo = repo,
+       _updateThemeMode = updateThemeMode,
+       _updateTextScale = updateTextScale,
+       _updateReduceAnimations = updateReduceAnimations,
+       _updateHighContrast = updateHighContrast,
+       _updateLargerTouchTargets = updateLargerTouchTargets,
+       _updateVoiceGuidance = updateVoiceGuidance,
+       _updateHapticFeedback = updateHapticFeedback,
+       _updateUseDeviceLocale = updateUseDeviceLocale,
+       _updateLanguageCode = updateLanguageCode,
+       _exportConfiguration = exportConfiguration,
+       _resetToDefaults = resetToDefaults,
+       super(SettingsViewState.initial());
+  final SettingsRepository _repo;
+  late final UpdateThemeMode _updateThemeMode;
+  late final UpdateTextScale _updateTextScale;
+  late final UpdateReduceAnimations _updateReduceAnimations;
+  late final UpdateHighContrast _updateHighContrast;
+  late final UpdateLargerTouchTargets _updateLargerTouchTargets;
+  late final UpdateVoiceGuidance _updateVoiceGuidance;
+  late final UpdateHapticFeedback _updateHapticFeedback;
+  late final UpdateUseDeviceLocale _updateUseDeviceLocale;
+  late final UpdateLanguageCode _updateLanguageCode;
+  late final ExportConfiguration _exportConfiguration;
+  late final ResetToDefaults _resetToDefaults;
 
+  /// Indicates if a settings update operation is in progress.
   bool get isUpdating => state.isLoading;
+
+  /// Success message from the last operation, if any.
+  String? get successMessage => state.successMessage;
+
+  /// Error message from the last operation, if any.
   String? get errorMessage => state.errorMessage;
+
+  ///  current settings configuration.
   SettingsConfig get currentConfig => _repo.currentConfig;
 
+  /// Updates the app's theme mode.
   Future<void> updateThemeMode(ThemeMode newThemeMode) async {
     updateState(state.clearMessages().copyWith(isLoading: true));
     try {
@@ -69,6 +83,7 @@ class SettingsViewModel extends foundation.ChangeNotifierViewModel<SettingsViewS
     }
   }
 
+  /// Updates the text scale factor.
   Future<void> updateTextScaleFactor(double newScaleFactor) async {
     updateState(state.clearMessages().copyWith(isLoading: true));
     try {
@@ -79,66 +94,85 @@ class SettingsViewModel extends foundation.ChangeNotifierViewModel<SettingsViewS
     }
   }
 
-  Future<void> updateReduceAnimations(bool reduceAnimations) async {
+  /// Updates whether animations are reduced.
+
+  /// Updates whether animations are reduced.
+  Future<void> setReduceAnimations({required bool enabled}) async {
     updateState(state.clearMessages().copyWith(isLoading: true));
     try {
-      await _updateReduceAnimations(reduceAnimations);
-      if (!reduceAnimations) _maybeHapticSelection();
+      await _updateReduceAnimations(reduceAnimations: enabled);
+      if (!enabled) _maybeHapticSelection();
     } finally {
       updateState(state.copyWith(isLoading: false));
     }
   }
 
-  Future<void> updateHighContrast(bool highContrast) async {
+  /// Updates whether high contrast mode is enabled.
+
+  /// Updates whether high contrast mode is enabled.
+  Future<void> setHighContrast({required bool enabled}) async {
     updateState(state.clearMessages().copyWith(isLoading: true));
     try {
-      await _updateHighContrast(highContrast);
+      await _updateHighContrast(highContrast: enabled);
       _maybeHapticSelection();
     } finally {
       updateState(state.copyWith(isLoading: false));
     }
   }
 
-  Future<void> updateLargerTouchTargets(bool largerTouchTargets) async {
+  /// Updates whether larger touch targets are enabled.
+
+  /// Updates whether larger touch targets are enabled.
+  Future<void> setLargerTouchTargets({required bool enabled}) async {
     updateState(state.clearMessages().copyWith(isLoading: true));
     try {
-      await _updateLargerTouchTargets(largerTouchTargets);
+      await _updateLargerTouchTargets(largerTouchTargets: enabled);
       _maybeHapticSelection();
     } finally {
       updateState(state.copyWith(isLoading: false));
     }
   }
 
-  Future<void> updateVoiceGuidance(bool enableVoiceGuidance) async {
+  /// Updates whether voice guidance is enabled.
+
+  /// Updates whether voice guidance is enabled.
+  Future<void> setVoiceGuidanceEnabled({required bool enabled}) async {
     updateState(state.clearMessages().copyWith(isLoading: true));
     try {
-      await _updateVoiceGuidance(enableVoiceGuidance);
+      await _updateVoiceGuidance(enableVoiceGuidance: enabled);
       _maybeHapticSelection();
     } finally {
       updateState(state.copyWith(isLoading: false));
     }
   }
 
-  Future<void> updateHapticFeedback(bool enableHapticFeedback) async {
+  /// Updates whether haptic feedback is enabled.
+
+  /// Updates whether haptic feedback is enabled.
+  Future<void> setHapticFeedbackEnabled({required bool enabled}) async {
     updateState(state.clearMessages().copyWith(isLoading: true));
     try {
-      await _updateHapticFeedback(enableHapticFeedback);
-      if (enableHapticFeedback) _maybeHapticSelection();
+      await _updateHapticFeedback(enableHapticFeedback: enabled);
+      if (enabled) _maybeHapticSelection();
     } finally {
       updateState(state.copyWith(isLoading: false));
     }
   }
 
-  Future<void> updateUseDeviceLocale(bool useDeviceLocale) async {
+  /// Updates whether to use the device's locale or a specific language code.
+
+  /// Updates whether to use the device's locale or a specific language code.
+  Future<void> setUseDeviceLocale({required bool useDeviceLocale}) async {
     updateState(state.clearMessages().copyWith(isLoading: true));
     try {
-      await _updateUseDeviceLocale(useDeviceLocale);
+      await _updateUseDeviceLocale(useDeviceLocale: useDeviceLocale);
       _maybeHapticSelection();
     } finally {
       updateState(state.copyWith(isLoading: false));
     }
   }
 
+  /// Updates the app's language code.
   Future<void> updateLanguageCode(String languageCode) async {
     updateState(state.clearMessages().copyWith(isLoading: true));
     try {
@@ -153,9 +187,14 @@ class SettingsViewModel extends foundation.ChangeNotifierViewModel<SettingsViewS
     }
   }
 
+  /// Exports the current settings configuration.
   Future<void> exportConfiguration() async {
     if (!currentConfig.features.enableDataExport) {
-      updateState(state.copyWith(errorMessage: 'Export functionality is not available in this version'));
+      updateState(
+        state.copyWith(
+          errorMessage: 'Export functionality is not available in this version',
+        ),
+      );
       return;
     }
     updateState(state.clearMessages().copyWith(isLoading: true));
@@ -163,13 +202,16 @@ class SettingsViewModel extends foundation.ChangeNotifierViewModel<SettingsViewS
       final res = await _exportConfiguration(const foundation.NoParams());
       res.fold(
         failure: (f) => throw Exception(f.message),
-        success: (path) => updateState(state.copyWith(successMessage: 'Configuration exported to: $path')),
+        success: (path) => updateState(
+          state.copyWith(successMessage: 'Configuration exported to: $path'),
+        ),
       );
     } finally {
       updateState(state.copyWith(isLoading: false));
     }
   }
 
+  /// Resets all settings to their default values.
   Future<void> resetToDefaults() async {
     updateState(state.clearMessages().copyWith(isLoading: true));
     try {
@@ -181,16 +223,23 @@ class SettingsViewModel extends foundation.ChangeNotifierViewModel<SettingsViewS
     }
   }
 
-  bool isFeatureEnabled(String featureName) => _repo.isFeatureEnabled(featureName);
+  /// Checks if a specific feature is enabled.
+  bool isFeatureEnabled(String featureName) =>
+      _repo.isFeatureEnabled(featureName);
 
+  /// Generates a summary of the current accessibility settings.
   String getAccessibilityStatusSummary() {
     final accessibility = currentConfig.accessibility;
-    List<String> activeFeatures = [];
+    final activeFeatures = <String>[];
     if (accessibility.reduceAnimations) activeFeatures.add('Reduced motion');
     if (accessibility.increasedContrast) activeFeatures.add('High contrast');
-    if (accessibility.largerTouchTargets) activeFeatures.add('Large touch targets');
+    if (accessibility.largerTouchTargets) {
+      activeFeatures.add('Large touch targets');
+    }
     if (accessibility.enableVoiceGuidance) activeFeatures.add('Voice guidance');
-    if (!accessibility.enableHapticFeedback) activeFeatures.add('Haptics disabled');
+    if (!accessibility.enableHapticFeedback) {
+      activeFeatures.add('Haptics disabled');
+    }
     if (activeFeatures.isEmpty) {
       return 'Standard accessibility settings';
     } else {
@@ -198,6 +247,7 @@ class SettingsViewModel extends foundation.ChangeNotifierViewModel<SettingsViewS
     }
   }
 
+  /// Generates a summary of the current theme settings.
   String getThemeStatusSummary() {
     final theme = currentConfig.theme;
     final themeName = switch (theme.themeMode) {
@@ -205,7 +255,7 @@ class SettingsViewModel extends foundation.ChangeNotifierViewModel<SettingsViewS
       ThemeMode.dark => 'Dark',
       ThemeMode.system => 'System',
     };
-    String summary = themeName;
+    var summary = themeName;
     if (theme.textScaleFactor != 1.0) {
       summary += ', ${(theme.textScaleFactor * 100).round()}% text size';
     }

@@ -1,13 +1,8 @@
-import '../../domain/entities/detail_item.dart';
+import 'package:feature_details/src/domain/entities/detail_item.dart';
 
+/// State for the details view.
 class DetailsViewState {
-  final String selectedColor;
-  final List<DetailItem> items;
-  final bool isAddingItem;
-  final bool isLoading;
-  final String? errorMessage;
-  final String? successMessage;
-
+  /// Creates a [DetailsViewState].
   const DetailsViewState({
     this.selectedColor = 'Blue',
     this.items = const <DetailItem>[],
@@ -17,16 +12,44 @@ class DetailsViewState {
     this.successMessage,
   });
 
+  /// Returns the initial [DetailsViewState].
   factory DetailsViewState.initial() => const DetailsViewState();
 
+  /// The selected color theme.
+  final String selectedColor;
+
+  /// The list of detail items.
+  final List<DetailItem> items;
+
+  /// Whether an item is being added.
+  final bool isAddingItem;
+
+  /// Whether the view is loading.
+  final bool isLoading;
+
+  /// Error message, if any.
+  final String? errorMessage;
+
+  /// Success message, if any.
+  final String? successMessage;
+
+  /// The number of items.
   int get itemCount => items.length;
+
+  /// Returns true if there are items.
   bool get hasItems => items.isNotEmpty;
-  List<String> get displayItems =>
-      List.unmodifiable(items.map((DetailItem e) => '${e.name} (${e.displayTime})'));
+
+  /// Returns a list of display strings for the items.
+  List<String> get displayItems => List.unmodifiable(
+    items.map((DetailItem e) => '${e.name} (${e.displayTime})'),
+  );
+
+  /// Returns a summary text for the view.
   String get summaryText => hasItems
       ? 'You have $itemCount items in $selectedColor theme'
       : 'No items yet. Add some to get started!';
 
+  /// Returns a copy of this state with updated fields.
   DetailsViewState copyWith({
     String? selectedColor,
     List<DetailItem>? items,
@@ -45,6 +68,6 @@ class DetailsViewState {
     );
   }
 
-  DetailsViewState clearMessages() =>
-      copyWith(errorMessage: null, successMessage: null);
+  /// Clears error and success messages.
+  DetailsViewState clearMessages() => copyWith();
 }

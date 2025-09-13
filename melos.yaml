@@ -13,11 +13,20 @@ scripts:
 
   analyze:all:
     description: Run static analysis across all packages
-    run: flutter analyze
+    run: dart run melos exec -- "flutter analyze"
 
   format:all:
     description: Format code across all packages
     run: dart format --set-exit-if-changed .
+
+  fix:all:
+    description: Apply automatic fixes suggested by the analyzer across all packages
+    run: dart run melos exec -- "dart fix --apply"
+
+  fix-and-format:all:
+    description: Apply analyzer fixes, format code, then analyze to verify
+    run: |
+      dart run melos exec -- "dart fix --apply" && dart format . && dart run melos exec -- "flutter analyze"
 
   test:all:
     description: Run tests across all packages

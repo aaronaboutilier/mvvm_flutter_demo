@@ -1,7 +1,7 @@
 # l10n.yaml
 # Configuration for Flutter's internationalization code generation
 
-arb-dir: lib/l10n
+arb-dir: l10n
 
 template-arb-file: app_en.arb
 
@@ -11,7 +11,7 @@ template-arb-file: app_en.arb
 synthetic-package: false
 
 # Specify where to output the generated localization files:
-output-dir: lib/generated/l10n
+output-dir: generated/l10n
 
 # The class name for the generated localization delegate:
 output-class: AppLocalizations

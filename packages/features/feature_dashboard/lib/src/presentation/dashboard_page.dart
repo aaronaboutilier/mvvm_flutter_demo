@@ -1,15 +1,16 @@
+import 'package:feature_dashboard/src/presentation/viewmodels/home_view_state.dart';
+import 'package:feature_dashboard/src/presentation/viewmodels/home_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-
-import 'viewmodels/home_viewmodel.dart';
-import 'viewmodels/home_view_state.dart';
+import 'package:provider/provider.dart';
 
 /// Dashboard page composed from the Home feature UI.
 class DashboardPage extends StatelessWidget {
+  /// Creates a [DashboardPage].
   const DashboardPage({super.key});
 
+  /// Builds the widget tree for the dashboard page.
   @override
   Widget build(BuildContext context) {
     return Provider<HomeViewModel>(
@@ -19,14 +20,19 @@ class DashboardPage extends StatelessWidget {
   }
 }
 
+/// Internal widget for dashboard content.
 class _DashboardContent extends StatefulWidget {
+  /// Creates a [_DashboardContent] widget.
   const _DashboardContent();
 
+  /// Creates the state for [_DashboardContent].
   @override
   State<_DashboardContent> createState() => _DashboardContentState();
 }
 
+/// State for [_DashboardContent].
 class _DashboardContentState extends State<_DashboardContent> {
+  /// Initializes the state and loads the user.
   @override
   void initState() {
     super.initState();
@@ -35,6 +41,7 @@ class _DashboardContentState extends State<_DashboardContent> {
     });
   }
 
+  /// Builds the widget tree for the dashboard content.
   @override
   Widget build(BuildContext context) {
     final viewModel = context.read<HomeViewModel>();
@@ -55,7 +62,7 @@ class _DashboardContentState extends State<_DashboardContent> {
             ],
           ),
           body: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -75,10 +82,11 @@ class _DashboardContentState extends State<_DashboardContent> {
     );
   }
 
+  /// Builds the welcome section card.
   Widget _buildWelcomeSection(HomeViewModel viewModel) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             Icon(
@@ -98,11 +106,12 @@ class _DashboardContentState extends State<_DashboardContent> {
     );
   }
 
+  /// Builds the user info section card.
   Widget _buildUserInfoSection(HomeViewModel viewModel) {
     if (viewModel.isLoading) {
       return const Card(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16),
           child: Column(
             children: [
               CircularProgressIndicator(),
@@ -118,7 +127,7 @@ class _DashboardContentState extends State<_DashboardContent> {
       return Card(
         color: Colors.red.shade50,
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16),
           child: Column(
             children: [
               const Icon(Icons.error, color: Colors.red),
@@ -143,7 +152,7 @@ class _DashboardContentState extends State<_DashboardContent> {
       final user = viewModel.currentUser!;
       return Card(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -152,8 +161,7 @@ class _DashboardContentState extends State<_DashboardContent> {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
-              Text('ID: ${user.id}')
-              ,
+              Text('ID: ${user.id}'),
               Text('Name: ${user.name}'),
               Text('Email: ${user.email}'),
             ],
@@ -165,10 +173,11 @@ class _DashboardContentState extends State<_DashboardContent> {
     return const SizedBox.shrink();
   }
 
+  /// Builds the button section card.
   Widget _buildButtonSection(BuildContext context, HomeViewModel viewModel) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             Text(
@@ -179,7 +188,10 @@ class _DashboardContentState extends State<_DashboardContent> {
             ElevatedButton(
               onPressed: viewModel.onButtonPressed,
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 16,
+                ),
               ),
               child: const Text('Click Me!'),
             ),
@@ -189,10 +201,14 @@ class _DashboardContentState extends State<_DashboardContent> {
     );
   }
 
-  Widget _buildNavigationSection(BuildContext context, HomeViewModel viewModel) {
+  /// Builds the navigation section card.
+  Widget _buildNavigationSection(
+    BuildContext context,
+    HomeViewModel viewModel,
+  ) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             const Text(
@@ -205,7 +221,10 @@ class _DashboardContentState extends State<_DashboardContent> {
               icon: const Icon(Icons.arrow_forward),
               label: const Text('Go to Details'),
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 16,
+                ),
               ),
             ),
           ],

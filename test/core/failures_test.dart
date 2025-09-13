@@ -1,6 +1,6 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:core_foundation/core/errors/failures.dart';
 import 'package:core_foundation/core/utils/error_mapper.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Failures', () {
@@ -11,7 +11,10 @@ void main() {
     });
 
     test('ValidationFailure stores field errors', () {
-      const f = ValidationFailure(message: 'invalid', fieldErrors: {'email': 'bad'});
+      const f = ValidationFailure(
+        message: 'invalid',
+        fieldErrors: {'email': 'bad'},
+      );
       expect(f.code, 'validation');
       expect(f.fieldErrors?['email'], 'bad');
     });

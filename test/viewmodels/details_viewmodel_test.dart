@@ -1,13 +1,18 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:core_foundation/core/core.dart' as foundation;
 import 'package:feature_details/feature_details.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 class _FakeDetailsRepo implements DetailsRepository {
   final List<DetailItem> _items = [];
 
   @override
   Future<foundation.Result<void>> addItem(String name) async {
-    _items.add(DetailItem(name: name, timestampMillis: DateTime(2024, 1, 1).millisecondsSinceEpoch));
+    _items.add(
+      DetailItem(
+        name: name,
+        timestampMillis: DateTime(2024).millisecondsSinceEpoch,
+      ),
+    );
     return const foundation.Success(null);
   }
 
@@ -18,7 +23,8 @@ class _FakeDetailsRepo implements DetailsRepository {
   }
 
   @override
-  Future<foundation.Result<List<DetailItem>>> getItems() async => foundation.Success(List.unmodifiable(_items));
+  Future<foundation.Result<List<DetailItem>>> getItems() async =>
+      foundation.Success(List.unmodifiable(_items));
 
   @override
   Future<foundation.Result<void>> removeAt(int index) async {
@@ -27,7 +33,10 @@ class _FakeDetailsRepo implements DetailsRepository {
   }
 
   @override
-  Future<foundation.Result<void>> reorder({required int oldIndex, required int newIndex}) async {
+  Future<foundation.Result<void>> reorder({
+    required int oldIndex,
+    required int newIndex,
+  }) async {
     if (newIndex > oldIndex) newIndex -= 1;
     final item = _items.removeAt(oldIndex);
     _items.insert(newIndex, item);

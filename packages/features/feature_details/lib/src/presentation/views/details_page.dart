@@ -1,15 +1,19 @@
 import 'dart:math' as math;
+
+import 'package:feature_dashboard/feature_dashboard.dart' show DashboardRoutes;
+import 'package:feature_details/src/presentation/viewmodels/details_view_state.dart';
+import 'package:feature_details/src/presentation/viewmodels/details_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:feature_dashboard/feature_dashboard.dart' show DashboardRoutes;
-import '../viewmodels/details_viewmodel.dart';
-import '../viewmodels/details_view_state.dart';
+import 'package:provider/provider.dart';
 
+/// Details page for managing detail items.
 class DetailsPage extends StatelessWidget {
+  /// Creates a [DetailsPage].
   const DetailsPage({super.key});
 
+  /// Builds the widget tree for the details page.
   @override
   Widget build(BuildContext context) {
     return Provider<DetailsViewModel>(
@@ -19,16 +23,22 @@ class DetailsPage extends StatelessWidget {
   }
 }
 
+/// Internal widget for details content.
 class _DetailsContent extends StatefulWidget {
+  /// Creates a [_DetailsContent] widget.
   const _DetailsContent();
 
+  /// Creates the state for [_DetailsContent].
   @override
   State<_DetailsContent> createState() => _DetailsContentState();
 }
 
+/// State for [_DetailsContent].
 class _DetailsContentState extends State<_DetailsContent> {
+  /// Controller for the item name text field.
   final TextEditingController _textController = TextEditingController();
 
+  /// Initializes the state and loads the items.
   @override
   void initState() {
     super.initState();
@@ -37,12 +47,14 @@ class _DetailsContentState extends State<_DetailsContent> {
     });
   }
 
+  /// Disposes the text controller.
   @override
   void dispose() {
     _textController.dispose();
     super.dispose();
   }
 
+  /// Builds the widget tree for the details content.
   @override
   Widget build(BuildContext context) {
     final viewModel = context.read<DetailsViewModel>();
@@ -68,7 +80,7 @@ class _DetailsContentState extends State<_DetailsContent> {
             ],
           ),
           body: SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -89,10 +101,11 @@ class _DetailsContentState extends State<_DetailsContent> {
     );
   }
 
+  /// Builds the color selection section card.
   Widget _buildColorSelectionSection(DetailsViewModel viewModel) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -102,7 +115,7 @@ class _DetailsContentState extends State<_DetailsContent> {
             ),
             const SizedBox(height: 12),
             Wrap(
-              spacing: 8.0,
+              spacing: 8,
               children: DetailsViewModel.availableColors.map((color) {
                 final isSelected = color == viewModel.selectedColor;
                 return FilterChip(
@@ -127,11 +140,12 @@ class _DetailsContentState extends State<_DetailsContent> {
     );
   }
 
+  /// Builds the summary section card.
   Widget _buildSummarySection(DetailsViewModel viewModel) {
     return Card(
       color: _getThemeColor(viewModel.selectedColor).withValues(alpha: 0.1),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             Icon(
@@ -149,10 +163,7 @@ class _DetailsContentState extends State<_DetailsContent> {
               const SizedBox(height: 8),
               Text(
                 'Items: ${viewModel.itemCount}',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
               ),
             ],
           ],
@@ -161,10 +172,14 @@ class _DetailsContentState extends State<_DetailsContent> {
     );
   }
 
-  Widget _buildAddItemSection(BuildContext context, DetailsViewModel viewModel) {
+  /// Builds the add item section card.
+  Widget _buildAddItemSection(
+    BuildContext context,
+    DetailsViewModel viewModel,
+  ) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -188,7 +203,9 @@ class _DetailsContentState extends State<_DetailsContent> {
                 ),
                 const SizedBox(width: 12),
                 ElevatedButton(
-                  onPressed: viewModel.isAddingItem ? null : () => _addItem(viewModel),
+                  onPressed: viewModel.isAddingItem
+                      ? null
+                      : () => _addItem(viewModel),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _getThemeColor(viewModel.selectedColor),
                     foregroundColor: Colors.white,
@@ -199,7 +216,9 @@ class _DetailsContentState extends State<_DetailsContent> {
                           height: 16,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
                           ),
                         )
                       : const Icon(Icons.add),
@@ -212,33 +231,24 @@ class _DetailsContentState extends State<_DetailsContent> {
     );
   }
 
+  /// Builds the items list section card.
   Widget _buildItemsListSection(DetailsViewModel viewModel) {
     if (!viewModel.hasItems) {
       return Card(
         child: Padding(
-          padding: const EdgeInsets.all(32.0),
+          padding: const EdgeInsets.all(32),
           child: Column(
             children: [
-              Icon(
-                Icons.inbox,
-                size: 48,
-                color: Colors.grey[400],
-              ),
+              Icon(Icons.inbox, size: 48, color: Colors.grey[400]),
               const SizedBox(height: 16),
               Text(
                 'No items yet',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.grey[600],
-                ),
+                style: TextStyle(fontSize: 18, color: Colors.grey[600]),
               ),
               const SizedBox(height: 8),
               Text(
                 'Add your first item above to get started!',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[500],
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.grey[500]),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -249,7 +259,7 @@ class _DetailsContentState extends State<_DetailsContent> {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -259,7 +269,7 @@ class _DetailsContentState extends State<_DetailsContent> {
             ),
             const SizedBox(height: 12),
             SizedBox(
-              height: math.min(viewModel.itemCount * 72.0, 300.0),
+              height: math.min(viewModel.itemCount * 72.0, 300),
               child: ReorderableListView.builder(
                 itemCount: viewModel.itemCount,
                 onReorder: viewModel.reorderItems,
@@ -271,7 +281,10 @@ class _DetailsContentState extends State<_DetailsContent> {
                       backgroundColor: _getThemeColor(viewModel.selectedColor),
                       child: Text(
                         '${index + 1}',
-                        style: const TextStyle(color: Colors.white, fontSize: 12),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                        ),
                       ),
                     ),
                     title: Text(item),
@@ -289,10 +302,11 @@ class _DetailsContentState extends State<_DetailsContent> {
     );
   }
 
+  /// Builds the navigation section card.
   Widget _buildNavigationSection(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             const Text(
@@ -305,7 +319,10 @@ class _DetailsContentState extends State<_DetailsContent> {
               icon: const Icon(Icons.home),
               label: const Text('Back to Home'),
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 16,
+                ),
               ),
             ),
           ],
@@ -314,6 +331,7 @@ class _DetailsContentState extends State<_DetailsContent> {
     );
   }
 
+  /// Adds a new item using the text field value.
   void _addItem(DetailsViewModel viewModel) {
     final text = _textController.text.trim();
     if (text.isNotEmpty) {
@@ -322,7 +340,11 @@ class _DetailsContentState extends State<_DetailsContent> {
     }
   }
 
-  void _showClearConfirmation(BuildContext context, DetailsViewModel viewModel) {
+  /// Shows a confirmation dialog to clear all items.
+  void _showClearConfirmation(
+    BuildContext context,
+    DetailsViewModel viewModel,
+  ) {
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
@@ -346,6 +368,7 @@ class _DetailsContentState extends State<_DetailsContent> {
     );
   }
 
+  /// Gets the theme color for the given [colorName].
   Color _getThemeColor(String colorName) {
     switch (colorName) {
       case 'Red':

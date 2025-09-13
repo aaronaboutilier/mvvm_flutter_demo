@@ -1,39 +1,43 @@
 import 'package:core_foundation/core/core.dart';
-import '../../domain/entities/user.dart' as domain;
-import '../../domain/repositories/user_repository.dart';
+import 'package:feature_dashboard/src/domain/entities/user.dart' as domain;
+import 'package:feature_dashboard/src/domain/repositories/user_repository.dart';
 
+/// In-memory implementation of [UserRepository].
 class InMemoryUserRepository implements UserRepository {
-  domain.User? _cached;
-  final PerformanceMonitor _monitor;
-
+  /// Creates an [InMemoryUserRepository] with a [PerformanceMonitor].
   InMemoryUserRepository(this._monitor);
 
+  /// Cached user instance.
+  domain.User? _cached;
+
+  /// Performance monitor for tracking operations.
+  final PerformanceMonitor _monitor;
+
+  /// Loads the user from memory or creates a default user.
   @override
   Future<Result<domain.User>> loadUser() async {
-    try {
-      return await _monitor.track<Result<domain.User>>('UserRepository.loadUser', () async {
+    return resultGuard<domain.User>(() async {
+      return _monitor.track<domain.User>('UserRepository.loadUser', () async {
         await Future<void>.delayed(const Duration(milliseconds: 800));
-        _cached = _cached ?? const domain.User(
-          id: '1',
-          name: 'John Doe',
-          email: 'john.doe@example.com',
-        );
-        return Success(_cached!);
+        _cached =
+            _cached ??
+            const domain.User(
+              id: '1',
+              name: 'John Doe',
+              email: 'john.doe@example.com',
+            );
+        return _cached!;
       });
-    } catch (e, s) {
-      return FailureResult(ErrorMapper.map(e, s));
-    }
+    });
   }
 
+  /// Clears the cached user.
   @override
   Future<Result<void>> clearUser() async {
-    try {
-      return await _monitor.track<Result<void>>('UserRepository.clearUser', () async {
+    return resultGuard<void>(() async {
+      return _monitor.track<void>('UserRepository.clearUser', () async {
         _cached = null;
-        return const Success(null);
       });
-    } catch (e, s) {
-      return FailureResult(ErrorMapper.map(e, s));
-    }
+    });
   }
 }

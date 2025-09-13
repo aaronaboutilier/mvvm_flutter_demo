@@ -1,6 +1,5 @@
+import 'package:core_design_system/src/tokens/colors.dart';
 import 'package:flutter/material.dart';
-
-import '../tokens/colors.dart';
 
 /// A DS-driven theme service that builds ThemeData from tokens and app inputs.
 abstract class ThemeService {
@@ -32,8 +31,10 @@ class DefaultThemeService implements ThemeService {
     Color? brandSecondary,
     Color? brandAccent,
   }) {
-    final isDark = themeMode == ThemeMode.dark ||
-        (themeMode == ThemeMode.system && platformBrightness == Brightness.dark);
+    final isDark =
+        themeMode == ThemeMode.dark ||
+        (themeMode == ThemeMode.system &&
+            platformBrightness == Brightness.dark);
 
     final base = isDark
         ? ThemeData.dark(useMaterial3: useMaterial3)
@@ -55,7 +56,7 @@ class DefaultThemeService implements ThemeService {
   @override
   TextTheme buildTextTheme(double textScaleFactor) {
     return ThemeData.light().textTheme.apply(
-          fontSizeFactor: textScaleFactor.clamp(0.8, 2.0),
-        );
+      fontSizeFactor: textScaleFactor.clamp(0.8, 2.0),
+    );
   }
 }

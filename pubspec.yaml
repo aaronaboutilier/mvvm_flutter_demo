@@ -12,24 +12,26 @@ environment:
 
 dependencies:
   accessibility_tools: ^2.2.0
-  core_design_system:
-    path: packages/core/core_design_system
-  core_analytics:
-    path: packages/core/core_analytics
   core_accessibility:
     path: packages/core/core_accessibility
+  core_analytics:
+    path: packages/core/core_analytics
+  core_configuration:
+    path: packages/core/core_configuration
+  core_design_system:
+    path: packages/core/core_design_system
+  core_foundation:
+    path: packages/core/core_foundation
   core_networking:
     path: packages/core/core_networking
   core_storage:
     path: packages/core/core_storage
-  core_foundation:
-    path: packages/core/core_foundation
   feature_dashboard:
     path: packages/features/feature_dashboard
-  feature_products:
-    path: packages/features/feature_products
   feature_details:
     path: packages/features/feature_details
+  feature_products:
+    path: packages/features/feature_products
   feature_settings:
     path: packages/features/feature_settings
   flutter:
@@ -75,6 +77,7 @@ workspace:
   - packages/core/core_networking
   - packages/core/core_storage
   - packages/core/core_foundation
+  - packages/core/core_configuration
   - packages/features/feature_dashboard
   - packages/features/feature_products
   - packages/features/feature_details
@@ -98,13 +101,20 @@ melos:
       run: flutter test
     generate:all:
       description: Run build_runner in all packages that depend on it
-      run: melos exec --depends-on build_runner -- flutter packages pub run build_runner build --delete-conflicting-outputs
+      run: dart run melos exec --depends-on build_runner -- flutter packages pub run build_runner build --delete-conflicting-outputs
     generate:app:
       description: Run build_runner in the application (root) package
       run: dart run build_runner build --delete-conflicting-outputs
     clean:all:
       description: Clean all packages
       run: flutter clean
+    fix:all:
+      description: Apply automatic fixes suggested by the analyzer across all packages
+      run: dart run melos exec -- "dart fix --apply"
+    fix-and-format:all:
+      description: Apply analyzer fixes, format code, then analyze to verify
+      run: |
+        dart run melos exec -- "dart fix --apply" && dart format . && dart run melos exec -- "flutter analyze"
 
 # Configuration for internationalization
 flutter:

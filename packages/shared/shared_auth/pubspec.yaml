@@ -9,12 +9,12 @@ environment:
   flutter: ">=3.22.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
   core_networking:
     path: ../../core/core_networking
   core_storage:
     path: ../../core/core_storage
+  flutter:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:

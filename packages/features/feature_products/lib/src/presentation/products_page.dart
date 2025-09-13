@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Minimal placeholder view for the Products feature.
 class ProductsPage extends StatelessWidget {
+  /// Creates a ProductsPage.
   const ProductsPage({super.key});
 
   @override

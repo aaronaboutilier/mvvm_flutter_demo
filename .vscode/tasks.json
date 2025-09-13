@@ -10,6 +10,16 @@
 				"$dart-build_runner"
 			],
 			"group": "build"
+		},
+		{
+			"label": "Analyze Flutter workspace",
+			"type": "shell",
+			"command": "flutter analyze",
+			"isBackground": false,
+			"problemMatcher": [
+				"$dart-code"
+			],
+			"group": "build"
 		}
 	]
 }

@@ -1,0 +1,17 @@
+{
+    // Apply Dart/Flutter fixes automatically on save
+    "[dart]": {
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            // Use "explicit" to avoid validation errors in some schemas. Change to true to auto-run on every save.
+            "source.fixAll": "explicit",
+            "source.fixAll.dart": "explicit",
+            // Keep imports tidy when saving (set to true for always-on)
+            "source.organizeImports": "explicit"
+        }
+    },
+    // Run formatter for non-language-override saves (kept conservative)
+    "editor.formatOnSave": true,
+    // Use Dart-Code extension formatter for Dart files
+    "editor.defaultFormatter": "Dart-Code.dart-code"
+}

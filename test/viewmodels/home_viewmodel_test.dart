@@ -1,12 +1,11 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:core_foundation/core/core.dart';
 import 'package:feature_dashboard/feature_dashboard.dart' as dashboard;
+import 'package:flutter_test/flutter_test.dart';
 
 class _FakeUserRepository implements dashboard.UserRepository {
+  _FakeUserRepository({required this.loadResult, required this.clearResult});
   Result<dashboard.User> loadResult;
   Result<void> clearResult;
-
-  _FakeUserRepository({required this.loadResult, required this.clearResult});
 
   @override
   Future<Result<dashboard.User>> loadUser() async => loadResult;
@@ -18,8 +17,15 @@ class _FakeUserRepository implements dashboard.UserRepository {
 void main() {
   group('HomeViewModel', () {
     test('loadUser success updates state', () async {
-      final user = dashboard.User(id: '42', name: 'Ada', email: 'ada@example.com');
-      final repo = _FakeUserRepository(loadResult: Success(user), clearResult: const Success(null));
+      const user = dashboard.User(
+        id: '42',
+        name: 'Ada',
+        email: 'ada@example.com',
+      );
+      final repo = _FakeUserRepository(
+        loadResult: const Success(user),
+        clearResult: const Success(null),
+      );
       final vm = dashboard.HomeViewModel(
         loadUser: dashboard.LoadUser(repo),
         clearUser: dashboard.ClearUser(repo),
@@ -34,8 +40,11 @@ void main() {
     });
 
     test('loadUser failure sets error and clears user', () async {
-      final failure = UnknownFailure(message: 'network');
-      final repo = _FakeUserRepository(loadResult: FailureResult(failure), clearResult: const Success(null));
+      const failure = UnknownFailure(message: 'network');
+      final repo = _FakeUserRepository(
+        loadResult: const FailureResult(failure),
+        clearResult: const Success(null),
+      );
       final vm = dashboard.HomeViewModel(
         loadUser: dashboard.LoadUser(repo),
         clearUser: dashboard.ClearUser(repo),
@@ -49,8 +58,15 @@ void main() {
     });
 
     test('clearUser resets state', () async {
-      final user = dashboard.User(id: '42', name: 'Ada', email: 'ada@example.com');
-      final repo = _FakeUserRepository(loadResult: Success(user), clearResult: const Success(null));
+      const user = dashboard.User(
+        id: '42',
+        name: 'Ada',
+        email: 'ada@example.com',
+      );
+      final repo = _FakeUserRepository(
+        loadResult: const Success(user),
+        clearResult: const Success(null),
+      );
       final vm = dashboard.HomeViewModel(
         loadUser: dashboard.LoadUser(repo),
         clearUser: dashboard.ClearUser(repo),

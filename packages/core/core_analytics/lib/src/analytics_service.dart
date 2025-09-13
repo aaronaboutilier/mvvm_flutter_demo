@@ -1,14 +1,20 @@
-/// Contract for analytics logging.
-abstract class AnalyticsService {
-  Future<void> logEvent(String name, {Map<String, Object?> parameters});
+/// Logs an analytics event.
+Future<void> logEvent(
+  String name, {
+  Map<String, Object?> parameters = const {},
+}) async {
+  // Implement your analytics logic here.
 }
 
 /// Debug implementation that stores events in memory.
-class DebugAnalyticsService implements AnalyticsService {
+class DebugAnalyticsService {
   final List<Map<String, Object?>> events = [];
 
-  @override
-  Future<void> logEvent(String name, {Map<String, Object?> parameters = const {}}) async {
+  /// Logs an analytics event and stores it in memory.
+  Future<void> logEvent(
+    String name, {
+    Map<String, Object?> parameters = const {},
+  }) async {
     events.add({'name': name, 'params': parameters});
   }
 }

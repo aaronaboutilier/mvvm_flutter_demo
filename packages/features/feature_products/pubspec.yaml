@@ -9,12 +9,12 @@ environment:
   flutter: ">=3.22.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
-  go_router: ^16.2.1
   core_foundation:
     path: ../../core/core_foundation
+  flutter:
+    sdk: flutter
   get_it: ^8.0.0
+  go_router: ^16.2.1
   # Add feature-specific deps as needed (e.g., shared_user, core_design_system)
 
 dev_dependencies:

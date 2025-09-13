@@ -1,16 +1,17 @@
 import 'package:core_foundation/core/core.dart';
-import '../../domain/repositories/user_repository.dart';
+import 'package:feature_dashboard/src/domain/repositories/user_repository.dart';
 
-class ClearUser implements UseCase<void, NoParams> {
-  final UserRepository repo;
+/// Use case for clearing the current user.
+class ClearUser {
+  /// Creates a [ClearUser] use case.
   ClearUser(this.repo);
 
-  @override
+  /// The user repository.
+  final UserRepository repo;
+
+  /// Executes the use case to clear the user.
   Future<Result<void>> call(NoParams params) async {
-    try {
-      return await repo.clearUser();
-    } catch (e, s) {
-      return FailureResult(ErrorMapper.map(e, s));
-    }
+    // Repository already wraps exceptions via resultGuard; just return.
+    return repo.clearUser();
   }
 }

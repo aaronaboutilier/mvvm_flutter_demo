@@ -1,7 +1,6 @@
-import 'package:flutter_test/flutter_test.dart';
-
-import 'package:core_foundation/core/result/result.dart';
 import 'package:core_foundation/core/errors/failure.dart';
+import 'package:core_foundation/core/result/result.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 class _DummyFailure extends Failure {
   const _DummyFailure(String message) : super(message: message, code: 'dummy');
@@ -11,10 +10,7 @@ void main() {
   group('Result', () {
     test('Success.fold returns success branch', () {
       const result = Success<int>(42);
-      final value = result.fold(
-        failure: (_) => -1,
-        success: (v) => v + 1,
-      );
+      final value = result.fold(failure: (_) => -1, success: (v) => v + 1);
       expect(value, 43);
     });
 

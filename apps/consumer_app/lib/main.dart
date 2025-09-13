@@ -27,10 +27,7 @@ class ConsumerApp extends StatelessWidget {
       title: 'Consumer App',
       routerConfig: GoRouter(
         initialLocation: DashboardRoutes.path,
-        routes: [
-          ...featureDashboardRoutes(),
-          ...featureProductsRoutes(),
-        ],
+        routes: [...featureDashboardRoutes(), ...featureProductsRoutes()],
       ),
     );
   }

@@ -1,17 +1,17 @@
 import 'package:core_foundation/core/core.dart';
-import '../../domain/entities/user.dart';
-import '../../domain/repositories/user_repository.dart';
+import 'package:feature_dashboard/src/domain/entities/user.dart';
+import 'package:feature_dashboard/src/domain/repositories/user_repository.dart';
 
-class LoadUser implements UseCase<User, NoParams> {
-  final UserRepository repo;
+/// Use case for loading the current user.
+class LoadUser {
+  /// Creates a [LoadUser] use case.
   LoadUser(this.repo);
 
-  @override
+  /// The user repository.
+  final UserRepository repo;
+
+  /// Executes the use case to load the user.
   Future<Result<User>> call(NoParams params) async {
-    try {
-      return await repo.loadUser();
-    } catch (e, s) {
-      return FailureResult(ErrorMapper.map(e, s));
-    }
+    return repo.loadUser();
   }
 }
